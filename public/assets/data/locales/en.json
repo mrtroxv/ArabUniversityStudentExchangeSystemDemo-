@@ -1,0 +1,10 @@
+{
+    "title":"Candidate Details",
+    "subtitle":"Enter the desired candidate details...",
+    "college":"College",
+    "branch":"Branch",
+    "major":"Major",
+    "status":"Status",
+    "gender":"Gender",
+    "other":"Other Requirments"
+}
