@@ -41,5 +41,19 @@
   "phoneP": "ex. 059-774-519",
   "passportNumberP": "ex. 111222333",
   "addressP": "ex. Jenin",
-  "birthPlaceP": "ex. Ramallah"
+  "birthPlaceP": "ex. Ramallah",
+
+  "home": "Home",
+  "secondPage": "Second Page",
+  "offers": "Offers",
+  "viewOffers": "View Offers",
+  "editOffer": "Edit Offer",
+  "createOffer": "Create Offer",
+  "candidates": "Candidates",
+  "viewCandidates": "View Candidates",
+  "editCandidate": "Edit Candidate",
+  "createCandidate": "Create Candidate",
+  "reports": "Reports",
+  "viewReports": "View Reports",
+  "createReport": "Create Report"
 }

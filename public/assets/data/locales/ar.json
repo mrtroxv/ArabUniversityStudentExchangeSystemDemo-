@@ -42,5 +42,19 @@
   "phoneP": "059-774-519",
   "passportNumberP": "111222333",
   "addressP": "جنين",
-  "birthPlaceP": "رام الله"
+  "birthPlaceP": "رام الله",
+
+  "home": "الرئيسية",
+  "secondPage": "الصفحة الثانية",
+  "offers": "عروض",
+  "viewOffers": "View Offers",
+  "editOffer": "تعديل عرض",
+  "createOffer": "انشاء عرض",
+  "candidates": "الطلاب",
+  "viewCandidates": "عرض الطلاب",
+  "editCandidate": "تعديل طالب",
+  "createCandidate": "إنشاء طالب",
+  "reports": "تقارير",
+  "viewReports": "عرض التقارير",
+  "createReport": "إنشاء تقرير"
 }
