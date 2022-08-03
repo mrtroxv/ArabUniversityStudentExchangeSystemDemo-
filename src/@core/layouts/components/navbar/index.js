@@ -7,10 +7,13 @@ import NavbarBookmarks from './NavbarBookmarks'
 
 const ThemeNavbar = props => {
   // ** Props
-  const { skin, setSkin } = props
+  const { skin, setSkin, setMenuVisibility } = props
 
   return (
     <Fragment>
+      <div className='bookmark-wrapper d-flex align-items-center'>
+        <NavbarBookmarks setMenuVisibility={setMenuVisibility} />
+      </div>
       <NavbarUser skin={skin} setSkin={setSkin} />
     </Fragment>
   )
