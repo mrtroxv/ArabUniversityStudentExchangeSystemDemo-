@@ -15,7 +15,7 @@ import { Row, Col, Button } from 'reactstrap'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import Select from 'react-select'
 import FormHeader from './FormHeader'
-
+import { useTranslation } from 'react-i18next'
 
 const CandidateInformation = ({ stepper, onSubmit }) => {
   const genderOptions = [
@@ -41,11 +41,12 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
     birthPlace: Yup.string().required('No birth place provided')
 
   })
-
+  /* eslint-disable */
+  const { t } = useTranslation()
 
   return (
     <Fragment>
-      <FormHeader title="Candidate" description="Enter the candidate information." />
+      <FormHeader title={t('title')} subtitle={t('subtitle')} />
       <Formik
         initialValues={defaultValues}
         validationSchema={schema}
@@ -57,26 +58,27 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
         {({ errors, touched, values }) => (<Form>
           <Row>
             <Col md="6" className='mb-1'>
-              <label htmlFor="name" className="form-label form-label">Name</label>
-              <Field name="name" className={`form-control ${errors.name && touched.name ? 'is-invalid' : ''}`}
-                placeholder="ex. Assel AlAssel" />
+              <label htmlFor="name" className="form-label form-label">{t('name')}</label>
+              < Field name="name" className={`form-control ${errors.name && touched.name ? 'is-invalid' : ''}`}
+                placeholder={t('nameP')} />
               <ErrorMessage name='name' component="p" className="invalid-feedback" />
             </Col>
             <Col md="6" className='mb-1'>
-              <label htmlFor="id" className="form-label form-label">ID</label>
+              <label htmlFor="id" className="form-label form-label">{t('id')}</label>
               <Field type="number" name="id" className={`form-control ${errors.id && touched.id ? 'is-invalid' : ''}`}
-                placeholder="ex. 201810232" />
+                placeholder={t('idP')} />
               <ErrorMessage name='id' component="p" className="invalid-feedback" />
             </Col>
           </Row>
           <Row>
             <Col md="6" className='mb-1'>
-              <label htmlFor="nationality" className="form-label form-label">Nationality</label>
-              <Field name="nationality" className={`form-control ${errors.nationality && touched.nationality ? 'is-invalid' : ''}`} placeholder="palestinian" />
+              <label htmlFor="nationality" className="form-label form-label">{t('nationality')}</label>
+              <Field name="nationality" className={`form-control ${errors.nationality && touched.nationality ? 'is-invalid' : ''}`}
+                placeholder={t('nationalityP')} />
               <ErrorMessage name='nationality' component="p" className="invalid-feedback" />
             </Col>
             <Col md="6" className='mb-1'>
-              <label htmlFor="gender" className="form-label form-label">Gender</label>
+              <label htmlFor="gender" className="form-label form-label">{t('gender')}</label>
               <Select
                 isClearable={false}
                 theme={selectThemeColors}
@@ -92,23 +94,23 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
           </Row>
           <Row>
             <Col md="6" className='mb-2'>
-              <label htmlFor="birthPlace" className="form-label form-label">Birth place</label>
-              <Field name="birthPlace" className={`form-control ${errors.birthPlace && touched.birthPlace ? 'is-invalid' : ''}`} placeholder="ex. Ramallah" />
+              <label htmlFor="birthPlace" className="form-label form-label">{t('birthPlace')}</label>
+              <Field name="birthPlace" className={`form-control ${errors.birthPlace && touched.birthPlace ? 'is-invalid' : ''}`} placeholder={t('birthPlaceP')} />
               <ErrorMessage name='birthPlace' component="p" className="invalid-feedback" />
             </Col>
             <Col md="6" className='mb-2'>
-              <label htmlFor="birthDate" className="form-label form-label">Birth date</label>
-              <Field name="birthDate" className={`form-control ${errors.birthDate && touched.birthDate ? 'is-invalid' : ''}`} placeholder="ex. 8-1-2001" type="date" />
+              <label htmlFor="birthDate" className="form-label form-label">{t('birthDate')}</label>
+              <Field name="birthDate" className={`form-control ${errors.birthDate && touched.birthDate ? 'is-invalid' : ''}`} type="date" />
               <ErrorMessage name='birthDate' component="p" className="invalid-feedback" />
             </Col>
           </Row>
           <div className='d-flex justify-content-between'>
             <Button color='secondary' className='btn-prev' outline disabled>
               <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
-              <span className='align-middle d-sm-inline-block d-none'>Previous</span>
+              <span className='align-middle d-sm-inline-block d-none'>{t('previous')}</span>
             </Button>
             <Button type='submit' color='primary' className='btn-next'>
-              <span className='align-middle d-sm-inline-block d-none'>Next</span>
+              <span className='align-middle d-sm-inline-block d-none'>{t('next')}</span>
               <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
             </Button>
           </div>

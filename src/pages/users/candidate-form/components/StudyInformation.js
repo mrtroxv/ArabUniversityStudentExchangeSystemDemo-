@@ -14,6 +14,7 @@ import { Row, Col, Button } from 'reactstrap'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import Select from 'react-select'
 import FormHeader from './FormHeader'
+import { useTranslation } from 'react-i18next'
 
 
 const StudyInformation = ({ stepper, onSubmit }) => {
@@ -38,11 +39,12 @@ const StudyInformation = ({ stepper, onSubmit }) => {
         fluencyInEnglish: Yup.string().oneOf(fluencyInEnglishOptions.map(value => value.value)).required('You have to pick one')
 
     })
+    const { t } = useTranslation()
 
 
     return (
         <Fragment>
-            <FormHeader title="Study information" description="Enter the study information." />
+            <FormHeader title={t('studyTitle')} subtitle={t('studySubtitle')} />
             <Formik
                 initialValues={defaultValues}
                 validationSchema={validationSchema}
@@ -54,33 +56,33 @@ const StudyInformation = ({ stepper, onSubmit }) => {
                 {({ errors, touched, values }) => (<Form>
                     <Row>
                         <Col md="6" className='mb-1'>
-                            <label htmlFor="universityName" className="form-label form-label">University name</label>
+                            <label htmlFor="universityName" className="form-label form-label">{t('universityName')}</label>
                             <Field name="universityName" className={`form-control ${errors.universityName && touched.universityName ? 'is-invalid' : ''}`}
-                                placeholder="ex. Palestine Technical University – Kadoorie" />
+                                placeholder={t("universityNameP")} />
                             <ErrorMessage name='universityName' component="p" className="invalid-feedback" />
                         </Col>
                         <Col md="6" className='mb-1'>
-                            <label htmlFor="college" className="form-label form-label">College</label>
-                            <Field name="college" className={`form-control ${errors.college && touched.college ? 'is-invalid' : ''}`} placeholder="ex. Engineering and Technology" />
+                            <label htmlFor="college" className="form-label form-label">{t('college')}</label>
+                            <Field name="college" className={`form-control ${errors.college && touched.college ? 'is-invalid' : ''}`} placeholder={t('collegeP')} />
                             <ErrorMessage name='college' component="p" className="invalid-feedback" />
                         </Col>
                     </Row>
                     <Row>
                         <Col md="6" className='mb-1'>
-                            <label htmlFor="universityMajor" className="form-label form-label">University major</label>
-                            <Field name="universityMajor" className={`form-control ${errors.universityMajor && touched.universityMajor ? 'is-invalid' : ''}`} placeholder="ex. Computer systems Engineering" />
-                            <ErrorMessage name='universityMajor' component="p" className="invalid-feedback" />
+                            <label htmlFor="universityMajor" className="form-label form-label">{t('major')}</label>
+                            <Field name="universityMajor" className={`form-control ${errors.universityMajor && touched.universityMajor ? 'is-invalid' : ''}`} placeholder={t('universityMajorP')} />
+                            < ErrorMessage name='universityMajor' component="p" className="invalid-feedback" />
                         </Col>
                         <Col md="6" className='mb-1'>
-                            <label htmlFor="totalCreditHours" className="form-label form-label">Total credit hours</label>
-                            <Field type="number" name="totalCreditHours" className={`form-control ${errors.totalCreditHours && touched.totalCreditHours ? 'is-invalid' : ''}`} placeholder="ex. 144" />
+                            <label htmlFor="totalCreditHours" className="form-label form-label">{t('totalCreditHours')}</label>
+                            <Field type="number" name="totalCreditHours" className={`form-control ${errors.totalCreditHours && touched.totalCreditHours ? 'is-invalid' : ''}`} placeholder={t('totalCreditHoursP')} />
                             <ErrorMessage name='totalCreditHours' component="p" className="invalid-feedback" />
                         </Col>
                     </Row>
                     <Row>
 
                         <Col md="6" className='mb-2'>
-                            <label htmlFor="fluencyInEnglish" className="form-label form-label">Fluency in english</label>
+                            <label htmlFor="fluencyInEnglish" className="form-label form-label">{t('fluencyInEnglish')}</label>
                             <Select
                                 isClearable={false}
                                 theme={selectThemeColors}
@@ -97,10 +99,10 @@ const StudyInformation = ({ stepper, onSubmit }) => {
                     <div className='d-flex justify-content-between'>
                         <Button color='secondary' className='btn-prev' onClick={() => stepper.previous()}>
                             <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
-                            <span className='align-middle d-sm-inline-block d-none'>Previous</span>
+                            <span className='align-middle d-sm-inline-block d-none'>{t('previous')}</span>
                         </Button>
                         <Button color='primary' className='btn-next' type='submit'>
-                            <span className='align-middle d-sm-inline-block d-none'>Next</span>
+                            <span className='align-middle d-sm-inline-block d-none'>{t('next')}</span>
                             <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                         </Button>
                     </div>
