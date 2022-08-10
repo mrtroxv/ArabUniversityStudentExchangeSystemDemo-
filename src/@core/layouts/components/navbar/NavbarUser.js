@@ -32,7 +32,7 @@ const NavbarUser = props => {
           <ThemeToggler />
         </NavLink>
       </NavItem>
-      <NotificationDropdown />
+
       <UserDropdown />
     </ul>
   )

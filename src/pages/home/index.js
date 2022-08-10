@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { Routes, Route, Link, useNavigate } from 'react-router-dom'
 import Breadcrumbs from '@components/breadcrumbs'
 import {
     Card,
@@ -15,27 +16,39 @@ import ObtainedOffers from './components/ObtainedOffers'
 import OwnedOffers from './components/OwnedOffers'
 import UserDetails from './components/UserDetails'
 import SentOffers from './components/SentOffers'
+import TableBasic from './components/table/Table'
+import { useTranslation } from 'react-i18next'
+import Active from './components/table/Active'
+import Sent from './components/table/Sent'
+import Obtained from './components/table/Obtained'
+import Owned from './components/table/Owned'
 
 function Home() {
+    const { t } = useTranslation()
+    const navigate = useNavigate()
+    const viewTableHandler = (route) => {
+        navigate(route)
+    }
     return (
         <Fragment>
-            <Breadcrumbs title='Home' data={[]} />
+            <Breadcrumbs title={`${t('home')}`} data={[]} />
             <Row className='match-height'>
                 <Col lg='6' md='12'>
                     <Row className='match-height'>
                         <Col lg='6' md='3' xs='6'>
-                            <OwnedOffers />
+                            <OwnedOffers onView={viewTableHandler} />
 
                         </Col>
                         <Col lg='6' md='3' xs='6'>
-                            <ObtainedOffers />
-                        </Col>
-                        <Col lg='6' md='3' xs='6'>
-                            <SentOffers />
+                            <SentOffers onView={viewTableHandler} />
 
                         </Col>
                         <Col lg='6' md='3' xs='6'>
-                            <ActiveOffers />
+                            <ObtainedOffers onView={viewTableHandler} />
+
+                        </Col>
+                        <Col lg='6' md='3' xs='6'>
+                            <ActiveOffers onView={viewTableHandler} />
                         </Col>
                     </Row>
                 </Col>
@@ -43,56 +56,19 @@ function Home() {
                     <UserDetails />
                 </Col>
             </Row>
-
             <Row>
-
-                {/* <Col xs='12' xl='5'>
-        <Card>
-          <CardHeader>
-            <CardTitle>Kick start your project 🚀</CardTitle>
-          </CardHeader>
-          <CardBody>
-            <CardText>All the best for your new project.</CardText>
-            <CardText>
-              Please make sure to read our{" "}
-              <CardLink
-                href="https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/documentation/"
-                target="_blank"
-              >
-                Template Documentation
-              </CardLink>{" "}
-              to understand where to go from here and how to use our template.
-            </CardText>
-          </CardBody>
-        </Card>
-
-      </Col> */}
-                <Col xs='12' xl='5'>
+                <Col>
                     <Card>
-                        <CardHeader>
-                            <CardTitle>Want to integrate JWT? 🔒</CardTitle>
-                        </CardHeader>
-                        <CardBody>
-                            <CardText>
-                                We carefully crafted JWT flow so you can implement JWT with ease and
-                                with minimum efforts.
-                            </CardText>
-                            <CardText>
-                                Please read our{" "}
-                                <CardLink
-                                    href="https://pixinvent.com/demo/vuexy-react-admin-dashboard-template/documentation/docs/development/auth"
-                                    target="_blank"
-                                >
-                                    JWT Documentation
-                                </CardLink>{" "}
-                                to get more out of JWT authentication.
-                            </CardText>
-                        </CardBody>
+                        <Routes>
+                            <Route index path='owned-offers' element={<Owned />} />
+                            <Route path='sent-offers' element={<Sent />} />
+                            <Route path='obtained-offers' element={<Obtained />} />
+                            <Route path='active-offers' element={<Active />} />
+                        </Routes>
                     </Card>
                 </Col>
-
-
             </Row>
+
         </Fragment>
     )
 }

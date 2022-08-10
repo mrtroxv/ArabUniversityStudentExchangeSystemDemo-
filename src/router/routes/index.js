@@ -140,6 +140,7 @@ import PublicRoute from "@components/routes/PublicRoute"
 // ** Utils
 import { isObjEmpty } from "@utils"
 import EcommerceDashboard from "../../views/dashboard/ecommerce"
+import TableBasic from "../../pages/home/components/table/Table"
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -171,7 +172,21 @@ const Routes = [
   },
   {
     path: "/home",
-    element: <Home />
+    element: <Home />,
+    children: [
+      {
+        path: "/home/sent-offers"
+      },
+      {
+        path: "/home/owned-offers"
+      },
+      {
+        path: "/home/obtained-offers"
+      },
+      {
+        path: "/home/active-offers"
+      }
+    ]
   },
   {
     path: "/second-page",
@@ -212,11 +227,8 @@ const Routes = [
   {
     path: "/new-candidate",
     element: <CandidateForm />
-  },
-  {
-    path: "/dashboard",
-    element: <EcommerceDashboard />
   }
+
 
 ]
 

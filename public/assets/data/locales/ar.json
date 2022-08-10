@@ -1,7 +1,7 @@
 {
   "ar": "عربية",
   "en": "إنجليزية",
-
+  
   "previous": "السابق",
   "next": "التالي",
   "submit": "إرسال",
@@ -32,6 +32,7 @@
   "passportExpiryDate": "تاريخ إنتهاء جواز السفر",
   "address": "العنوان",
   "enterInformation": "أدخل البينات",
+
   "candidate": "الطالب",
   "contact": "التواصل",
   "nameP": "أصيل خالد الأصيل",
@@ -59,5 +60,19 @@
   "createCandidate": "إنشاء طالب",
   "reports": "تقارير",
   "viewReports": "عرض التقارير",
-  "createReport": "إنشاء تقرير"
+  "createReport": "إنشاء تقرير",
+
+  "ownedOffers": "العروض المتاحة",
+  "sentOffers": "العروض المرسلة",
+  "obtainedOffers": "العروض المحصلة",
+  "activeOffers": "العروض النشطة",
+  "view": "عرض",
+  "userDetails": "تفاصيل المستخدم",
+
+  "viewOfferID": "الرقم",
+  "viewOfferMajor": "التخصص",
+  "viewOfferUniversity": "الحامعة",
+  "viewOfferStatus": "الحالة",
+  "viewOfferActions": "الإجراءات"
+
 }

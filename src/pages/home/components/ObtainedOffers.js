@@ -1,17 +1,23 @@
 import React from 'react'
 import { Button, Card, CardBody, CardHeader, CardTitle, Col, Row } from 'reactstrap'
 import image from '@src/assets/images/svg/icons8_post_office.svg'
+import { useTranslation } from 'react-i18next'
 
-function ObtainedOffers() {
+function ObtainedOffers({ onView }) {
+    const { t } = useTranslation()
+    const onClick = () => {
+
+        onView('obtained-offers')
+    }
     return (
         <Card className="card-offer-status">
             <CardHeader>
-                <CardTitle>Obtained Offers</CardTitle>
+                <CardTitle>{t('obtainedOffers')}</CardTitle>
             </CardHeader>
             <CardBody>
                 <Row>
                     <Col>
-                        <Button color='primary'>View</Button>
+                        <Button.Ripple color='primary' onClick={onClick}>{t('view')}</Button.Ripple>
                     </Col>
                 </Row>
             </CardBody>
