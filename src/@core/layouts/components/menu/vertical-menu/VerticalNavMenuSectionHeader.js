@@ -9,5 +9,4 @@ const VerticalNavMenuSectionHeader = ({ item }) => {
     </li>
   )
 }
-
 export default VerticalNavMenuSectionHeader

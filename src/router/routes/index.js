@@ -139,6 +139,8 @@ import PublicRoute from "@components/routes/PublicRoute"
 
 // ** Utils
 import { isObjEmpty } from "@utils"
+import EcommerceDashboard from "../../views/dashboard/ecommerce"
+import TableBasic from "../../pages/home/components/table/Table"
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -152,7 +154,7 @@ const TemplateTitle = "%s - Internship Management System"
 // ** Default Route
 const DefaultRoute = "/home"
 
-const Home = lazy(() => import("../../pages/Home"))
+const Home = lazy(() => import("../../pages/home/index"))
 const SecondPage = lazy(() => import("../../pages/SecondPage"))
 const Login = lazy(() => import("../../pages/Login"))
 const Register = lazy(() => import("../../pages/Register"))
@@ -170,7 +172,21 @@ const Routes = [
   },
   {
     path: "/home",
-    element: <Home />
+    element: <Home />,
+    children: [
+      {
+        path: "/home/sent-offers"
+      },
+      {
+        path: "/home/owned-offers"
+      },
+      {
+        path: "/home/obtained-offers"
+      },
+      {
+        path: "/home/active-offers"
+      }
+    ]
   },
   {
     path: "/second-page",
@@ -212,6 +228,7 @@ const Routes = [
     path: "/new-candidate",
     element: <CandidateForm />
   }
+
 
 ]
 

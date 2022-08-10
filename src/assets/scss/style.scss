@@ -9,8 +9,37 @@ NOTE:
 ------
 PLACE HERE YOUR OWN SCSS CODES AND IF NEEDED, OVERRIDE THE STYLES FROM THE OTHER STYLESHEETS.
 WE WILL RELEASE FUTURE UPDATES SO IN ORDER TO NOT OVERWRITE YOUR STYLES IT'S BETTER LIKE THIS.  */
+$easing: cubic-bezier(0.645, 0.045, 0.355, 1);
+$transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+
 .invalid-feedback {
   position: absolute;
   margin: 0;
   font-weight: bold;
+}
+
+.card-offer-status {
+  position: relative;
+  // * {
+  //   border: 1px solid lime;
+  // }
+  overflow: hidden;
+  z-index: 9;
+  .status-icon {
+    position: absolute;
+    inset-inline-end: 1rem;
+    inset-block-end: 1rem;
+    // width: 100%;
+    height: 70%;
+    transition: $transition;
+    z-index: -1;
+  }
+  &:hover {
+    .status-icon {
+      inset-inline-end: -5rem;
+      inset-block-end: -5rem;
+      height: 200%;
+      opacity: 0.5;
+    }
+  }
 }

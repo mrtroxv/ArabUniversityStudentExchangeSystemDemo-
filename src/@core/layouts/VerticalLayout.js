@@ -126,8 +126,7 @@ const VerticalLayout = props => {
   return (
     <div
       className={classnames(
-        `wrapper vertical-layout ${navbarWrapperClasses[navbarType] || 'navbar-floating'} ${
-          footerClasses[footerType] || 'footer-static'
+        `wrapper vertical-layout ${navbarWrapperClasses[navbarType] || 'navbar-floating'} ${footerClasses[footerType] || 'footer-static'
         }`,
         {
           // Modern Menu
@@ -215,7 +214,6 @@ const VerticalLayout = props => {
       >
         {footer ? footer : <FooterComponent footerType={footerType} footerClasses={footerClasses} />}
       </footer>
-      
 
       {themeConfig.layout.scrollTop === true ? (
         <div className='scroll-to-top'>

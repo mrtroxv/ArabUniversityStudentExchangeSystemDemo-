@@ -7,22 +7,22 @@ import { UncontrolledDropdown, DropdownMenu, DropdownItem, DropdownToggle } from
 
 const IntlDropdown = () => {
   // ** Hooks
+  const { t } = useTranslation()
   const { i18n } = useTranslation()
   const [isRtl, setValue] = useRTL()
   // ** Vars
   const langObj = {
-    en: 'English',
-    ar: 'Arabic'
+    en: 'en',
+    ar: 'ar'
   }
 
   // ** Function to switch Language
   const handleLangUpdate = (e, lang) => {
     e.preventDefault()
     i18n.changeLanguage(lang)
-    console.log(isRtl)
-    if (lang === 'ar') {
+    if (lang === 'ar' && !isRtl) {
       setValue(true)
-    } else {
+    } else if (lang === 'en') {
       setValue(false)
     }
   }
@@ -35,16 +35,16 @@ const IntlDropdown = () => {
           className='country-flag flag-icon'
           countryCode={i18n.language === 'en' ? 'us' : 'sa'}
         />
-        <span className='selected-language'>{langObj[i18n.language]}</span>
+        <span className='selected-language'>{t(langObj[i18n.language])}</span>
       </DropdownToggle>
       <DropdownMenu className='mt-0' end>
         <DropdownItem href='/' tag='a' onClick={e => handleLangUpdate(e, 'en')}>
           <ReactCountryFlag className='country-flag' countryCode='us' svg />
-          <span className='ms-1'>English</span>
+          <span className='ms-1'>{t('en')}</span>
         </DropdownItem>
         <DropdownItem href='/' tag='a' onClick={e => handleLangUpdate(e, 'ar')}>
           <ReactCountryFlag className='country-flag' countryCode='sa' svg />
-          <span className='ms-1'>Arabic</span>
+          <span className='ms-1'>{t('ar')}</span>
         </DropdownItem>
 
       </DropdownMenu>
