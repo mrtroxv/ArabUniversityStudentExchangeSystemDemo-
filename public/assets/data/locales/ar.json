@@ -1,4 +1,7 @@
 {
+  "ar": "عربية",
+  "en": "إنجليزية",
+
   "previous": "السابق",
   "next": "التالي",
   "submit": "إرسال",
@@ -46,8 +49,8 @@
 
   "home": "الرئيسية",
   "secondPage": "الصفحة الثانية",
-  "offers": "عروض",
-  "viewOffers": "View Offers",
+  "offers": "العروض",
+  "viewOffers": "كشف العروض",
   "editOffer": "تعديل عرض",
   "createOffer": "انشاء عرض",
   "candidates": "الطلاب",

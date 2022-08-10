@@ -17,7 +17,7 @@ const menuItems = (t) => {
             id: "home",
             title: t('home'),
             icon: <Home size={20} />,
-            navLink: "/home"
+            navLink: "/dashboard"
         },
         {
             id: "secondPage",
