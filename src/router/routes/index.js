@@ -162,6 +162,7 @@ const ForgotPassword = lazy(() => import("../../pages/ForgotPassword"))
 const Error = lazy(() => import("../../pages/Error"))
 const OfferWizard = lazy(() => import("../../pages/create-offer/OfferWizard"))
 const CandidateForm = lazy(() => import("../../pages/users/candidate-form/CandidateForm"))
+const AccountSettings = lazy(() => import("../../pages/account-settings/index"))
 
 // ** Merge Routes
 const Routes = [
@@ -227,8 +228,16 @@ const Routes = [
   {
     path: "/new-candidate",
     element: <CandidateForm />
-  }
+  },
 
+  {
+    path: "/pages/account-settings",
+    element: <AccountSettings />
+  },
+  {
+    path: "/pages/account-page",
+    element: <CandidateForm />
+  }
 
 ]
 

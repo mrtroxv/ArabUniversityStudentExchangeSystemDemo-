@@ -12,6 +12,7 @@ import * as Yup from 'yup'
 
 // ** Utils
 import { selectThemeColors } from '@utils'
+import { useTranslation } from 'react-i18next'
 
 const TrainingDetails = ({ stepper, onSubmit }) => {
     const defaultValues = {
@@ -50,12 +51,12 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
         support_type: Yup.array().oneOf(supportTypeOptions.map(value => value.value))
     })
 
-
+    const { t } = useTranslation()
     return (
         <Fragment>
             <div className='content-header'>
-                <h5 className='mb-0'>Training Information</h5>
-                <small className='text-muted'>Enter the training type and info that will be taken into account.</small>
+                <h5 className='mb-0'>{t('trainingTitle')}</h5>
+                <small className='text-muted'>{t('trainingSubTitle')}</small>
             </div>
             <Formik
                 initialValues={defaultValues}
@@ -71,7 +72,7 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
                         <Row>
                             <Col className='mb-1'>
                                 <Label className='form-label' for={`train_description`}>
-                                    Training Description
+                                    {t('trainingDescription')}
                                 </Label>
                                 <Field
                                     type='text'
@@ -85,7 +86,7 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
                             </Col>
                             <Col md='6' className='mb-1'>
                                 <Label className='form-label' for={`train_type`}>
-                                    Type of Training
+                                    {t('trainingType')}
                                 </Label>
                                 <Select
                                     isClearable={false}
@@ -104,7 +105,7 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
 
                             <Col md='6' className='mb-2'>
                                 <Label className='form-label' for={`train_length`}>
-                                    Training Length
+                                    {t('trainingLength')}
                                 </Label>
                                 <Field
                                     type='number'
@@ -118,7 +119,7 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
                             </Col>
                             <Col md='3' className='mb-2'>
                                 <Label className='form-label' for={`train_start_date`}>
-                                    From
+                                    {t('trainingStartDate')}
                                 </Label>
                                 <Field
                                     type='date'
@@ -132,7 +133,7 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
                             </Col>
                             <Col md='3' className='mb-2'>
                                 <Label className='form-label' for={`train_end_date`}>
-                                    To
+                                    {t('trainingEndDate')}
                                 </Label>
                                 <Field
                                     type='date'
@@ -148,7 +149,7 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
                         <Row>
                             <Col className='mb-1'>
                                 <Label className='form-label' for={`support_amount`}>
-                                    Amount
+                                    {t('trainingSupportAmount')}
                                 </Label>
                                 <InputGroup className='input-group-merge mb-1'>
                                     <InputGroupText>$</InputGroupText>
@@ -166,7 +167,8 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
                             </Col>
                             <Col md='6' className='mb-1'>
                                 <Label className='form-label' for={`support_type`}>
-                                    Food
+                                    {t('trainingSupportFood')}
+
                                 </Label>
                                 <Col>
                                     <InputGroup>
@@ -183,7 +185,8 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
                         <Row>
                             <Col md='6' className='mb-2'>
                                 <Label className='form-label' for={`support_type`}>
-                                    Residence
+                                    {t('trainingSupportResidence')}
+
                                 </Label>
                                 <Col>
                                     <InputGroup>
@@ -197,7 +200,8 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
                             </Col>
                             <Col md='6' className='mb-2'>
                                 <Label className='form-label' for={`support_type`}>
-                                    Transfer
+                                    {t('trainingSupportTransfer')}
+
                                 </Label>
                                 <Col>
                                     <InputGroup>
@@ -213,10 +217,10 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
                         <div className='d-flex justify-content-between'>
                             <Button color='secondary' className='btn-prev' onClick={() => stepper.previous()}>
                                 <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
-                                <span className='align-middle d-sm-inline-block d-none'>Previous</span>
+                                <span className='align-middle d-sm-inline-block d-none'>{t('previous')}</span>
                             </Button>
                             <Button type='submit' color='success' className='btn-submit'>
-                                <span className='align-middle d-sm-inline-block d-none'>Submit</span>
+                                <span className='align-middle d-sm-inline-block d-none'>{t('submit')}</span>
                             </Button>
                         </div>
 

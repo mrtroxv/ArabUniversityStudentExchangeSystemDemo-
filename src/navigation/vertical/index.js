@@ -10,7 +10,7 @@
 
 // ** Merge & Export
 // export default [...dashboards, ...apps, ...pages, ...uiElements, ...forms, ...tables, ...charts, ...others]
-import { Mail, Home, Circle, FileText, User, Edit } from "react-feather"
+import { Mail, Home, Circle, FileText, User, Edit, File } from "react-feather"
 const menuItems = (t) => {
     const items = [
         {
@@ -30,18 +30,18 @@ const menuItems = (t) => {
             title: t('offers'),
             icon: <FileText size={20} />,
             children: [
-                {
-                    id: "ViewOffers",
-                    title: t('viewOffers'),
-                    icon: <Circle size={20} />,
-                    navLink: "/view-offers"
-                },
-                {
-                    id: "EditOffer",
-                    title: t('editOffer'),
-                    icon: <Circle size={20} />,
-                    navLink: "/edit-offer"
-                },
+                // {
+                //     id: "ViewOffers",
+                //     title: t('viewOffers'),
+                //     icon: <Circle size={20} />,
+                //     navLink: "/view-offers"
+                // },
+                // {
+                //     id: "EditOffer",
+                //     title: t('editOffer'),
+                //     icon: <Circle size={20} />,
+                //     navLink: "/edit-offer"
+                // },
                 {
                     id: "CreateOffer",
                     title: t('createOffer'),
@@ -56,18 +56,18 @@ const menuItems = (t) => {
             title: t('candidates'),
             icon: <User size={20} />,
             children: [
-                {
-                    id: "ViewCandidates",
-                    title: t('viewCandidates'),
-                    icon: <Circle size={20} />,
-                    navLink: "/view-candidates"
-                },
-                {
-                    id: "EditCandidate",
-                    title: t('editCandidate'),
-                    icon: <Circle size={20} />,
-                    navLink: "/edit-candidate"
-                },
+                // {
+                //     id: "ViewCandidates",
+                //     title: t('viewCandidates'),
+                //     icon: <Circle size={20} />,
+                //     navLink: "/view-candidates"
+                // },
+                // {
+                //     id: "EditCandidate",
+                //     title: t('editCandidate'),
+                //     icon: <Circle size={20} />,
+                //     navLink: "/edit-candidate"
+                // },
                 {
                     id: "CreateCandidate",
                     title: t('createCandidate'),
@@ -93,6 +93,20 @@ const menuItems = (t) => {
                     title: t('createReport'),
                     icon: <Circle size={20} />,
                     navLink: "/new-report"
+                }
+            ]
+
+        },
+        {
+            id: "Pages",
+            title: t('pages'),
+            icon: <File size={20} />,
+            children: [
+                {
+                    id: "AccountSettings",
+                    title: t('accountSettings'),
+                    icon: <Circle size={20} />,
+                    navLink: "/pages/account-settings"
                 }
             ]
 
