@@ -162,10 +162,10 @@ const StudentDetails = ({ stepper, onSubmit }) => {
                         <div className='d-flex justify-content-between'>
                             <Button color='secondary' className='btn-prev' onClick={() => stepper.previous()}>
                                 <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
-                                <span className='align-middle d-sm-inline-block d-none'>Previous</span>
+                                <span className='align-middle d-sm-inline-block d-none'>{t('previous')}</span>
                             </Button>
                             <Button color='primary' className='btn-next' type='submit'>
-                                <span className='align-middle d-sm-inline-block d-none'>Next</span>
+                                <span className='align-middle d-sm-inline-block d-none'>{t('next')}</span>
                                 <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                             </Button>
                         </div>

@@ -11,6 +11,7 @@ import TrainingDetails from './components/TrainingDetails'
 import StudentDetails from './components/StudentDetails'
 
 import { Col, Card } from 'reactstrap'
+import { useTranslation } from 'react-i18next'
 
 const OfferWizard = () => {
     // ** Ref
@@ -20,7 +21,7 @@ const OfferWizard = () => {
     const [stepper, setStepper] = useState(null)
 
     const [data, setData] = useState({})
-
+    const { t } = useTranslation()
     const submitHandler = (data) => {
         setData((prevData) => {
             return { ...prevData, ...data }
@@ -34,20 +35,20 @@ const OfferWizard = () => {
     const steps = [
         {
             id: 'company-details',
-            title: 'Institute Details',
-            subtitle: 'Enter Inst. Details.',
+            title: t('instituteTab'),
+            subtitle: t('instituteTabSubTitle'),
             content: <CompanyDetails stepper={stepper} onSubmit={submitHandler} />
         },
         {
             id: 'candidate-qualifications',
-            title: 'Qualifications',
-            subtitle: 'Candidate\'s Qualifications.',
+            title: t('qualificationTab'),
+            subtitle: t('qualificationTabSubTitle'),
             content: <StudentDetails stepper={stepper} onSubmit={submitHandler} />
         },
         {
             id: 'training-details',
-            title: 'Training Details',
-            subtitle: 'Enter Information.',
+            title: t('trainingTab'),
+            subtitle: t('trainingTabSubTitle'),
             content: <TrainingDetails stepper={stepper} onSubmit={submitHandler} />
         }
     ]

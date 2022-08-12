@@ -56,18 +56,18 @@ function Home() {
                     <UserDetails />
                 </Col>
             </Row>
-            <Row>
-                <Col>
-                    <Card>
-                        <Routes>
-                            <Route index path='owned-offers' element={<Owned />} />
-                            <Route path='sent-offers' element={<Sent />} />
-                            <Route path='obtained-offers' element={<Obtained />} />
-                            <Route path='active-offers' element={<Active />} />
-                        </Routes>
-                    </Card>
-                </Col>
-            </Row>
+            {/* <Row>
+                <Col> */}
+            <Card>
+                <Routes>
+                    <Route index path='owned-offers' element={<Owned />} />
+                    <Route path='sent-offers' element={<Sent />} />
+                    <Route path='obtained-offers' element={<Obtained />} />
+                    <Route path='active-offers' element={<Active />} />
+                </Routes>
+            </Card>
+            {/* </Col>
+            </Row> */}
 
         </Fragment>
     )

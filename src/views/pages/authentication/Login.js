@@ -32,6 +32,7 @@ import { Row, Col, Input, Label, Alert, Button, CardText, CardTitle, Uncontrolle
 
 // ** Styles
 import '@styles/react/pages/page-authentication.scss'
+import { useTranslation } from 'react-i18next'
 
 const ToastContent = ({ t, name, role }) => {
   return (
@@ -89,6 +90,7 @@ const Login = () => {
       .min(4, 'Password is too short - should be 4 chars minimum.')
       .matches(/[a-zA-Z]/, 'Password can only contain Latin letters.')
   })
+  const { t } = useTranslation()
 
   return (
     <div className='auth-wrapper auth-cover'>
@@ -105,10 +107,10 @@ const Login = () => {
         <Col className='d-flex align-items-center auth-bg px-2 p-lg-5' lg='4' sm='12'>
           <Col className='px-xl-2 mx-auto' sm='8' md='6' lg='12'>
             <CardTitle tag="h2" className="fw-bold mb-1">
-              Sign in 👋
+              {t('signIn')} 👋
             </CardTitle>
             <CardText className="mb-2">
-              Please sign-in to your account
+              {t('signInSubTitle')}
             </CardText>
             <Alert color='primary'>
               <div className='alert-body font-small-2'>
@@ -141,7 +143,8 @@ const Login = () => {
                 <Form className="auth-login-form mt-2">
                   <div className="mb-2">
                     <Label className="form-label" for="email">
-                      Email
+                      {t('email')}
+
                     </Label>
                     <Field
                       name='email'
@@ -156,10 +159,10 @@ const Login = () => {
                   <div className="mb-2">
                     <div className="d-flex justify-content-between">
                       <Label className="form-label" for="password">
-                        Password
+                        {t('password')}
                       </Label>
                       <Link to="/forgot-password">
-                        <small>Forgot Password?</small>
+                        <small>{t('forgotPassword')}</small>
                       </Link>
                     </div>
                     <Field
@@ -179,7 +182,7 @@ const Login = () => {
                     </Label>
                   </div>
                   <Button type="submit" color="primary" block>
-                    Sign in
+                    {t('signIn')}
                   </Button>
                 </Form>
               )}

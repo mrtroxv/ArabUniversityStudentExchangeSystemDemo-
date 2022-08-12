@@ -4,10 +4,10 @@ const SecondPage = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create Awesome 🙌</CardTitle>
+        <CardTitle>Test Page 🙌</CardTitle>
       </CardHeader>
       <CardBody>
-        <CardText>This is your second page.</CardText>
+        <CardText>This is a test page.</CardText>
         <CardText>
           Chocolate sesame snaps pie carrot cake pastry pie lollipop muffin.
           Carrot cake dragée chupa chups jujubes. Macaroon liquorice cookie

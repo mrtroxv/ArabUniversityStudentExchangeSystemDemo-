@@ -13,12 +13,14 @@ import * as Yup from 'yup'
 // ** Utils
 import { selectThemeColors } from '@utils'
 
+import { useTranslation } from 'react-i18next'
+
 const CompanyDetails = ({ stepper, onSubmit }) => {
 
     const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
     const faxRegExp = /^\+?[0-9]{6,}$/
 
-
+    const { t } = useTranslation()
     // const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu']
     const daysOfWorkOptions = [
         { value: 'Sun', label: 'Sun' },
@@ -81,8 +83,8 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
     return (
         <Fragment>
             <div className='content-header'>
-                <h5 className='mb-0'>Institute Information</h5>
-                <small className='text-muted'>Enter the Institute's name, contact and address information.</small>
+                <h5 className='mb-0'>{t('instituteTitle')}</h5>
+                <small className='text-muted'>{t('instituteSubTitle')}</small>
             </div>
             <Formik
                 initialValues={defaultValues}
@@ -98,7 +100,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                         <Row>
                             <Col className='mb-1'>
                                 <Label className='form-label' for={`inst_name`}>
-                                    Institute Name
+                                    {t('instituteName')}
                                 </Label>
                                 <Field
                                     type='text'
@@ -112,7 +114,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                             </Col>
                             <Col>
                                 <Label className='form-label' for={`inst_address`}>
-                                    Institute Address
+                                    {t('instituteAddress')}
                                 </Label>
                                 <Field
                                     type='text'
@@ -127,7 +129,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                         <Row>
                             <Col md='6' className='mb-1'>
                                 <Label className='form-label' for={`place_of_work`}>
-                                    Place of work
+                                    {t('institutePlaceOfWork')}
                                 </Label>
 
                                 <Select
@@ -146,7 +148,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                             </Col>
                             <Col md='6' className='mb-1'>
                                 <Label className='form-label' for={`train_aria`}>
-                                    Area of Training
+                                    {t('instituteTrainingType')}
                                 </Label>
                                 <Field
                                     disabled={true}
@@ -164,7 +166,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
 
                             <Col md='6' className='mb-1'>
                                 <Label className='form-label' for={`trainer_name`}>
-                                    Trainer's Name
+                                    {t('instituteTrainerName')}
                                 </Label>
                                 <Field
                                     disabled={true}
@@ -179,7 +181,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                             </Col>
                             <Col md='6' className='mb-1'>
                                 <Label className='form-label' for='days_of_work'>
-                                    Days of Work
+                                    {t('instituteDaysOfWork')}
                                 </Label>
                                 <Select
                                     isDisabled={true}
@@ -198,7 +200,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                         <Row>
                             <Col md='6' className='mb-1'>
                                 <Label className='form-label' for={`inst_phone`}>
-                                    Phone
+                                    {t('institutePhone')}
                                 </Label>
                                 <Field
                                     disabled={true}
@@ -213,7 +215,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                             </Col>
                             <Col md='6' className='mb-1'>
                                 <Label className='form-label' for={`inst_fax`}>
-                                    Fax
+                                    {t('instituteFax')}
                                 </Label>
                                 <Field
                                     disabled={true}
@@ -232,7 +234,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
 
                             <Col md='6' className='mb-2'>
                                 <Label className='form-label' for={`weekly_hours`}>
-                                    Weekly work hours
+                                    {t('instituteWeeklyHours')}
                                 </Label>
                                 <Field
                                     disabled={true}
@@ -247,7 +249,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                             </Col>
                             <Col md='6' className='mb-2'>
                                 <Label className='form-label' for={`daily_hours`}>
-                                    Daily work hours
+                                    {t('instituteDailyHours')}
                                 </Label>
                                 <Field
                                     disabled={true}
@@ -265,10 +267,10 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                         <div className='d-flex justify-content-between'>
                             <Button color='secondary' className='btn-prev' outline disabled>
                                 <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>
-                                <span className='align-middle d-sm-inline-block d-none'>Previous</span>
+                                <span className='align-middle d-sm-inline-block d-none'>{t('previous')}</span>
                             </Button>
                             <Button color='primary' className='btn-next' type='submit'>
-                                <span className='align-middle d-sm-inline-block d-none'>Next</span>
+                                <span className='align-middle d-sm-inline-block d-none'>{t('next')}</span>
                                 <ArrowRight size={14} className='align-middle ms-sm-25 ms-0'></ArrowRight>
                             </Button>
                         </div>
