@@ -18,10 +18,11 @@ import { useTranslation } from 'react-i18next'
 
 
 const StudyInformation = ({ stepper, onSubmit }) => {
+    const { t } = useTranslation()
     const fluencyInEnglishOptions = [
-        { value: "Good", label: "Good" },
-        { value: "Medium", label: "Medium" },
-        { value: "Excellent", label: "Excellent" }
+        { value: "Good", label: t('good') },
+        { value: "Medium", label: t('medium') },
+        { value: "Excellent", label: t('excellent') }
     ]
 
     const defaultValues = {
@@ -39,8 +40,6 @@ const StudyInformation = ({ stepper, onSubmit }) => {
         fluencyInEnglish: Yup.string().oneOf(fluencyInEnglishOptions.map(value => value.value)).required('You have to pick one')
 
     })
-    const { t } = useTranslation()
-
 
     return (
         <Fragment>

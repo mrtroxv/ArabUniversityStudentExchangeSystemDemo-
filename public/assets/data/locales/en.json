@@ -1,5 +1,4 @@
 {
-  
   "ar": "Arabic",
   "en": "English",
 
@@ -66,20 +65,22 @@
   "activeOffers": "Active Offers",
   "view": "View",
   "userDetails": "User Details",
-
+  "male": "Male",
+  "female": "Female",
+  "good": "Good",
+  "medium": "Medium",
+  "excellent": "Excellent",
 
   "viewOfferID": "ID",
   "viewOfferMajor": "Major",
   "viewOfferUniversity": "University",
   "viewOfferStatus": "Status",
   "viewOfferActions": "Actions",
-  
+
   "profile": "Profile",
   "logout": "Logout",
   "login": "Login",
   "settings": "Settings",
-
-
 
   "forgotPassword": "Forgot Password",
   "resetPassword": "Reset Password",
@@ -111,7 +112,6 @@
   "requirments1": "Minimum 8 characters long - the more, the better",
   "requirments2": "At least one lowercase letter",
   "requirments3": "At least one number, symbol, or whitespace character",
-
 
   "instituteTab": "Institute Details",
   "instituteTabSubTitle": "Enter Inst. Details.",
@@ -145,5 +145,4 @@
 
   "signIn": "Sign In",
   "signInSubTitle": "Please sign-in to your account."
-
 }
