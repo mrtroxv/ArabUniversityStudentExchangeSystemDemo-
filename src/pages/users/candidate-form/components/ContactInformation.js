@@ -15,7 +15,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import FormHeader from './FormHeader'
 import { useTranslation } from 'react-i18next'
 
-const ContactInformation = ({ stepper, onSubmit }) => {
+const ContactInformation = ({ stepper, onSubmit, data }) => {
     const { t } = useTranslation()
 
     const defaultValues = {
@@ -54,7 +54,16 @@ const ContactInformation = ({ stepper, onSubmit }) => {
                 initialValues={defaultValues}
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
-                    onSubmit(values)
+                    const candidatesInformations = localStorage.getItem('candidatesInformations')
+                    if (!(!candidatesInformations)) {
+                        const candidatesInformationsList = JSON.parse(candidatesInformations)
+                        candidatesInformationsList.push({ ...values, ...props.data })
+                        localStorage.setItem('candidatesInformations', JSON.stringify(candidatesInformationsList))
+
+                    } else {
+                        localStorage.setItem('candidatesInformations', JSON.stringify([{ ...values, ...data }]))
+                    }
+                    onSubmit({})
                     stepper.next()
                 }}
             >
@@ -63,7 +72,10 @@ const ContactInformation = ({ stepper, onSubmit }) => {
                     <Row>
                         <Col md="6" className='mb-1'>
                             <label htmlFor="email" className="form-label form-label">{t('email')}</label>
-                            <Field type="email" name="email" className={`form-control ${errors.email && touched.email ? 'is-invalid' : ''}`}
+                            <Field
+                                type="email"
+                                name="email"
+                                className={`form-control ${errors.email && touched.email ? 'is-invalid' : ''}`}
                                 placeholder={t('emailP')} />
                             <ErrorMessage name='email' component="p" className="invalid-feedback" />
                         </Col>
@@ -87,19 +99,29 @@ const ContactInformation = ({ stepper, onSubmit }) => {
 
                         <Col md="6" className='mb-1'>
                             <label htmlFor="passportNumber" className="form-label form-label">{t('passportNumber')}</label>
-                            <Field type="text" name="passportNumber" className={`form-control ${errors.passportNumber && touched.passportNumber ? 'is-invalid' : ''}`} placeholder={t('passportNumberP')} />
+                            <Field
+                                type="text"
+                                name="passportNumber"
+                                className={`form-control ${errors.passportNumber && touched.passportNumber ? 'is-invalid' : ''}`}
+                                placeholder={t('passportNumberP')} />
                             <ErrorMessage name='passportNumber' component="p" className="invalid-feedback" />
                         </Col>
                         <Col md="6" className='mb-1'>
                             <label htmlFor="passportExpiryDate" className="form-label form-label">{t('passportExpiryDate')}</label>
-                            <Field type="date" name="passportExpiryDate" className={`form-control ${errors.passportNumber && touched.passportNumber ? 'is-invalid' : ''}`} />
+                            <Field
+                                type="date"
+                                name="passportExpiryDate"
+                                className={`form-control ${errors.passportNumber && touched.passportNumber ? 'is-invalid' : ''}`} />
                             <ErrorMessage name='passportExpiryDate' component="p" className="invalid-feedback" />
                         </Col>
                     </Row>
                     <Row>
                         <Col md="6" className='mb-2'>
                             <label htmlFor="address" className="form-label form-label">{t('address')}</label>
-                            <Field name="address" className={`form-control ${errors.address && touched.address ? 'is-invalid' : ''}`} placeholder={t('addressP')} />
+                            <Field
+                                name="address"
+                                className={`form-control ${errors.address && touched.address ? 'is-invalid' : ''}`}
+                                placeholder={t('addressP')} />
                             <ErrorMessage name='address' component="p" className="invalid-feedback" />
                         </Col>
                     </Row>
