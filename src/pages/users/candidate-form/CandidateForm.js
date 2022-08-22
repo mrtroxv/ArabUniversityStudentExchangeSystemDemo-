@@ -35,13 +35,13 @@ const CandidateForm = () => {
             id: 'studyInformation',
             title: t('studyTitle'),
             subtitle: t('enterInformation'),
-            content: <StudyInformation stepper={stepper} onSubmit={submitHandler} data={data} />
+            content: <StudyInformation stepper={stepper} onSubmit={submitHandler} />
         },
         {
             id: 'contactInformation',
             title: t('contact'),
             subtitle: t('enterInformation'),
-            content: <ContactInformation stepper={stepper} onSubmit={submitHandler} />
+            content: <ContactInformation stepper={stepper} onSubmit={submitHandler} data={data} />
         }
     ]
     return (

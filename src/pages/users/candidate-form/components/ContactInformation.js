@@ -6,11 +6,11 @@ import { Fragment } from 'react'
 
 // ** Third Party Components
 import * as Yup from 'yup'
-import { ArrowLeft, ArrowRight } from 'react-feather'
+import { ArrowLeft } from 'react-feather'
 
 
 // ** Reactstrap Imports
-import { Row, Col, Button, InputGroup } from 'reactstrap'
+import { Row, Col, Button } from 'reactstrap'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import FormHeader from './FormHeader'
 import { useTranslation } from 'react-i18next'
@@ -54,21 +54,22 @@ const ContactInformation = ({ stepper, onSubmit, data }) => {
                 initialValues={defaultValues}
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
+                    console.log(data)
                     const candidatesInformations = localStorage.getItem('candidatesInformations')
                     if (!(!candidatesInformations)) {
                         const candidatesInformationsList = JSON.parse(candidatesInformations)
-                        candidatesInformationsList.push({ ...values, ...props.data })
+                        candidatesInformationsList.push({ ...data, ...values })
                         localStorage.setItem('candidatesInformations', JSON.stringify(candidatesInformationsList))
 
                     } else {
-                        localStorage.setItem('candidatesInformations', JSON.stringify([{ ...values, ...data }]))
+                        localStorage.setItem('candidatesInformations', JSON.stringify([{ ...data, ...values }]))
                     }
                     onSubmit({})
                     stepper.next()
                 }}
             >
                 {/* eslint-disable */}
-                {({ errors, touched, handleChange, setFieldValue }) => (<Form>
+                {({ errors, touched, setFieldValue }) => (<Form>
                     <Row>
                         <Col md="6" className='mb-1'>
                             <label htmlFor="email" className="form-label form-label">{t('email')}</label>
