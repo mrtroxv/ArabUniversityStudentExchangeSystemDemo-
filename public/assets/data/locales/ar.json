@@ -1,7 +1,7 @@
 {
   "ar": "عربية",
   "en": "إنجليزية",
-  
+
   "previous": "السابق",
   "next": "التالي",
   "submit": "إرسال",
@@ -74,13 +74,16 @@
   "viewOfferUniversity": "الجامعة",
   "viewOfferStatus": "الحالة",
   "viewOfferActions": "الإجراءات",
+  "male": "ذكر",
+  "female": "أنثى",
+  "good": "جيد",
+  "medium": "متوسط",
+  "excellent": "ممتاز",
 
   "profile": "الملف الشخصي",
   "logout": "تسجيل الخروج",
   "login": "تسجيل الدخول",
   "settings": "الإعدادات",
-
-
 
   "forgotPassword": "نسيت كلمة المرور",
   "resetPassword": "إعادة تعيين كلمة المرور",
@@ -143,7 +146,7 @@
   "trainingSupportFood": "غذاء",
   "trainingSupportResidence": "إقامة",
   "trainingSupportTransfer": "نقل",
-  
+
   "signIn": "تسجيل الدخول",
   "signInSubTitle": "أدخل بيانات الدخول للدخول إلى النظام"
 }

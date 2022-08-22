@@ -6,7 +6,7 @@ import { Fragment } from 'react'
 
 // ** Third Party Components
 import * as Yup from 'yup'
-import { ArrowLeft, ArrowRight } from 'react-feather'
+import { ArrowLeft } from 'react-feather'
 
 
 // ** Reactstrap Imports
@@ -15,9 +15,8 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import FormHeader from './FormHeader'
 import { useTranslation } from 'react-i18next'
 
-
-const ContactInformation = ({ stepper, onSubmit }) => {
-    const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+const ContactInformation = ({ stepper, onSubmit, data }) => {
+    const { t } = useTranslation()
 
     const defaultValues = {
         email: "",
@@ -26,12 +25,12 @@ const ContactInformation = ({ stepper, onSubmit }) => {
         passportNumber: "",
         passportExpiryDate: ""
     }
-    const validationSchema = Yup.object({
+    const validationSchema = Yup.object().shape({
         email: Yup.string()
             .required('No email provided')
             .email("Invalid email address"),
         phone: Yup.string()
-            .matches(phoneRegExp, 'Phone number is not valid')
+            .matches(/^[0-9]*$/, 'Phone number is not valid')
             .required('No Phone Number provided'),
         address: Yup.string()
             .required('No address provided')
@@ -42,32 +41,58 @@ const ContactInformation = ({ stepper, onSubmit }) => {
             .required('No Date provided')
 
     })
+    // function to validate phone number
 
-    const { t } = useTranslation()
+
     return (
         <Fragment>
 
             <FormHeader title={t('contactTitle')} subtitle={t('contactSubtitle')} />
 
             <Formik
+
                 initialValues={defaultValues}
                 validationSchema={validationSchema}
                 onSubmit={async (values) => {
-                    onSubmit(values)
+                    console.log(data)
+                    const candidatesInformations = localStorage.getItem('candidatesInformations')
+                    if (!(!candidatesInformations)) {
+                        const candidatesInformationsList = JSON.parse(candidatesInformations)
+                        candidatesInformationsList.push({ ...data, ...values })
+                        localStorage.setItem('candidatesInformations', JSON.stringify(candidatesInformationsList))
+
+                    } else {
+                        localStorage.setItem('candidatesInformations', JSON.stringify([{ ...data, ...values }]))
+                    }
+                    onSubmit({})
                     stepper.next()
                 }}
             >
-                {({ errors, touched }) => (<Form>
+                {/* eslint-disable */}
+                {({ errors, touched, setFieldValue }) => (<Form>
                     <Row>
                         <Col md="6" className='mb-1'>
                             <label htmlFor="email" className="form-label form-label">{t('email')}</label>
-                            <Field type="email" name="email" className={`form-control ${errors.email && touched.email ? 'is-invalid' : ''}`}
+                            <Field
+                                type="email"
+                                name="email"
+                                className={`form-control ${errors.email && touched.email ? 'is-invalid' : ''}`}
                                 placeholder={t('emailP')} />
                             <ErrorMessage name='email' component="p" className="invalid-feedback" />
                         </Col>
                         <Col md="6" className='mb-1'>
                             <label htmlFor="phone" className="form-label form-label">{t('phone')}</label>
-                            <Field type="number" name="phone" className={`form-control ${errors.phone && touched.phone ? 'is-invalid' : ''}`} placeholder={t('phoneP')} />
+                            <Field
+                                type="text"
+                                name="phone"
+                                placeholder={t('phoneP')}
+                                className={`form-control ${errors.phone && touched.phone ? 'is-invalid' : ''}`}
+                                onChange={(e) => {
+                                    setFieldValue('phone', e.target.value.replace(/[^0-9]/g, ''))
+                                }
+                                }
+
+                            />
                             <ErrorMessage name='phone' component="p" className="invalid-feedback" />
                         </Col>
                     </Row>
@@ -75,19 +100,29 @@ const ContactInformation = ({ stepper, onSubmit }) => {
 
                         <Col md="6" className='mb-1'>
                             <label htmlFor="passportNumber" className="form-label form-label">{t('passportNumber')}</label>
-                            <Field type="number" name="passportNumber" className={`form-control ${errors.passportNumber && touched.passportNumber ? 'is-invalid' : ''}`} placeholder={t('passportNumberP')} />
+                            <Field
+                                type="text"
+                                name="passportNumber"
+                                className={`form-control ${errors.passportNumber && touched.passportNumber ? 'is-invalid' : ''}`}
+                                placeholder={t('passportNumberP')} />
                             <ErrorMessage name='passportNumber' component="p" className="invalid-feedback" />
                         </Col>
                         <Col md="6" className='mb-1'>
                             <label htmlFor="passportExpiryDate" className="form-label form-label">{t('passportExpiryDate')}</label>
-                            <Field type="date" name="passportExpiryDate" className={`form-control ${errors.passportNumber && touched.passportNumber ? 'is-invalid' : ''}`} />
+                            <Field
+                                type="date"
+                                name="passportExpiryDate"
+                                className={`form-control ${errors.passportNumber && touched.passportNumber ? 'is-invalid' : ''}`} />
                             <ErrorMessage name='passportExpiryDate' component="p" className="invalid-feedback" />
                         </Col>
                     </Row>
                     <Row>
                         <Col md="6" className='mb-2'>
                             <label htmlFor="address" className="form-label form-label">{t('address')}</label>
-                            <Field name="address" className={`form-control ${errors.address && touched.address ? 'is-invalid' : ''}`} placeholder={t('addressP')} />
+                            <Field
+                                name="address"
+                                className={`form-control ${errors.address && touched.address ? 'is-invalid' : ''}`}
+                                placeholder={t('addressP')} />
                             <ErrorMessage name='address' component="p" className="invalid-feedback" />
                         </Col>
                     </Row>

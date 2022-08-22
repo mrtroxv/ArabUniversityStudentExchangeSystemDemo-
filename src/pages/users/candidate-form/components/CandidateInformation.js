@@ -18,9 +18,10 @@ import FormHeader from './FormHeader'
 import { useTranslation } from 'react-i18next'
 
 const CandidateInformation = ({ stepper, onSubmit }) => {
+  const { t } = useTranslation()
   const genderOptions = [
-    { value: "Male", label: "Male" },
-    { value: "Female", label: "Female" }
+    { value: t("male"), label: t("male") },
+    { value: t('female'), label: t('female') }
   ]
 
   const defaultValues = {
@@ -41,8 +42,7 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
     birthPlace: Yup.string().required('No birth place provided')
 
   })
-  /* eslint-disable */
-  const { t } = useTranslation()
+
 
   return (
     <Fragment>

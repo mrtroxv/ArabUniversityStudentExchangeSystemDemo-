@@ -41,7 +41,7 @@ const CandidateForm = () => {
             id: 'contactInformation',
             title: t('contact'),
             subtitle: t('enterInformation'),
-            content: <ContactInformation stepper={stepper} onSubmit={submitHandler} />
+            content: <ContactInformation stepper={stepper} onSubmit={submitHandler} data={data} />
         }
     ]
     return (

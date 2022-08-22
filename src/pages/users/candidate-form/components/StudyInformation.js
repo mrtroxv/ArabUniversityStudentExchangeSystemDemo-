@@ -18,10 +18,11 @@ import { useTranslation } from 'react-i18next'
 
 
 const StudyInformation = ({ stepper, onSubmit }) => {
+    const { t } = useTranslation()
     const fluencyInEnglishOptions = [
-        { value: "Good", label: "Good" },
-        { value: "Medium", label: "Medium" },
-        { value: "Excellent", label: "Excellent" }
+        { value: "Good", label: t('good') },
+        { value: "Medium", label: t('medium') },
+        { value: "Excellent", label: t('excellent') }
     ]
 
     const defaultValues = {
@@ -39,8 +40,6 @@ const StudyInformation = ({ stepper, onSubmit }) => {
         fluencyInEnglish: Yup.string().oneOf(fluencyInEnglishOptions.map(value => value.value)).required('You have to pick one')
 
     })
-    const { t } = useTranslation()
-
 
     return (
         <Fragment>
@@ -53,7 +52,7 @@ const StudyInformation = ({ stepper, onSubmit }) => {
                     stepper.next()
                 }}
             >
-                {({ errors, touched, values }) => (<Form>
+                {({ errors, touched, values, setFieldValue }) => (<Form>
                     <Row>
                         <Col md="6" className='mb-1'>
                             <label htmlFor="universityName" className="form-label form-label">{t('universityName')}</label>
@@ -75,7 +74,17 @@ const StudyInformation = ({ stepper, onSubmit }) => {
                         </Col>
                         <Col md="6" className='mb-1'>
                             <label htmlFor="totalCreditHours" className="form-label form-label">{t('totalCreditHours')}</label>
-                            <Field type="number" name="totalCreditHours" className={`form-control ${errors.totalCreditHours && touched.totalCreditHours ? 'is-invalid' : ''}`} placeholder={t('totalCreditHoursP')} />
+                            <Field
+                                type="text"
+                                name="totalCreditHours"
+                                placeholder={t('totalCreditHours')}
+                                className={`form-control ${errors.totalCreditHours && touched.totalCreditHours ? 'is-invalid' : ''}`}
+                                onChange={(e) => {
+                                    setFieldValue('totalCreditHours', e.target.value.replace(/[^0-9]/g, ''))
+                                }
+                                }
+
+                            />
                             <ErrorMessage name='totalCreditHours' component="p" className="invalid-feedback" />
                         </Col>
                     </Row>
