@@ -67,24 +67,33 @@ const Login = () => {
     source = require(`@src/assets/images/pages/${illustration}`).default
 
   const onSubmit = data => {
-    console.log(data, Object.values(data))
-    useJwt
-      .login({ email: data.email, password: data.password })
-      .then(res => {
-        const data = { ...res.data.userData, accessToken: res.data.accessToken, refreshToken: res.data.refreshToken }
-        dispatch(handleLogin(data))
-        ability.update(res.data.userData.ability)
-        navigate(getHomeRouteForLoggedInUser(data.role))
-        toast(t => (
-          <ToastContent t={t} role={data.role || 'admin'} name={data.fullName || data.username || 'John Doe'} />
-        ))
-      })
-      .catch(err => console.log(err))
-
-
+    if (Object.values(data).every(field => field.length > 0)) {
+      useJwt
+        .login({ Username: data.Username, password: data.password })
+        .then(res => {
+          const data = { ...res.data, accessToken: res.data.accessToken }
+          dispatch(handleLogin(data))
+          ability.update(res.data.ability)
+          navigate(getHomeRouteForLoggedInUser(data.role))
+          toast(t => (
+            <ToastContent t={t} role={data.role || 'admin'} name={data.fullName || data.username || 'John Doe'} />
+          ))
+        })
+        .catch(() => {
+          toast.error('Invalid username or password')
+        })
+    } else {
+      for (const key in data) {
+        if (data[key].length === 0) {
+          setError(key, {
+            type: 'manual'
+          })
+        }
+      }
+    }
   }
   const SignInSchema = Yup.object().shape({
-    email: Yup.string().email().required('No Email provided'),
+    Username: Yup.string().required('No Username provided'),
     password: Yup.string()
       .required('No password provided.')
       .min(4, 'Password is too short - should be 4 chars minimum.')
@@ -116,7 +125,7 @@ const Login = () => {
               <div className='alert-body font-small-2'>
                 <p>
                   <small className='me-50'>
-                    admin@demo.com | admin
+                    Ahmad Osama | Ahmad2000$
                   </small>
                 </p>
               </div>
@@ -132,9 +141,8 @@ const Login = () => {
             </Alert>
             <Formik
               initialValues={{
-                password: '',
-                email: '',
-                'remember-me': false
+                password: 'Ahmad2000$',
+                Username: 'Ahmad Osama'
               }}
               validationSchema={SignInSchema}
               onSubmit={onSubmit}
@@ -143,18 +151,18 @@ const Login = () => {
                 <Form className="auth-login-form mt-2">
                   <div className="mb-2">
                     <Label className="form-label" for="email">
-                      {t('email')}
+                      {t('username')}
 
                     </Label>
                     <Field
-                      name='email'
-                      id="email"
-                      placeholder='example@example.com'
-                      type="email"
-                      className={`form-control ${errors.email && touched.email ? 'is-invalid' : ''}`}
+                      name='Username'
+                      id="Username"
+                      placeholder='Ahmad Osama'
+                      type="text"
+                      className={`form-control ${errors.Username && touched.Username ? 'is-invalid' : ''}`}
                       autoFocus
                     />
-                    <ErrorMessage name="email" component='p' className="invalid-feedback" />
+                    <ErrorMessage name="Username" component='p' className="invalid-feedback" />
                   </div>
                   <div className="mb-2">
                     <div className="d-flex justify-content-between">
