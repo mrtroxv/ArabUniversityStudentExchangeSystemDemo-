@@ -7,6 +7,8 @@ import { Fragment } from 'react'
 // ** Third Party Components
 import * as Yup from 'yup'
 import { ArrowLeft } from 'react-feather'
+// import axios
+import axios from 'axios'
 
 
 // ** Reactstrap Imports
@@ -15,7 +17,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import FormHeader from './FormHeader'
 import { useTranslation } from 'react-i18next'
 
-const ContactInformation = ({ stepper, onSubmit, data }) => {
+const ContactInformation = ({ data }) => {
     const { t } = useTranslation()
 
     const defaultValues = {
@@ -53,20 +55,23 @@ const ContactInformation = ({ stepper, onSubmit, data }) => {
 
                 initialValues={defaultValues}
                 validationSchema={validationSchema}
-                onSubmit={async (values) => {
-                    console.log(data)
-                    const candidatesInformations = localStorage.getItem('candidatesInformations')
-                    if (!(!candidatesInformations)) {
-                        const candidatesInformationsList = JSON.parse(candidatesInformations)
-                        candidatesInformationsList.push({ ...data, ...values })
-                        localStorage.setItem('candidatesInformations', JSON.stringify(candidatesInformationsList))
-
-                    } else {
-                        localStorage.setItem('candidatesInformations', JSON.stringify([{ ...data, ...values }]))
+                onSubmit={(values) => {
+                    console.table({ ...data, ...values })
+                    axios.post('http://localhost:3500/student', {
+                        ...data, ...values
+                    }, {
+                        headers: {
+                            authorization: JSON.parse(localStorage.getItem('accessToken'))
+                        }
+                    }).then((res) => {
+                        console.log(res.data)
+                    }).catch((err) => {
+                        console.log(err)
+                        console.log(1)
                     }
-                    onSubmit({})
-                    stepper.next()
-                }}
+                    )
+                }
+                }
             >
                 {/* eslint-disable */}
                 {({ errors, touched, setFieldValue }) => (<Form>

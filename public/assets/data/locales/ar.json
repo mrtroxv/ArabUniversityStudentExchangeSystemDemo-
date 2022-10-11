@@ -148,5 +148,8 @@
   "trainingSupportTransfer": "نقل",
 
   "signIn": "تسجيل الدخول",
-  "signInSubTitle": "أدخل بيانات الدخول للدخول إلى النظام"
+  "signInSubTitle": "أدخل بيانات الدخول للدخول إلى النظام",
+  "studyYears": "مجموع سنوات الدراسة",
+  "studyYearFinished": "سنوات الدراسة المنجزة",
+  "healthStatus": "الحالة الصحية للطالب"
 }
