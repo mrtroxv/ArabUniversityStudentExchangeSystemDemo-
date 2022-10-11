@@ -26,18 +26,20 @@ const StudyInformation = ({ stepper, onSubmit }) => {
     ]
 
     const defaultValues = {
-        universityName: "",
         college: "",
         universityMajor: "",
         totalCreditHours: "",
-        fluencyInEnglish: ""
+        fluencyInEnglish: "",
+        studyYears: "",
+        studyYearFinished: ""
     }
     const validationSchema = Yup.object({
-        universityName: Yup.string().required('No university provided'),
         totalCreditHours: Yup.number().required('No total credit hours provided'),
         college: Yup.string().required('No college provided'),
         universityMajor: Yup.string().required('No university major provided'),
-        fluencyInEnglish: Yup.string().oneOf(fluencyInEnglishOptions.map(value => value.value)).required('You have to pick one')
+        fluencyInEnglish: Yup.string().oneOf(fluencyInEnglishOptions.map(value => value.value)).required('You have to pick one'),
+        studyYears: Yup.number().required('No study years provided'),
+        studyYearFinished: Yup.number().required('No study year finished provided')
 
     })
 
@@ -55,23 +57,17 @@ const StudyInformation = ({ stepper, onSubmit }) => {
                 {({ errors, touched, values, setFieldValue }) => (<Form>
                     <Row>
                         <Col md="6" className='mb-1'>
-                            <label htmlFor="universityName" className="form-label form-label">{t('universityName')}</label>
-                            <Field name="universityName" className={`form-control ${errors.universityName && touched.universityName ? 'is-invalid' : ''}`}
-                                placeholder={t("universityNameP")} />
-                            <ErrorMessage name='universityName' component="p" className="invalid-feedback" />
-                        </Col>
-                        <Col md="6" className='mb-1'>
                             <label htmlFor="college" className="form-label form-label">{t('college')}</label>
                             <Field name="college" className={`form-control ${errors.college && touched.college ? 'is-invalid' : ''}`} placeholder={t('collegeP')} />
                             <ErrorMessage name='college' component="p" className="invalid-feedback" />
                         </Col>
-                    </Row>
-                    <Row>
                         <Col md="6" className='mb-1'>
                             <label htmlFor="universityMajor" className="form-label form-label">{t('major')}</label>
                             <Field name="universityMajor" className={`form-control ${errors.universityMajor && touched.universityMajor ? 'is-invalid' : ''}`} placeholder={t('universityMajorP')} />
                             < ErrorMessage name='universityMajor' component="p" className="invalid-feedback" />
                         </Col>
+                    </Row>
+                    <Row>
                         <Col md="6" className='mb-1'>
                             <label htmlFor="totalCreditHours" className="form-label form-label">{t('totalCreditHours')}</label>
                             <Field
@@ -87,10 +83,7 @@ const StudyInformation = ({ stepper, onSubmit }) => {
                             />
                             <ErrorMessage name='totalCreditHours' component="p" className="invalid-feedback" />
                         </Col>
-                    </Row>
-                    <Row>
-
-                        <Col md="6" className='mb-2'>
+                        <Col md="6" className='mb-1'>
                             <label htmlFor="fluencyInEnglish" className="form-label form-label">{t('fluencyInEnglish')}</label>
                             <Select
                                 isClearable={false}
@@ -105,6 +98,19 @@ const StudyInformation = ({ stepper, onSubmit }) => {
                             <ErrorMessage name='fluencyInEnglish' component="p" className="invalid-feedback" />
                         </Col>
                     </Row>
+                    <Row>
+                        <Col md="6" className='mb-1'>
+                            <label htmlFor="studyYears" className="form-label form-label">{t('studyYears')}</label>
+                            <Field name="studyYears" className={`form-control ${errors.studyYears && touched.studyYears ? 'is-invalid' : ''}`} placeholder={t('studyYears')} />
+                            <ErrorMessage name='studyYears' component="p" className="invalid-feedback" />
+                        </Col>
+                        <Col md="6" className='mb-2'>
+                            <label htmlFor="studyYearFinished" className="form-label form-label">{t('studyYearFinished')}</label>
+                            <Field name="studyYearFinished" className={`form-control ${errors.studyYearFinished && touched.studyYearFinished ? 'is-invalid' : ''}`} placeholder={t('studyYearFinished')} />
+                            <ErrorMessage name='studyYearFinished' component="p" className="invalid-feedback" />
+                        </Col>
+                    </Row>
+
                     <div className='d-flex justify-content-between'>
                         <Button color='secondary' className='btn-prev' onClick={() => stepper.previous()}>
                             <ArrowLeft size={14} className='align-middle me-sm-25 me-0'></ArrowLeft>

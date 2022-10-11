@@ -30,7 +30,8 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
     gender: "",
     nationality: "",
     birthDate: "",
-    birthPlace: ""
+    birthPlace: "",
+    healthStatus: ""
   }
   const schema = Yup.object({
     name: Yup.string().required('No name provided')
@@ -39,7 +40,8 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
     gender: Yup.string().oneOf(genderOptions.map(value => value.value)).required('You have to pick one'),
     nationality: Yup.string().required('No nationality provided'),
     birthDate: Yup.date().required('No birth date provided'),
-    birthPlace: Yup.string().required('No birth place provided')
+    birthPlace: Yup.string().required('No birth place provided'),
+    healthStatus: Yup.string().required("")
 
   })
 
@@ -93,15 +95,23 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
             </Col>
           </Row>
           <Row>
-            <Col md="6" className='mb-2'>
+            <Col md="6" className='mb-1'>
               <label htmlFor="birthPlace" className="form-label form-label">{t('birthPlace')}</label>
               <Field name="birthPlace" className={`form-control ${errors.birthPlace && touched.birthPlace ? 'is-invalid' : ''}`} placeholder={t('birthPlaceP')} />
               <ErrorMessage name='birthPlace' component="p" className="invalid-feedback" />
             </Col>
-            <Col md="6" className='mb-2'>
+            <Col md="6" className='mb-1'>
               <label htmlFor="birthDate" className="form-label form-label">{t('birthDate')}</label>
               <Field name="birthDate" className={`form-control ${errors.birthDate && touched.birthDate ? 'is-invalid' : ''}`} type="date" />
               <ErrorMessage name='birthDate' component="p" className="invalid-feedback" />
+            </Col>
+          </Row>
+          <Row>
+            <Col md="6" className='mb-2'>
+              <label htmlFor="healthStatus" className="form-label form-label">{t('healthStatus')}</label>
+              <Field name="healthStatus" className={`form-control ${errors.healthStatus && touched.healthStatus ? 'is-invalid' : ''}`}
+                placeholder={t('healthStatus')} />
+              <ErrorMessage name='healthStatus' component="p" className="invalid-feedback" />
             </Col>
           </Row>
           <div className='d-flex justify-content-between'>

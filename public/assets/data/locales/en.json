@@ -144,5 +144,8 @@
   "trainingSupportTransfer": "Transfer",
 
   "signIn": "Sign In",
-  "signInSubTitle": "Please sign-in to your account."
+  "signInSubTitle": "Please sign-in to your account.",
+  "studyYears": "Total study years",
+  "studyYearFinished": "Study year finished",
+  "healthStatus": "Health Status"
 }
