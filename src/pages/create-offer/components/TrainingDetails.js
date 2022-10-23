@@ -13,8 +13,9 @@ import * as Yup from 'yup'
 // ** Utils
 import { selectThemeColors } from '@utils'
 import { useTranslation } from 'react-i18next'
+import axios from 'axios'
 
-const TrainingDetails = ({ stepper, onSubmit }) => {
+const TrainingDetails = ({ stepper, onsubmit, data }) => {
     const defaultValues = {
         train_description: '',
         train_type: '',
@@ -62,8 +63,19 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
                 initialValues={defaultValues}
                 validationSchema={Schema}
                 onSubmit={async (values) => {
-                    onSubmit(values)
-                    stepper.next()
+
+                    axios.post('http://localhost:3500/offer', {
+                        ...data, ...values
+                    }, {
+                        headers: {
+                            authorization: JSON.parse(localStorage.getItem('accessToken'))
+                        }
+                    }).then((response) => {
+                        console.log(response)
+                    }).catch((error) => {
+                        console.log(error)
+                    })
+                    onsubmit(values)
                 }}
                 validateOnChange='true'
             >
@@ -228,7 +240,7 @@ const TrainingDetails = ({ stepper, onSubmit }) => {
                 )}
             </Formik>
 
-        </Fragment>
+        </Fragment >
     )
 }
 export default TrainingDetails
