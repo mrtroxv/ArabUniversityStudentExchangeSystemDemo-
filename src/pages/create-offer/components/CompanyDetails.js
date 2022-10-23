@@ -133,7 +133,6 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                                 </Label>
 
                                 <Select
-                                    isDisabled={true}
                                     isClearable={false}
                                     theme={selectThemeColors}
                                     id='place_of_work'
@@ -151,7 +150,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                                     {t('instituteTrainingType')}
                                 </Label>
                                 <Field
-                                    disabled={true}
+
                                     type='text'
                                     name={`train_aria`}
                                     id={`train_aria`}
@@ -169,7 +168,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                                     {t('instituteTrainerName')}
                                 </Label>
                                 <Field
-                                    disabled={true}
+
                                     type='text'
                                     name={`trainer_name`}
                                     id={`trainer_name`}
@@ -184,7 +183,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                                     {t('instituteDaysOfWork')}
                                 </Label>
                                 <Select
-                                    isDisabled={true}
+
                                     isMulti
                                     isClearable={false}
                                     theme={selectThemeColors}
@@ -203,7 +202,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                                     {t('institutePhone')}
                                 </Label>
                                 <Field
-                                    disabled={true}
+
                                     type='number'
                                     name={`inst_phone`}
                                     id={`inst_phone`}
@@ -218,7 +217,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                                     {t('instituteFax')}
                                 </Label>
                                 <Field
-                                    disabled={true}
+
                                     type='number'
                                     name={`inst_fax`}
                                     id={`inst_fax`}
@@ -237,7 +236,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                                     {t('instituteWeeklyHours')}
                                 </Label>
                                 <Field
-                                    disabled={true}
+
                                     type='number'
                                     name={`weekly_hours`}
                                     id={`weekly_hours`}
@@ -252,7 +251,7 @@ const CompanyDetails = ({ stepper, onSubmit }) => {
                                     {t('instituteDailyHours')}
                                 </Label>
                                 <Field
-                                    disabled={true}
+
                                     type='number'
                                     name={`daily_hours`}
                                     id={`daily_hours`}

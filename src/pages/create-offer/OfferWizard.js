@@ -30,7 +30,7 @@ const OfferWizard = () => {
 
     }
 
-    console.log(data)
+    console.table(data)
 
     const steps = [
         {
@@ -49,7 +49,7 @@ const OfferWizard = () => {
             id: 'training-details',
             title: t('trainingTab'),
             subtitle: t('trainingTabSubTitle'),
-            content: <TrainingDetails stepper={stepper} onSubmit={submitHandler} />
+            content: <TrainingDetails stepper={stepper} onSubmit={submitHandler} data={data} />
         }
     ]
 

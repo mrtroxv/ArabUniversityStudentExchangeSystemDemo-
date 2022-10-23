@@ -136,13 +136,13 @@ const StudentDetails = ({ stepper, onSubmit }) => {
                                 <Select
                                     isClearable={false}
                                     theme={selectThemeColors}
-                                    id='stu_gender'
+                                    id='stu_sex'
                                     options={studentGenderTypes}
-                                    className={`react-select ${errors.stu_gender && touched.stu_gender ? 'is-invalid' : ''}`}
+                                    className={`react-select ${errors.stu_sex && touched.stu_sex ? 'is-invalid' : ''}`}
                                     classNamePrefix='select'
-                                    onChange={value => { values.stu_gender = value.value }}
+                                    onChange={value => { values.stu_sex = value.value }}
                                 />
-                                <ErrorMessage name="stu_gender" component='p' className="invalid-feedback" />
+                                <ErrorMessage name="stu_sex" component='p' className="invalid-feedback" />
                             </Col>
                             <Col md='6' className='mb-1'>
                                 <Label className='form-label' for={`other_requirments`}>
