@@ -1,4 +1,5 @@
-import React, { Fragment } from 'react'
+// eslint-disable-next-line
+import React, { Fragment, useState, useEffect } from 'react'
 import { Routes, Route, Link, useNavigate } from 'react-router-dom'
 import Breadcrumbs from '@components/breadcrumbs'
 import {
@@ -22,8 +23,26 @@ import Active from './components/table/Active'
 import Sent from './components/table/Sent'
 import Obtained from './components/table/Obtained'
 import Owned from './components/table/Owned'
+import axios from 'axios'
 
 function Home() {
+    // eslint-disable-next-line
+    const [offersList, setOffersList] = useState([])
+
+    useEffect(() => {
+        axios.get('http://localhost:3500/offer/show_offer', {
+            headers: {
+                authorization: JSON.parse(localStorage.getItem('accessToken'))
+            }
+        })
+            .then(res => {
+                console.log(res.data)
+                setOffersList(res.data)
+            }).catch(err => {
+                console.log(err)
+            })
+    }, [])
+
     const { t } = useTranslation()
     const navigate = useNavigate()
     const viewTableHandler = (route) => {
