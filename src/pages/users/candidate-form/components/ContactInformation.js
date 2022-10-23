@@ -17,7 +17,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import FormHeader from './FormHeader'
 import { useTranslation } from 'react-i18next'
 
-const ContactInformation = ({ data }) => {
+const ContactInformation = ({ stepper, data }) => {
     const { t } = useTranslation()
 
     const defaultValues = {
@@ -56,7 +56,6 @@ const ContactInformation = ({ data }) => {
                 initialValues={defaultValues}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    console.table({ ...data, ...values })
                     axios.post('http://localhost:3500/student', {
                         ...data, ...values
                     }, {

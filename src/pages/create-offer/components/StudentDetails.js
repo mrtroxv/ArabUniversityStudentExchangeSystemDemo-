@@ -43,7 +43,7 @@ const StudentDetails = ({ stepper, onSubmit }) => {
         major_name: Yup.string()
             .required('No Email provided')
             .min(8, 'Too Short - Major name must be at least 8 characters long'),
-        stu_gender: Yup.string().oneOf(studentGenderTypes.map(value => value.value), 'Student Sex type is not valid').required('You should pick one'),
+        stu_sex: Yup.string().oneOf(studentGenderTypes.map(value => value.value), 'Student Sex type is not valid').required('You should pick one'),
         stu_level: Yup.string().oneOf(studentLevelTypes.map(value => value.value), 'Student Level is not valid').required('You should pick one'),
         other_requirments: Yup.string()
     })

@@ -63,8 +63,9 @@ const TrainingDetails = ({ stepper, onsubmit, data }) => {
                 initialValues={defaultValues}
                 validationSchema={Schema}
                 onSubmit={async (values) => {
+                    console.table({ ...values, ...data })
 
-                    axios.post('http://localhost:3500/offer', {
+                    axios.post('http://localhost:3500/offer/insert_offer', {
                         ...data, ...values
                     }, {
                         headers: {
