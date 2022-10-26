@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React, { Fragment, useState, useEffect } from 'react'
-import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+import { Routes, Route, Link } from 'react-router-dom'
 import Breadcrumbs from '@components/breadcrumbs'
 import {
     Card,
@@ -12,11 +12,8 @@ import {
     Row,
     Col
 } from "reactstrap"
-import ActiveOffers from './components/ActiveOffers'
-import ObtainedOffers from './components/ObtainedOffers'
-import OwnedOffers from './components/OwnedOffers'
+
 import UserDetails from './components/UserDetails'
-import SentOffers from './components/SentOffers'
 import TableBasic from './components/table/Table'
 import { useTranslation } from 'react-i18next'
 import Active from './components/table/Active'
@@ -24,11 +21,16 @@ import Sent from './components/table/Sent'
 import Obtained from './components/table/Obtained'
 import Owned from './components/table/Owned'
 import axios from 'axios'
+import OffersFilter from './components/OffersFilter'
+import ownedImage from '@src/assets/images/svg/icons8_box.svg'
+import sentImage from '@src/assets/images/svg/icons8_paper_plane.svg'
+import obtainedImage from '@src/assets/images/svg/icons8_post_office.svg'
+import activeImage from '@src/assets/images/svg/icons8_hard_working.svg'
 
 function Home() {
     // eslint-disable-next-line
     const [offersList, setOffersList] = useState([])
-
+    const [offersStatus, setOffersStatus] = useState("pending")
     useEffect(() => {
         axios.get('http://localhost:3500/offer/show_offer', {
             headers: {
@@ -44,10 +46,11 @@ function Home() {
     }, [])
 
     const { t } = useTranslation()
-    const navigate = useNavigate()
     const viewTableHandler = (route) => {
-        navigate(route)
+        setOffersStatus(route)
+        console.log(offersStatus)
     }
+    
     return (
         <Fragment>
             <Breadcrumbs title={`${t('home')}`} data={[]} />
@@ -55,19 +58,16 @@ function Home() {
                 <Col lg='6' md='12'>
                     <Row className='match-height'>
                         <Col lg='6' md='3' xs='6'>
-                            <OwnedOffers onView={viewTableHandler} />
-
+                            <OffersFilter onView={viewTableHandler} filter="owned" title="ownedOffers" src={ownedImage}/>
                         </Col>
                         <Col lg='6' md='3' xs='6'>
-                            <SentOffers onView={viewTableHandler} />
-
+                            <OffersFilter onView={viewTableHandler} filter="sent" title="sentOffers" src={sentImage}/>
                         </Col>
                         <Col lg='6' md='3' xs='6'>
-                            <ObtainedOffers onView={viewTableHandler} />
-
+                            <OffersFilter onView={viewTableHandler} filter="obtained" title="obtainedOffers" src={obtainedImage}/>
                         </Col>
                         <Col lg='6' md='3' xs='6'>
-                            <ActiveOffers onView={viewTableHandler} />
+                            <OffersFilter onView={viewTableHandler} filter="active" title="activeOffers" src={activeImage}/>
                         </Col>
                     </Row>
                 </Col>
@@ -75,18 +75,10 @@ function Home() {
                     <UserDetails />
                 </Col>
             </Row>
-            {/* <Row>
-                <Col> */}
+           
             <Card>
-                <Routes>
-                    <Route index path='owned-offers' element={<Owned />} />
-                    <Route path='sent-offers' element={<Sent />} />
-                    <Route path='obtained-offers' element={<Obtained />} />
-                    <Route path='active-offers' element={<Active />} />
-                </Routes>
+               
             </Card>
-            {/* </Col>
-            </Row> */}
 
         </Fragment>
     )
