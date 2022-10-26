@@ -10,27 +10,93 @@ import {
     CardText,
     CardLink,
     Row,
-    Col
+    Col,
+    UncontrolledDropdown,
+    DropdownToggle,
+    DropdownItem,
+    DropdownMenu
 } from "reactstrap"
 
 import UserDetails from './components/UserDetails'
-import TableBasic from './components/table/Table'
+// import TableBasic from './components/table/Table'
 import { useTranslation } from 'react-i18next'
-import Active from './components/table/Active'
-import Sent from './components/table/Sent'
-import Obtained from './components/table/Obtained'
-import Owned from './components/table/Owned'
+
 import axios from 'axios'
 import OffersFilter from './components/OffersFilter'
 import ownedImage from '@src/assets/images/svg/icons8_box.svg'
 import sentImage from '@src/assets/images/svg/icons8_paper_plane.svg'
 import obtainedImage from '@src/assets/images/svg/icons8_post_office.svg'
 import activeImage from '@src/assets/images/svg/icons8_hard_working.svg'
+import DataTableWithButtons from './components/table/ReactTable'
+import { Archive, Edit, FileText, MoreVertical, Trash } from 'react-feather'
 
 function Home() {
     // eslint-disable-next-line
     const [offersList, setOffersList] = useState([])
+    const [filteredData, setFilteredData] = useState([])
     const [offersStatus, setOffersStatus] = useState("pending")
+    const cols = [
+        {
+          name: 'ID',
+          sortable: true,
+          maxWidth: '100px',
+          selector: row => row.id
+        },
+        {
+          name: 'Collage',
+          sortable: true,
+          minWidth: '225px',
+          selector: row => row.collage
+        },
+        {
+          name: 'Major',
+          sortable: true,
+          minWidth: '310px',
+          selector: row => row.major
+        },
+        {
+          name: 'Status',
+          sortable: true,
+          minWidth: '100px',
+          selector: row => row.status
+        },
+        {
+          name: 'Date',
+          sortable: true,
+          minWidth: '175px',
+          selector: row => row.end_date
+        },
+        {
+            name: 'Actions',
+            allowOverflow: true,
+            cell: () => {
+            return (
+                <div className='d-flex'>
+                <UncontrolledDropdown>
+                    <DropdownToggle className='pe-1' tag='span'>
+                    <MoreVertical size={15} />
+                    </DropdownToggle>
+                    <DropdownMenu end>
+                    <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                        <FileText size={15} />
+                        <span className='align-middle ms-50'>Details</span>
+                    </DropdownItem>
+                    <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                        <Archive size={15} />
+                        <span className='align-middle ms-50'>Archive</span>
+                    </DropdownItem>
+                    <DropdownItem tag='a' href='/' className='w-100' onClick={e => e.preventDefault()}>
+                        <Trash size={15} />
+                        <span className='align-middle ms-50'>Delete</span>
+                    </DropdownItem>
+                    </DropdownMenu>
+                </UncontrolledDropdown>
+                <Edit size={15} />
+                </div>
+            )
+            }
+        }
+      ]
     useEffect(() => {
         axios.get('http://localhost:3500/offer/show_offer', {
             headers: {
@@ -40,17 +106,22 @@ function Home() {
             .then(res => {
                 console.log(res.data)
                 setOffersList(res.data)
+                setFilteredData(res.data)
             }).catch(err => {
                 console.log(err)
             })
     }, [])
 
+    useEffect(() => {
+        setFilteredData(offersList.filter(offer => {
+            return offer.status === offersStatus
+        }))
+    }, [offersStatus])
     const { t } = useTranslation()
     const viewTableHandler = (route) => {
         setOffersStatus(route)
-        console.log(offersStatus)
     }
-    
+
     return (
         <Fragment>
             <Breadcrumbs title={`${t('home')}`} data={[]} />
@@ -58,16 +129,16 @@ function Home() {
                 <Col lg='6' md='12'>
                     <Row className='match-height'>
                         <Col lg='6' md='3' xs='6'>
-                            <OffersFilter onView={viewTableHandler} filter="owned" title="ownedOffers" src={ownedImage}/>
+                            <OffersFilter onView={viewTableHandler} filter="owned" title="ownedOffers" src={ownedImage} />
                         </Col>
                         <Col lg='6' md='3' xs='6'>
-                            <OffersFilter onView={viewTableHandler} filter="sent" title="sentOffers" src={sentImage}/>
+                            <OffersFilter onView={viewTableHandler} filter="sent" title="sentOffers" src={sentImage} />
                         </Col>
                         <Col lg='6' md='3' xs='6'>
-                            <OffersFilter onView={viewTableHandler} filter="obtained" title="obtainedOffers" src={obtainedImage}/>
+                            <OffersFilter onView={viewTableHandler} filter="obtained" title="obtainedOffers" src={obtainedImage} />
                         </Col>
                         <Col lg='6' md='3' xs='6'>
-                            <OffersFilter onView={viewTableHandler} filter="active" title="activeOffers" src={activeImage}/>
+                            <OffersFilter onView={viewTableHandler} filter="active" title="activeOffers" src={activeImage} />
                         </Col>
                     </Row>
                 </Col>
@@ -75,10 +146,8 @@ function Home() {
                     <UserDetails />
                 </Col>
             </Row>
-           
-            <Card>
-               
-            </Card>
+
+            <DataTableWithButtons data={filteredData} columns={cols} />
 
         </Fragment>
     )
