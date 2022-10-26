@@ -1,4 +1,5 @@
 // ** React Imports
+// eslint-disable
 import { Fragment } from 'react'
 
 // ** Reactstrap Imports
@@ -9,9 +10,13 @@ import * as yup from 'yup'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 
+import axios from 'axios'
+
 // ** Custom Components
 import InputPasswordToggle from '@components/input-password-toggle'
 import { useTranslation } from 'react-i18next'
+
+import toast from 'react-hot-toast'
 const showErrors = (field, valueLen, min) => {
   if (valueLen === 0) {
     return `${field} field is required`
@@ -55,11 +60,30 @@ const SecurityTabContent = () => {
   })
 
   const { t } = useTranslation()
+  const handelDataSubmition = data => {
+    console.log(data)
+    axios.post('http://localhost:3500/acount/change-password', data, {
+      headers: {
+        authorization: JSON.parse(localStorage.getItem('accessToken'))
+      }
+    }).then(response => {
+      console.log(response)
+      if (response.status === 200) {
+        toast.success(response.data.message)
+      }
+    }).catch(error => {
+      console.log(error)
+      toast.error(error.response.data.message)
+    })
+  }
 
   const onSubmit = data => {
     if (Object.values(data).every(field => field.length > 0)) {
+      console.log(data)
+      handelDataSubmition(data)
       return null
     } else {
+      console.log('error')
       for (const key in data) {
         if (data[key].length === 0) {
           setError(key, {
