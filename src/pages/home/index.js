@@ -1,7 +1,9 @@
 // eslint-disable-next-line
 import React, { Fragment, useState, useEffect } from "react"
+import { useSelector, useDispatch } from "react-redux"
 import { Routes, Route, Link } from "react-router-dom"
 import Breadcrumbs from "@components/breadcrumbs"
+import Toast, { toast } from "react-hot-toast"
 import {
   Card,
   CardHeader,
@@ -29,7 +31,7 @@ import UserDetails from "./components/UserDetails"
 // import TableBasic from './components/table/Table'
 import { useTranslation } from "react-i18next"
 
-import axios from "axios"
+// import axios from "axios"
 import OffersFilter from "./components/OffersFilter"
 import ownedImage from "@src/assets/images/svg/icons8_box.svg"
 import sentImage from "@src/assets/images/svg/icons8_paper_plane.svg"
@@ -38,13 +40,15 @@ import activeImage from "@src/assets/images/svg/icons8_hard_working.svg"
 import DataTableWithButtons from "./components/table/ReactTable"
 import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
 import OfferWizard from "../create-offer/OfferWizard"
+import { selectAllOffers, fetchOffers } from "../../redux/project/offers"
 
 function Home() {
   // eslint-disable-next-line
-  const [offersList, setOffersList] = useState([])
+  const offersList = useSelector(selectAllOffers)
   const [filteredData, setFilteredData] = useState([])
-  const [offersStatus, setOffersStatus] = useState("pending")
+  //   const [offersStatus, setOffersStatus] = useState("pending")
   const [formModal, setFormModal] = useState(false)
+  const dispatch = useDispatch()
   const { t } = useTranslation()
   const cols = [
     {
@@ -132,31 +136,22 @@ function Home() {
     }
   ]
   useEffect(() => {
-    axios
-      .get("http://localhost:3500/offer/show_offer", {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
-      })
-      .then((res) => {
-        console.log(res.data)
-        setOffersList(res.data)
-        setFilteredData(res.data)
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+    toast.promise(dispatch(fetchOffers()), {
+      loading: "Loading",
+      success: "Success",
+      error: "Error"
+    })
   }, [])
 
   useEffect(() => {
+    setFilteredData(offersList)
+  }, [offersList])
+  const viewTableHandler = (route) => {
     setFilteredData(
-      offersList.filter((offer) => {
-        return offer.status === offersStatus
+      filteredData.filter((offer) => {
+        return offer.status === route
       })
     )
-  }, [offersStatus])
-  const viewTableHandler = (route) => {
-    setOffersStatus(route)
   }
   const handleOfferPopUp = () => {
     setFormModal(!formModal)
