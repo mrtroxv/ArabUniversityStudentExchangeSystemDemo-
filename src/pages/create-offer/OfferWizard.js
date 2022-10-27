@@ -5,15 +5,13 @@ import { Fragment, useRef, useState } from "react"
 import Wizard from "@components/wizard"
 
 // ** Steps
-import UniversityDetails from "./components/UniversityDetails"
 import CompanyDetails from "./components/CompanyDetails"
 import TrainingDetails from "./components/TrainingDetails"
 import StudentDetails from "./components/StudentDetails"
 
-import { Col, Card } from "reactstrap"
 import { useTranslation } from "react-i18next"
 
-const OfferWizard = ({ outerSubmit, type }) => {
+const OfferWizard = ({ outerSubmit, type, initialState }) => {
   // ** Ref
   const ref = useRef(null)
 
@@ -37,13 +35,25 @@ const OfferWizard = ({ outerSubmit, type }) => {
       id: "company-details",
       title: t("instituteTab"),
       subtitle: t("instituteTabSubTitle"),
-      content: <CompanyDetails stepper={stepper} onSubmit={submitHandler} />
+      content: (
+        <CompanyDetails
+          stepper={stepper}
+          onSubmit={submitHandler}
+          initialState={initialState}
+        />
+      )
     },
     {
       id: "candidate-qualifications",
       title: t("qualificationTab"),
       subtitle: t("qualificationTabSubTitle"),
-      content: <StudentDetails stepper={stepper} onSubmit={submitHandler} />
+      content: (
+        <StudentDetails
+          stepper={stepper}
+          onSubmit={submitHandler}
+          initialState={initialState}
+        />
+      )
     },
     {
       id: "training-details",
@@ -54,6 +64,7 @@ const OfferWizard = ({ outerSubmit, type }) => {
           stepper={stepper}
           onSubmit={submitHandler}
           data={data}
+          initialState={initialState}
         />
       )
     }
