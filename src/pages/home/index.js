@@ -24,7 +24,8 @@ import {
   ModalBody,
   Label,
   Input,
-  ModalFooter
+  ModalFooter,
+  ButtonToggle
 } from "reactstrap"
 
 import UserDetails from "./components/UserDetails"
@@ -46,6 +47,7 @@ function Home() {
   // eslint-disable-next-line
   const offersList = useSelector(selectAllOffers)
   const [filteredData, setFilteredData] = useState([])
+  const [editingOffer, setEditingOffer] = useState(null)
   //   const [offersStatus, setOffersStatus] = useState("pending")
   const [formModal, setFormModal] = useState(false)
   const dispatch = useDispatch()
@@ -123,13 +125,21 @@ function Home() {
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
-            <Edit
-              size={15}
+            <Button
+              type="button"
+              color="white"
+              outline="false"
+              className="table-button_edit"
               onClick={(e) => {
                 e.preventDefault()
-                console.log(row.id)
+                setEditingOffer(
+                  offersList.filter((offer) => offer.id === row.id)[0]
+                )
+                setFormModal(true)
               }}
-            />
+            >
+              <Edit size={15} />
+            </Button>
           </div>
         )
       }
@@ -202,14 +212,14 @@ function Home() {
       </Row>
 
       <Card>
-        <Row className="p-2">
-          <Col lg="12" md="12">
-            <Button color="primary" onClick={handleOfferPopUp}>
+        <Row className="">
+          {/* bootstrap class of justify-content: flex-end */}
+          <Col lg="12" md="12" className="d-flex justify-content-end">
+            <Button color="primary" className="m-2" onClick={handleOfferPopUp}>
               {t("createOffer")}
             </Button>
           </Col>
         </Row>
-
         <DataTableWithButtons data={filteredData} columns={cols} />
       </Card>
       {formModal && (
@@ -228,10 +238,14 @@ function Home() {
             <OfferWizard
               outerSubmit={handleOfferPopUp}
               type="modern-vertical"
+              initialState={editingOffer}
             />
           </ModalBody>
         </Modal>
       )}
+      {
+        // <ToastContainer />
+      }
     </Fragment>
   )
 }
