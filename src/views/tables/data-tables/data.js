@@ -177,7 +177,7 @@ export const columns = [
     name: 'Status',
     minWidth: '150px',
     sortable: row => row.status.title,
-    cell: row => {
+    selector: row => {
       return (
         <Badge color={status[row.status].color} pill>
           {status[row.status].title}
