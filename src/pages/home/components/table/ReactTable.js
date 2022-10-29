@@ -49,7 +49,7 @@ const DataTableWithButtons = ({ data, columns }) => {
   )
 
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <div className="react-dataTable">
         <DataTable
           noHeader
@@ -61,7 +61,6 @@ const DataTableWithButtons = ({ data, columns }) => {
           sortIcon={<ChevronDown size={10} />}
           paginationComponent={CustomPagination}
           paginationDefaultPage={currentPage + 1}
-          paginationRowsPerPageOptions={[10, 25, 50, 100]}
         />
       </div>
     </Card>

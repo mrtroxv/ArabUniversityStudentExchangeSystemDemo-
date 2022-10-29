@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import React, { Fragment, useState, useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
-import { Routes, Route, Link } from "react-router-dom"
+import { Routes, Route, Link, useNavigate } from "react-router-dom"
 import Breadcrumbs from "@components/breadcrumbs"
 import Toast, { toast } from "react-hot-toast"
 import {
@@ -44,14 +44,13 @@ import OfferWizard from "../create-offer/OfferWizard"
 import { selectAllOffers, fetchOffers } from "../../redux/project/offers"
 
 function Home() {
-  // eslint-disable-next-line
   const offersList = useSelector(selectAllOffers)
   const [filteredData, setFilteredData] = useState([])
   const [editingOffer, setEditingOffer] = useState(null)
-  //   const [offersStatus, setOffersStatus] = useState("pending")
   const [formModal, setFormModal] = useState(false)
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const cols = [
     {
       name: "ID",
@@ -60,28 +59,34 @@ function Home() {
       selector: (row) => row.id
     },
     {
-      name: t("collage"),
+      name: t("college"),
       sortable: true,
       minWidth: "150px",
-      selector: (row) => row.collage
+      selector: (row) => row.college_name
     },
     {
       name: t("major"),
       sortable: true,
       minWidth: "300px",
-      selector: (row) => row.major
+      selector: (row) => row.major_name
     },
     {
-      name: t("status"),
-      sortable: true,
+      name: "Status",
       minWidth: "50px",
-      selector: (row) => row.status
+      sortable: (row) => row.status,
+      cell: (row) => {
+        return (
+          <Badge color={"light-success"} pill>
+            {row.status}
+          </Badge>
+        )
+      }
     },
     {
       name: t("date"),
       sortable: true,
       minWidth: "175px",
-      selector: (row) => new Date(row.end_date).toLocaleDateString()
+      selector: (row) => new Date(row.offer_date).toLocaleDateString()
     },
     {
       name: "Actions",
@@ -100,6 +105,7 @@ function Home() {
                   className="w-100"
                   onClick={(e) => {
                     e.preventDefault()
+                    navigate(`/view-offers/${row.id}`)
                   }}
                 >
                   <FileText size={15} />
@@ -135,7 +141,7 @@ function Home() {
                 setEditingOffer(
                   offersList.filter((offer) => offer.id === row.id)[0]
                 )
-                setFormModal(true)
+                setFormModal(!formModal)
               }}
             >
               <Edit size={15} />
@@ -155,7 +161,9 @@ function Home() {
 
   useEffect(() => {
     setFilteredData(offersList)
+    console.log(offersList)
   }, [offersList])
+
   const viewTableHandler = (route) => {
     setFilteredData(
       filteredData.filter((offer) => {
@@ -164,6 +172,7 @@ function Home() {
     )
   }
   const handleOfferPopUp = () => {
+    setEditingOffer(null)
     setFormModal(!formModal)
   }
   return (
@@ -238,7 +247,7 @@ function Home() {
             <OfferWizard
               outerSubmit={handleOfferPopUp}
               type="modern-vertical"
-              initialState={editingOffer}
+              initialState={formModal && editingOffer}
             />
           </ModalBody>
         </Modal>
