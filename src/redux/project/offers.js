@@ -41,3 +41,9 @@ const offersSlice = createSlice({
 
 export default offersSlice.reducer
 export const selectAllOffers = (state) => state.offers.offers
+
+export const selectOfferById = (state, id) => {
+  return state.offers.offers.find((o) => {
+    return o.id === +id
+  })
+}

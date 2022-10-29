@@ -22,15 +22,14 @@ const StudentDetails = ({ stepper, onSubmit, initialState }) => {
     { value: "Undergraduate", label: "Undergraduate" },
     { value: "Graduate", label: "Graduate" }
   ]
-  console.log(initialState)
 
-  const defaultValues = {
-    college_name: initialState.college_name,
-    branch_name: initialState.branch_name,
-    major_name: initialState.major_name,
-    stu_level: initialState.stu_level,
-    gender: initialState.gender,
-    other_requirments: initialState?.other_requirments
+  const defaultValues = initialState || {
+    college_name: "",
+    branch_name: "",
+    major_name: "",
+    stu_level: "",
+    stu_sex: "",
+    other_requirments: ""
   }
 
   const Schema = Yup.object().shape({
@@ -174,11 +173,11 @@ const StudentDetails = ({ stepper, onSubmit, initialState }) => {
                   id="stu_sex"
                   options={studentGenderTypes}
                   className={`react-select ${
-                    errors.gender && touched.gender ? "is-invalid" : ""
+                    errors.stu_sex && touched.stu_sex ? "is-invalid" : ""
                   }`}
                   classNamePrefix="select"
                   onChange={(value) => {
-                    values.gender = value.value
+                    values.stu_sex = value.value
                   }}
                 />
                 <ErrorMessage

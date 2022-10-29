@@ -34,18 +34,18 @@ const CompanyDetails = ({ stepper, onSubmit, initialState }) => {
     { value: "Remote", label: "Remote" },
     { value: "On-Site", label: "On-Site" }
   ]
-  console.log(initialState)
-  const defaultValues = {
-    inst_name: initialState.inst_name,
-    inst_address: initialState.inst_address,
-    place_of_work: initialState.place_of_work,
-    train_aria: initialState.train_aria,
-    trainer_name: initialState.trainer_name,
-    days_of_work: initialState.days_of_work,
-    inst_phone: initialState.inst_phone,
-    inst_fax: initialState.inst_fax,
-    weekly_hours: initialState.weekly_hours,
-    daily_hours: initialState.daily_hours
+
+  const defaultValues = initialState || {
+    inst_name: "",
+    inst_address: "",
+    place_of_work: "",
+    train_aria: "",
+    trainer_name: "",
+    days_of_work: [],
+    inst_phone: "",
+    inst_fax: "",
+    weekly_hours: "",
+    daily_hours: ""
   }
 
   const Schema = Yup.object().shape({

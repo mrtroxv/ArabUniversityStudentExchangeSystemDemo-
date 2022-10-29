@@ -1,19 +1,19 @@
 // ** React Imports
-import { Fragment, lazy } from 'react'
-import { Navigate } from 'react-router'
+import { Fragment, lazy } from "react"
+import { Navigate } from "react-router"
 
 // ** Layouts
-import BlankLayout from '@layouts/BlankLayout'
-import VerticalLayout from '@src/layouts/VerticalLayout'
-import HorizontalLayout from '@src/layouts/HorizontalLayout'
-import LayoutWrapper from '@src/@core/layouts/components/layout-wrapper'
+import BlankLayout from "@layouts/BlankLayout"
+import VerticalLayout from "@src/layouts/VerticalLayout"
+import HorizontalLayout from "@src/layouts/HorizontalLayout"
+import LayoutWrapper from "@src/@core/layouts/components/layout-wrapper"
 
 // ** Route Components
-import PublicRoute from '@components/routes/PublicRoute'
-import PrivateRoute from '@components/routes/PrivateRoute'
+import PublicRoute from "@components/routes/PublicRoute"
+import PrivateRoute from "@components/routes/PrivateRoute"
 
 // ** Utils
-import { isObjEmpty } from '@utils'
+import { isObjEmpty } from "@utils"
 
 const getLayout = {
   blank: <BlankLayout />,
@@ -34,8 +34,11 @@ const Register = lazy(() => import("../../pages/Register"))
 const ForgotPassword = lazy(() => import("../../pages/ForgotPassword"))
 const Error = lazy(() => import("../../pages/Error"))
 const OfferWizard = lazy(() => import("../../pages/create-offer/OfferWizard"))
-const CandidateForm = lazy(() => import("../../pages/users/candidate-form/CandidateForm"))
+const CandidateForm = lazy(() =>
+  import("../../pages/users/candidate-form/CandidateForm")
+)
 const AccountSettings = lazy(() => import("../../pages/account-settings/index"))
+const OfferPreview = lazy(() => import("../../pages/Offer/index"))
 
 // ** Merge Routes
 const Routes = [
@@ -44,21 +47,7 @@ const Routes = [
     element: <Home />,
     meta: {
       publicRoute: false
-    },
-    children: [
-      {
-        path: "/home/sent-offers"
-      },
-      {
-        path: "/home/owned-offers"
-      },
-      {
-        path: "/home/obtained-offers"
-      },
-      {
-        path: "/home/active-offers"
-      }
-    ]
+    }
   },
   {
     path: "/second-page",
@@ -97,6 +86,10 @@ const Routes = [
     element: <OfferWizard />
   },
   {
+    path: "/view-offers/:id",
+    element: <OfferPreview />
+  },
+  {
     path: "/new-candidate",
     element: <CandidateForm />
   },
@@ -109,10 +102,9 @@ const Routes = [
     path: "/pages/account-page",
     element: <CandidateForm />
   }
-
 ]
 
-const getRouteMeta = route => {
+const getRouteMeta = (route) => {
   if (isObjEmpty(route.element.props)) {
     if (route.meta) {
       return { routeMeta: route.meta }
@@ -127,18 +119,19 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
   const LayoutRoutes = []
 
   if (Routes) {
-    Routes.filter(route => {
+    Routes.filter((route) => {
       let isBlank = false
       // ** Checks if Route layout or Default layout matches current layout
       if (
         (route.meta && route.meta.layout && route.meta.layout === layout) ||
-        ((route.meta === undefined || route.meta.layout === undefined) && defaultLayout === layout)
+        ((route.meta === undefined || route.meta.layout === undefined) &&
+          defaultLayout === layout)
       ) {
         let RouteTag = PrivateRoute
 
         // ** Check for public or private route
         if (route.meta) {
-          route.meta.layout === 'blank' ? (isBlank = true) : (isBlank = false)
+          route.meta.layout === "blank" ? (isBlank = true) : (isBlank = false)
           RouteTag = route.meta.publicRoute ? PublicRoute : PrivateRoute
         }
         if (route.element) {
@@ -146,7 +139,7 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
             // eslint-disable-next-line multiline-ternary
             isObjEmpty(route.element.props) && isBlank === false
               ? // eslint-disable-next-line multiline-ternary
-              LayoutWrapper
+                LayoutWrapper
               : Fragment
 
           route.element = (
@@ -165,17 +158,17 @@ const MergeLayoutRoutes = (layout, defaultLayout) => {
   return LayoutRoutes
 }
 
-const getRoutes = layout => {
-  const defaultLayout = layout || 'vertical'
-  const layouts = ['vertical', 'horizontal', 'blank']
+const getRoutes = (layout) => {
+  const defaultLayout = layout || "vertical"
+  const layouts = ["vertical", "horizontal", "blank"]
 
   const AllRoutes = []
 
-  layouts.forEach(layoutItem => {
+  layouts.forEach((layoutItem) => {
     const LayoutRoutes = MergeLayoutRoutes(layoutItem, defaultLayout)
 
     AllRoutes.push({
-      path: '/',
+      path: "/",
       element: getLayout[layoutItem] || getLayout[defaultLayout],
       children: LayoutRoutes
     })
