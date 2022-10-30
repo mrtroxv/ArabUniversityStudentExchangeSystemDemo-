@@ -10,8 +10,9 @@ import TrainingDetails from "./components/TrainingDetails"
 import StudentDetails from "./components/StudentDetails"
 
 import { useTranslation } from "react-i18next"
+import axios from "axios"
 
-const OfferWizard = ({ outerSubmit, type, initialState }) => {
+const OfferWizard = ({ type, initialState, onClose }) => {
   // ** Ref
   const ref = useRef(null)
 
@@ -20,15 +21,29 @@ const OfferWizard = ({ outerSubmit, type, initialState }) => {
 
   const [data, setData] = useState({})
   const { t } = useTranslation()
-  const submitHandler = (data) => {
+  const storeData = (data) => {
     setData((prevData) => {
       return { ...prevData, ...data }
     })
-    outerSubmit()
+    // outerSubmit()
     console.log(data)
   }
+  const handelSubmit = (values) => {
+    console.table({ ...values, ...data })
+    axios.post('http://localhost:3500/offer/insert_offer', {
+      ...data, ...values
+    }, {
+      headers: {
+        authorization: JSON.parse(localStorage.getItem('accessToken'))
+      }
+    }).then((response) => {
+      console.log(response)
+      onClose()
+    }).catch((error) => {
+      console.log(error)
+    })
 
-  console.table(data)
+  }
 
   const steps = [
     {
@@ -38,7 +53,7 @@ const OfferWizard = ({ outerSubmit, type, initialState }) => {
       content: (
         <CompanyDetails
           stepper={stepper}
-          onSubmit={submitHandler}
+          onStoreData={storeData}
           initialState={initialState}
         />
       )
@@ -50,7 +65,7 @@ const OfferWizard = ({ outerSubmit, type, initialState }) => {
       content: (
         <StudentDetails
           stepper={stepper}
-          onSubmit={submitHandler}
+          onStoreData={storeData}
           initialState={initialState}
         />
       )
@@ -62,8 +77,7 @@ const OfferWizard = ({ outerSubmit, type, initialState }) => {
       content: (
         <TrainingDetails
           stepper={stepper}
-          onSubmit={submitHandler}
-          data={data}
+          onSubmit={handelSubmit}
           initialState={initialState}
         />
       )
