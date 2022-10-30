@@ -13,9 +13,8 @@ import * as Yup from 'yup'
 // ** Utils
 import { selectThemeColors } from '@utils'
 import { useTranslation } from 'react-i18next'
-import axios from 'axios'
 
-const TrainingDetails = ({ stepper, onsubmit, data }) => {
+const TrainingDetails = ({ stepper, onSubmit }) => {
     const defaultValues = {
         train_description: '',
         train_type: '',
@@ -63,20 +62,7 @@ const TrainingDetails = ({ stepper, onsubmit, data }) => {
                 initialValues={defaultValues}
                 validationSchema={Schema}
                 onSubmit={async (values) => {
-                    console.table({ ...values, ...data })
-
-                    axios.post('http://localhost:3500/offer/insert_offer', {
-                        ...data, ...values
-                    }, {
-                        headers: {
-                            authorization: JSON.parse(localStorage.getItem('accessToken'))
-                        }
-                    }).then((response) => {
-                        console.log(response)
-                    }).catch((error) => {
-                        console.log(error)
-                    })
-                    onsubmit(values)
+                    onSubmit(values)
                 }}
                 validateOnChange='true'
             >

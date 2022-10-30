@@ -134,7 +134,6 @@ function Home() {
             <Button
               type="button"
               color="white"
-              outline="false"
               className="table-button_edit"
               onClick={(e) => {
                 e.preventDefault()
@@ -248,6 +247,7 @@ function Home() {
               outerSubmit={handleOfferPopUp}
               type="modern-vertical"
               initialState={formModal && editingOffer}
+              onClose={() => setFormModal(!formModal)}
             />
           </ModalBody>
         </Modal>

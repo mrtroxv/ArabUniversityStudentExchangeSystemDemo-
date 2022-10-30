@@ -11,7 +11,7 @@ import * as Yup from "yup"
 import Select from "react-select"
 import { useTranslation } from "react-i18next"
 
-const StudentDetails = ({ stepper, onSubmit, initialState }) => {
+const StudentDetails = ({ stepper, onStoreData, initialState }) => {
   const studentGenderTypes = [
     { value: "Male", label: "Male" },
     { value: "Female", label: "Female" },
@@ -68,7 +68,7 @@ const StudentDetails = ({ stepper, onSubmit, initialState }) => {
         initialValues={defaultValues}
         validationSchema={Schema}
         onSubmit={async (values) => {
-          onSubmit(values)
+          onStoreData(values)
           stepper.next()
         }}
       >
@@ -84,11 +84,10 @@ const StudentDetails = ({ stepper, onSubmit, initialState }) => {
                   name={`college_name`}
                   id={`college_name`}
                   placeholder="ex. Engineering and Technology"
-                  className={`form-control ${
-                    errors.college_name && touched.college_name
+                  className={`form-control ${errors.college_name && touched.college_name
                       ? "is-invalid"
                       : ""
-                  }`}
+                    }`}
                 />
                 <ErrorMessage
                   name="college_name"
@@ -105,11 +104,10 @@ const StudentDetails = ({ stepper, onSubmit, initialState }) => {
                   name={`branch_name`}
                   id={`branch_name`}
                   placeholder="ex. Computer Systems"
-                  className={`form-control ${
-                    errors.branch_name && touched.branch_name
+                  className={`form-control ${errors.branch_name && touched.branch_name
                       ? "is-invalid"
                       : ""
-                  }`}
+                    }`}
                 />
                 <ErrorMessage
                   name="branch_name"
@@ -128,9 +126,8 @@ const StudentDetails = ({ stepper, onSubmit, initialState }) => {
                   name={`major_name`}
                   id={`major_name`}
                   placeholder="ex. Software Engineering"
-                  className={`form-control ${
-                    errors.major_name && touched.major_name ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.major_name && touched.major_name ? "is-invalid" : ""
+                    }`}
                 />
                 <ErrorMessage
                   name="major_name"
@@ -147,9 +144,8 @@ const StudentDetails = ({ stepper, onSubmit, initialState }) => {
                   theme={selectThemeColors}
                   id="stu_level"
                   options={studentLevelTypes}
-                  className={`react-select ${
-                    errors.stu_level && touched.stu_level ? "is-invalid" : ""
-                  }`}
+                  className={`react-select ${errors.stu_level && touched.stu_level ? "is-invalid" : ""
+                    }`}
                   classNamePrefix="select"
                   onChange={(value) => {
                     values.stu_level = value.value
@@ -172,9 +168,8 @@ const StudentDetails = ({ stepper, onSubmit, initialState }) => {
                   theme={selectThemeColors}
                   id="stu_sex"
                   options={studentGenderTypes}
-                  className={`react-select ${
-                    errors.stu_sex && touched.stu_sex ? "is-invalid" : ""
-                  }`}
+                  className={`react-select ${errors.stu_sex && touched.stu_sex ? "is-invalid" : ""
+                    }`}
                   classNamePrefix="select"
                   onChange={(value) => {
                     values.stu_sex = value.value
@@ -195,11 +190,10 @@ const StudentDetails = ({ stepper, onSubmit, initialState }) => {
                   name={`other_requirments`}
                   id={`other_requirments`}
                   placeholder="ex. GPA > 85 | 3.0"
-                  className={`form-control ${
-                    errors.other_requirments && touched.other_requirments
+                  className={`form-control ${errors.other_requirments && touched.other_requirments
                       ? "is-invalid"
                       : ""
-                  }`}
+                    }`}
                 />
                 <ErrorMessage
                   name="other_requirments"
