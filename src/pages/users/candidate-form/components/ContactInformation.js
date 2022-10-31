@@ -56,7 +56,7 @@ const ContactInformation = ({ stepper, data }) => {
                 initialValues={defaultValues}
                 validationSchema={validationSchema}
                 onSubmit={(values) => {
-                    axios.post('http://localhost:3500/student', {
+                    axios.post('http://localhost:3500/student/insert_student', {
                         ...data, ...values
                     }, {
                         headers: {

@@ -42,11 +42,21 @@ import DataTableWithButtons from "../../components/custom/table/ReactTable"
 import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
 import OfferWizard from "../Offers/create-offer/OfferWizard"
 import { selectAllOffers } from "../../redux/project/offers"
+<<<<<<< HEAD
 import { useForm } from "react-hook-form"
 
 function Home() {
   const offersList = useSelector(selectAllOffers)
   const { register, watch } = useForm()
+=======
+import { selectAllUniversities } from "../../redux/project/universities"
+import { selectAllStudents } from "../../redux/project/students"
+
+function Home() {
+  const offersList = useSelector(selectAllOffers)
+  const universities = useSelector(selectAllUniversities)
+  const students = useSelector(selectAllStudents)
+>>>>>>> deca213484b00aaaab9f53295aaec08e47f6d45d
   const [filteredData, setFilteredData] = useState([])
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
@@ -155,6 +165,15 @@ function Home() {
     setFilteredData(offersList)
     console.log(offersList)
   }, [offersList])
+
+  useEffect(() => {
+    console.log(universities)
+  }, [universities])
+
+  useEffect(() => {
+    console.log(students)
+  }, [students])
+
 
   const viewTableHandler = (route) => {
     setFilteredData(
