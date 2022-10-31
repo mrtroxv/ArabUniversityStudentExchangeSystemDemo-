@@ -39,38 +39,34 @@ const PreviewCard = ({ data }) => {
       <CardBody className="invoice-padding pt-0">
         <Row className="invoice-spacing">
           <Col className="p-0" xl="8">
-            <h6 className="mb-2">Invoice To:</h6>
-            {/* <h6 className='mb-25'>{data.invoice.client.name}</h6>
-            <CardText className='mb-25'>{data.invoice.client.company}</CardText>
-            <CardText className='mb-25'>{data.invoice.client.address}</CardText>
-            <CardText className='mb-25'>{data.invoice.client.contact}</CardText>
-            <CardText className='mb-0'>{data.invoice.client.companyEmail}</CardText> */}
+            <h6 className="mb-2">Offer Requirment :</h6>
+            <h6 className="mb-25">{data.college_name}</h6>
+            <CardText className="mb-25">{data.major_name}</CardText>
+            <CardText className="mb-25">{data.offer_start_date}</CardText>
+            <CardText className="mb-25">{data.offer_end_date}</CardText>
+            <CardText className="mb-0">{data.date}</CardText>
           </Col>
           <Col className="p-0 mt-xl-0 mt-2" xl="4">
-            <h6 className="mb-2">Payment Details:</h6>
+            <h6 className="mb-2">Candidate Requirment:</h6>
             <table>
               <tbody>
                 <tr>
-                  <td className="pe-1">Total Due:</td>
+                  <td className="pe-1">Requirment :</td>
                   <td>
                     {/* <span className='fw-bold'>{data.totalDue}</span> */}
                   </td>
                 </tr>
                 <tr>
-                  <td className="pe-1">Bank name:</td>
+                  <td className="pe-1">Requirment:</td>
                   {/* <td>{data.paymentDetails.bankName}</td> */}
                 </tr>
                 <tr>
-                  <td className="pe-1">Country:</td>
+                  <td className="pe-1">Requirment:</td>
                   {/* <td>{data.paymentDetails.country}</td> */}
                 </tr>
                 <tr>
-                  <td className="pe-1">IBAN:</td>
+                  <td className="pe-1">Requirment:</td>
                   {/* <td>{data.paymentDetails.iban}</td> */}
-                </tr>
-                <tr>
-                  <td className="pe-1">SWIFT code:</td>
-                  {/* <td>{data.paymentDetails.swiftCode}</td> */}
                 </tr>
               </tbody>
             </table>
@@ -80,7 +76,7 @@ const PreviewCard = ({ data }) => {
       {/* /Address and Contact */}
 
       {/* Invoice Description */}
-      <Table responsive>
+      {/* <Table responsive>
         <thead>
           <tr>
             <th className="py-1">Task description</th>
@@ -126,7 +122,7 @@ const PreviewCard = ({ data }) => {
             </td>
           </tr>
         </tbody>
-      </Table>
+      </Table> */}
       {/* /Invoice Description */}
 
       {/* Total & Sales Person */}
@@ -134,8 +130,8 @@ const PreviewCard = ({ data }) => {
         <Row className="invoice-sales-total-wrapper">
           <Col className="mt-md-0 mt-3" md="6" order={{ md: 1, lg: 2 }}>
             <CardText className="mb-0">
-              <span className="fw-bold">Salesperson:</span>{" "}
-              <span className="ms-75">Alfie Solomons</span>
+              <span className="fw-bold">Creator :</span>{" "}
+              <span className="ms-75">Creator name</span>
             </CardText>
           </Col>
           <Col
@@ -145,21 +141,16 @@ const PreviewCard = ({ data }) => {
           >
             <div className="invoice-total-wrapper">
               <div className="invoice-total-item">
-                <p className="invoice-total-title">Subtotal:</p>
-                <p className="invoice-total-amount">$1800</p>
+                <p className="invoice-total-title">detail:</p>
+                <p className="invoice-total-amount"></p>
               </div>
               <div className="invoice-total-item">
-                <p className="invoice-total-title">Discount:</p>
-                <p className="invoice-total-amount">$28</p>
+                <p className="invoice-total-title">detail:</p>
+                <p className="invoice-total-amount"></p>
               </div>
               <div className="invoice-total-item">
-                <p className="invoice-total-title">Tax:</p>
-                <p className="invoice-total-amount">21%</p>
-              </div>
-              <hr className="my-50" />
-              <div className="invoice-total-item">
-                <p className="invoice-total-title">Total:</p>
-                <p className="invoice-total-amount">$1690</p>
+                <p className="invoice-total-title">detail:</p>
+                <p className="invoice-total-amount"></p>
               </div>
             </div>
           </Col>
@@ -174,10 +165,7 @@ const PreviewCard = ({ data }) => {
         <Row>
           <Col sm="12">
             <span className="fw-bold">Note: </span>
-            <span>
-              It was a pleasure working with you and your team. We hope you will
-              keep us in mind for future freelance projects. Thank You!
-            </span>
+            <span>Notes are included in the final stage of the offer.</span>
           </Col>
         </Row>
       </CardBody>
