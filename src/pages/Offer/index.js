@@ -9,6 +9,7 @@ import "@styles/base/pages/app-invoice.scss"
 import { useSelector } from "react-redux"
 import { selectOfferById } from "../../redux/project/offers"
 import PreviewCard from "./PreviewCard"
+import PreviewActions from "./PreviewActions"
 const OfferPreview = () => {
   // ** HooksVars
   const { id } = useParams()
@@ -25,7 +26,7 @@ const OfferPreview = () => {
         </Col>
         <Col xl={3} md={4} sm={12}>
           <Card>
-            <h1>Offer Actions</h1>
+            <PreviewActions id={id} />
           </Card>
         </Col>
       </Row>

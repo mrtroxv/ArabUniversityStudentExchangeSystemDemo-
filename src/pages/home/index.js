@@ -1,9 +1,9 @@
 // eslint-disable-next-line
 import React, { Fragment, useState, useEffect } from "react"
-import { useSelector, useDispatch } from "react-redux"
+import { useSelector } from "react-redux"
 import { Routes, Route, Link, useNavigate } from "react-router-dom"
 import Breadcrumbs from "@components/breadcrumbs"
-import Toast, { toast } from "react-hot-toast"
+import Toast from "react-hot-toast"
 import {
   Card,
   CardHeader,
@@ -41,14 +41,13 @@ import activeImage from "@src/assets/images/svg/icons8_hard_working.svg"
 import DataTableWithButtons from "./components/table/ReactTable"
 import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
 import OfferWizard from "../create-offer/OfferWizard"
-import { selectAllOffers, fetchOffers } from "../../redux/project/offers"
+import { selectAllOffers } from "../../redux/project/offers"
 
 function Home() {
   const offersList = useSelector(selectAllOffers)
   const [filteredData, setFilteredData] = useState([])
   const [editingOffer, setEditingOffer] = useState(null)
   const [formModal, setFormModal] = useState(false)
-  const dispatch = useDispatch()
   const { t } = useTranslation()
   const navigate = useNavigate()
   const cols = [
@@ -150,13 +149,6 @@ function Home() {
       }
     }
   ]
-  useEffect(() => {
-    toast.promise(dispatch(fetchOffers()), {
-      loading: "Loading",
-      success: "Success",
-      error: "Error"
-    })
-  }, [])
 
   useEffect(() => {
     setFilteredData(offersList)
