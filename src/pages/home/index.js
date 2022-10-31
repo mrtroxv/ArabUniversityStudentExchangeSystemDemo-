@@ -42,9 +42,13 @@ import DataTableWithButtons from "../../components/custom/table/ReactTable"
 import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
 import OfferWizard from "../Offers/create-offer/OfferWizard"
 import { selectAllOffers } from "../../redux/project/offers"
+import { selectAllUniversities } from "../../redux/project/universities"
+import { selectAllStudents } from "../../redux/project/students"
 
 function Home() {
   const offersList = useSelector(selectAllOffers)
+  const universities = useSelector(selectAllUniversities)
+  const students = useSelector(selectAllStudents)
   const [filteredData, setFilteredData] = useState([])
   const [editingOffer, setEditingOffer] = useState(null)
   const [formModal, setFormModal] = useState(false)
@@ -154,6 +158,15 @@ function Home() {
     setFilteredData(offersList)
     console.log(offersList)
   }, [offersList])
+
+  useEffect(() => {
+    console.log(universities)
+  }, [universities])
+
+  useEffect(() => {
+    console.log(students)
+  }, [students])
+
 
   const viewTableHandler = (route) => {
     setFilteredData(
