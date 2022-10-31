@@ -33,12 +33,14 @@ const Login = lazy(() => import("../../pages/Login"))
 const Register = lazy(() => import("../../pages/Register"))
 const ForgotPassword = lazy(() => import("../../pages/ForgotPassword"))
 const Error = lazy(() => import("../../pages/Error"))
-const OfferWizard = lazy(() => import("../../pages/create-offer/OfferWizard"))
+const OfferWizard = lazy(() =>
+  import("../../pages/Offers/create-offer/OfferWizard")
+)
 const CandidateForm = lazy(() =>
   import("../../pages/users/candidate-form/CandidateForm")
 )
 const AccountSettings = lazy(() => import("../../pages/account-settings/index"))
-const OfferPreview = lazy(() => import("../../pages/Offer/index"))
+const OfferPreview = lazy(() => import("../../pages/Offers/Offer/index"))
 
 // ** Merge Routes
 const Routes = [

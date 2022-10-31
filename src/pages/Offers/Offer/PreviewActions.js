@@ -19,7 +19,7 @@ const PreviewActions = ({ id, setSendSidebarOpen, setAddPaymentOpen }) => {
         <Button
           color="secondary"
           tag={Link}
-          to="/apps/invoice/print"
+          to="/offers/print"
           target="_blank"
           block
           outline
@@ -29,7 +29,7 @@ const PreviewActions = ({ id, setSendSidebarOpen, setAddPaymentOpen }) => {
         </Button>
         <Button
           tag={Link}
-          to={`/apps/invoice/edit/${id}`}
+          to={`/offers/edit/${id}`}
           color="secondary"
           block
           outline

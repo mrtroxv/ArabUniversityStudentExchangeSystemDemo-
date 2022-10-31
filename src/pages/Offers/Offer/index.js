@@ -7,7 +7,7 @@ import { Row, Col, Alert, Card } from "reactstrap"
 // ** Styles
 import "@styles/base/pages/app-invoice.scss"
 import { useSelector } from "react-redux"
-import { selectOfferById } from "../../redux/project/offers"
+import { selectOfferById } from "../../../redux/project/offers"
 import PreviewCard from "./PreviewCard"
 import PreviewActions from "./PreviewActions"
 const OfferPreview = () => {

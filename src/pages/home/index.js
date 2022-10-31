@@ -38,9 +38,9 @@ import ownedImage from "@src/assets/images/svg/icons8_box.svg"
 import sentImage from "@src/assets/images/svg/icons8_paper_plane.svg"
 import obtainedImage from "@src/assets/images/svg/icons8_post_office.svg"
 import activeImage from "@src/assets/images/svg/icons8_hard_working.svg"
-import DataTableWithButtons from "./components/table/ReactTable"
+import DataTableWithButtons from "../../components/custom/table/ReactTable"
 import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
-import OfferWizard from "../create-offer/OfferWizard"
+import OfferWizard from "../Offers/create-offer/OfferWizard"
 import { selectAllOffers } from "../../redux/project/offers"
 
 function Home() {
