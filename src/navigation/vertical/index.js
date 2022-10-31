@@ -31,22 +31,29 @@ const menuItems = (t) => {
       icon: <FileText size={20} />,
       children: [
         {
-          id: "ViewOffers",
-          title: t("viewOffers"),
-          icon: <Circle size={20} />,
-          navLink: "/view-offers"
-        },
-        // {
-        //     id: "EditOffer",
-        //     title: t('editOffer'),
-        //     icon: <Circle size={20} />,
-        //     navLink: "/edit-offer"
-        // },
-        {
           id: "CreateOffer",
           title: t("createOffer"),
           icon: <Circle size={20} />,
           navLink: "/new-offer"
+        }
+      ]
+    },
+    {
+      id: "Universities",
+      title: t("universities"),
+      icon: <User size={20} />,
+      children: [
+        {
+          id: "CreateUniversity",
+          title: t("CreateUniversity"),
+          icon: <Circle size={20} />,
+          navLink: "/new-university"
+        },
+        {
+          id: "ViewUniversities",
+          title: t("ViewUniversities"),
+          icon: <Circle size={20} />,
+          navLink: "/universities/list"
         }
       ]
     },

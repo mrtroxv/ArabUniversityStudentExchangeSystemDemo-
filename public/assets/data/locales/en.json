@@ -1,7 +1,6 @@
 {
   "ar": "Arabic",
   "en": "English",
-
   "previous": "Previous",
   "next": "Next",
   "submit": "Submit",
@@ -13,7 +12,6 @@
   "status": "Status",
   "gender": "Gender",
   "other": "Other Requirements",
-
   "name": "Name",
   "id": "ID",
   "nationality": "Nationality",
@@ -70,18 +68,15 @@
   "good": "Good",
   "medium": "Medium",
   "excellent": "Excellent",
-
   "viewOfferID": "ID",
   "viewOfferMajor": "Major",
   "viewOfferUniversity": "University",
   "viewOfferStatus": "Status",
   "viewOfferActions": "Actions",
-
   "profile": "Profile",
   "logout": "Logout",
   "login": "Login",
   "settings": "Settings",
-
   "forgotPassword": "Forgot Password",
   "resetPassword": "Reset Password",
   "resetPasswordTitle": "Reset Password",
@@ -90,7 +85,6 @@
   "resetPasswordSuccess": "Password reset successfully.",
   "resetPasswordError": "Error resetting password.",
   "resetPasswordSuccessTitle": "Password reset successfully.",
-
   "pages": "Pages",
   "accountSettings": "Account Settings",
   "accountTab": "Account",
@@ -101,7 +95,6 @@
   "emailAddress": "Email Address",
   "phoneNumber": "Phone Number",
   "university": "University",
-
   "changePassword": "Change Password",
   "currentPassword": "Current Password",
   "newPassword": "New Password",
@@ -112,7 +105,6 @@
   "requirments1": "Minimum 8 characters long - the more, the better",
   "requirments2": "At least one lowercase letter",
   "requirments3": "At least one number, symbol, or whitespace character",
-
   "instituteTab": "Institute Details",
   "instituteTabSubTitle": "Enter Inst. Details.",
   "instituteTitle": "Institute Information",
@@ -142,10 +134,11 @@
   "trainingSupportFood": "Food",
   "trainingSupportResidence": "Residence",
   "trainingSupportTransfer": "Transfer",
-
   "signIn": "Sign In",
   "signInSubTitle": "Please sign-in to your account.",
   "studyYears": "Total study years",
   "studyYearFinished": "Study year finished",
-  "healthStatus": "Health Status"
+  "healthStatus": "Health Status",
+  "universities": "Universities",
+  "list": "List"
 }

@@ -22,12 +22,22 @@ const PreviewCard = ({ data }) => {
             </h4>
             <div className="invoice-date-wrapper">
               <p className="invoice-date-title">Date Issued:</p>
-              <p className="invoice-date">{data.date}</p>
+              <p className="invoice-date">
+                {new Date(data.offer_date).toLocaleDateString()}
+              </p>
+            </div>
+            {/* <div className="invoice-date-wrapper">
+              <p className="invoice-date-title">Start Date:</p>
+              <p className="invoice-date">
+                {new Date(data.train_start_date).toLocaleDateString()}
+              </p>
             </div>
             <div className="invoice-date-wrapper">
               <p className="invoice-date-title">Due Date:</p>
-              <p className="invoice-date">{data.offer_end_date}</p>
-            </div>
+              <p className="invoice-date">
+                {new Date(data.train_end_date).toLocaleDateString()}
+              </p>
+            </div> */}
           </div>
         </div>
         {/* /Header */}
@@ -41,32 +51,38 @@ const PreviewCard = ({ data }) => {
           <Col className="p-0" xl="8">
             <h6 className="mb-2">Offer Requirment :</h6>
             <h6 className="mb-25">{data.college_name}</h6>
+            <CardText className="mb-25">{data.branch_name}</CardText>
             <CardText className="mb-25">{data.major_name}</CardText>
             <CardText className="mb-25">{data.offer_start_date}</CardText>
-            <CardText className="mb-25">{data.offer_end_date}</CardText>
-            <CardText className="mb-0">{data.date}</CardText>
+            <div className="invoice-date-wrapper">
+              <p className="invoice-date-title">Start Date:</p>
+              <CardText className="invoice-date">
+                {new Date(data.train_start_date).toLocaleDateString()}
+              </CardText>
+            </div>
+            <div className="invoice-date-wrapper">
+              <p className="invoice-date-title">Due Date:</p>
+              <CardText className="invoice-date">
+                {new Date(data.train_end_date).toLocaleDateString()}
+              </CardText>
+            </div>
           </Col>
           <Col className="p-0 mt-xl-0 mt-2" xl="4">
             <h6 className="mb-2">Candidate Requirment:</h6>
             <table>
               <tbody>
                 <tr>
-                  <td className="pe-1">Requirment :</td>
+                  <td className="pe-1">Level :</td>
                   <td>
-                    {/* <span className='fw-bold'>{data.totalDue}</span> */}
+                    <span className="fw-bold">{data.stu_level}</span>
                   </td>
                 </tr>
                 <tr>
-                  <td className="pe-1">Requirment:</td>
-                  {/* <td>{data.paymentDetails.bankName}</td> */}
-                </tr>
-                <tr>
-                  <td className="pe-1">Requirment:</td>
-                  {/* <td>{data.paymentDetails.country}</td> */}
-                </tr>
-                <tr>
-                  <td className="pe-1">Requirment:</td>
-                  {/* <td>{data.paymentDetails.iban}</td> */}
+                  <td className="pe-1">Gender :</td>
+                  <td>
+                    {" "}
+                    <span className="fw-bold">{data.stu_sex}</span>
+                  </td>
                 </tr>
               </tbody>
             </table>
