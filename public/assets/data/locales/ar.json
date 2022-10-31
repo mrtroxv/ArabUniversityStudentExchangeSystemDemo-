@@ -1,7 +1,6 @@
 {
   "ar": "عربية",
   "en": "إنجليزية",
-
   "previous": "السابق",
   "next": "التالي",
   "submit": "إرسال",
@@ -13,7 +12,6 @@
   "status": "الحالة الدراسية",
   "gender": "الجنس",
   "other": "متطلبات اخرى",
-
   "name": "اسم الطالب",
   "id": "رقم الطالب",
   "nationality": "الجنسية",
@@ -32,7 +30,6 @@
   "passportExpiryDate": "تاريخ إنتهاء جواز السفر",
   "address": "العنوان",
   "enterInformation": "أدخل البينات",
-
   "candidate": "الطالب",
   "contact": "التواصل",
   "nameP": "أصيل خالد الأصيل",
@@ -47,7 +44,6 @@
   "passportNumberP": "111222333",
   "addressP": "جنين",
   "birthPlaceP": "رام الله",
-
   "home": "الرئيسية",
   "secondPage": "الصفحة الثانية",
   "offers": "العروض",
@@ -61,14 +57,12 @@
   "reports": "تقارير",
   "viewReports": "عرض التقارير",
   "createReport": "إنشاء تقرير",
-
   "ownedOffers": "العروض المتاحة",
   "sentOffers": "العروض المرسلة",
   "obtainedOffers": "العروض المحصلة",
   "activeOffers": "العروض النشطة",
   "view": "عرض",
   "userDetails": "تفاصيل المستخدم",
-
   "viewOfferID": "الرقم",
   "viewOfferMajor": "التخصص",
   "viewOfferUniversity": "الجامعة",
@@ -79,12 +73,10 @@
   "good": "جيد",
   "medium": "متوسط",
   "excellent": "ممتاز",
-
   "profile": "الملف الشخصي",
   "logout": "تسجيل الخروج",
   "login": "تسجيل الدخول",
   "settings": "الإعدادات",
-
   "forgotPassword": "نسيت كلمة المرور",
   "resetPassword": "إعادة تعيين كلمة المرور",
   "resetPasswordTitle": "إعادة تعيين كلمة المرور",
@@ -93,7 +85,6 @@
   "resetPasswordSuccess": "تم إعادة تعيين كلمة المرور بنجاح",
   "resetPasswordError": "حدث خطأ أثناء إعادة تعيين كلمة المرور",
   "resetPasswordSuccessTitle": "تم إعادة تعيين كلمة المرور بنجاح",
-
   "pages": "الصفحات",
   "accountSettings": "إعدادات الحساب",
   "accountTab": "الحساب",
@@ -114,7 +105,6 @@
   "requirments1": "8 أحرف على الأقل",
   "requirments2": "أحرف الانجليزية وأرقام",
   "requirments3": "رمز على الاقل",
-
   "instituteTab": "بيانات المؤسسة",
   "instituteTabSubTitle": "ادخل بيانات المؤسسة",
   "instituteTitle": "بيانات المؤسسة",
@@ -146,10 +136,11 @@
   "trainingSupportFood": "غذاء",
   "trainingSupportResidence": "إقامة",
   "trainingSupportTransfer": "نقل",
-
   "signIn": "تسجيل الدخول",
   "signInSubTitle": "أدخل بيانات الدخول للدخول إلى النظام",
   "studyYears": "مجموع سنوات الدراسة",
   "studyYearFinished": "سنوات الدراسة المنجزة",
-  "healthStatus": "الحالة الصحية للطالب"
+  "healthStatus": "الحالة الصحية للطالب",
+  "universities": "الجامعات",
+  "list": "قائمة"
 }

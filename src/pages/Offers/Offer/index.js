@@ -15,7 +15,7 @@ const OfferPreview = () => {
   const { id } = useParams()
   const offer = useSelector((state) => selectOfferById(state, id))
   const data = offer
-
+  console.log(data)
   return data !== null && data.id !== undefined ? (
     <div className="invoice-preview-wrapper">
       <Row className="invoice-preview">

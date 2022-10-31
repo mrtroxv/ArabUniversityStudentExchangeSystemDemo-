@@ -41,9 +41,14 @@ const CandidateForm = lazy(() =>
 )
 const AccountSettings = lazy(() => import("../../pages/account-settings/index"))
 const OfferPreview = lazy(() => import("../../pages/Offers/Offer/index"))
+const ViewUsers = lazy(() => import("../../pages/users/view-users/ViewUsers"))
 
 // ** Merge Routes
 const Routes = [
+  {
+    path: "/",
+    element: <Navigate to={DefaultRoute} />
+  },
   {
     path: "/home",
     element: <Home />,
@@ -103,6 +108,10 @@ const Routes = [
   {
     path: "/pages/account-page",
     element: <CandidateForm />
+  },
+  {
+    path: "/universities/list",
+    element: <ViewUsers />
   }
 ]
 

@@ -12,7 +12,7 @@ import StudentDetails from "./components/StudentDetails"
 import { useTranslation } from "react-i18next"
 import axios from "axios"
 
-const OfferWizard = ({ type, initialState, onClose }) => {
+const OfferWizard = ({ type, onClose }) => {
   // ** Ref
   const ref = useRef(null)
 
@@ -30,19 +30,26 @@ const OfferWizard = ({ type, initialState, onClose }) => {
   }
   const handelSubmit = (values) => {
     console.table({ ...values, ...data })
-    axios.post('http://localhost:3500/offer/insert_offer', {
-      ...data, ...values
-    }, {
-      headers: {
-        authorization: JSON.parse(localStorage.getItem('accessToken'))
-      }
-    }).then((response) => {
-      console.log(response)
-      onClose()
-    }).catch((error) => {
-      console.log(error)
-    })
-
+    axios
+      .post(
+        "http://localhost:3500/offer/insert_offer",
+        {
+          ...data,
+          ...values
+        },
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      .then((response) => {
+        console.log(response)
+        onClose()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   }
 
   const steps = [
@@ -50,37 +57,19 @@ const OfferWizard = ({ type, initialState, onClose }) => {
       id: "company-details",
       title: t("instituteTab"),
       subtitle: t("instituteTabSubTitle"),
-      content: (
-        <CompanyDetails
-          stepper={stepper}
-          onStoreData={storeData}
-          initialState={initialState}
-        />
-      )
+      content: <CompanyDetails stepper={stepper} onStoreData={storeData} />
     },
     {
       id: "candidate-qualifications",
       title: t("qualificationTab"),
       subtitle: t("qualificationTabSubTitle"),
-      content: (
-        <StudentDetails
-          stepper={stepper}
-          onStoreData={storeData}
-          initialState={initialState}
-        />
-      )
+      content: <StudentDetails stepper={stepper} onStoreData={storeData} />
     },
     {
       id: "training-details",
       title: t("trainingTab"),
       subtitle: t("trainingTabSubTitle"),
-      content: (
-        <TrainingDetails
-          stepper={stepper}
-          onSubmit={handelSubmit}
-          initialState={initialState}
-        />
-      )
+      content: <TrainingDetails stepper={stepper} onSubmit={handelSubmit} />
     }
   ]
 
