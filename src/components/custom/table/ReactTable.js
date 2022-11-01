@@ -8,7 +8,7 @@ import DataTable from "react-data-table-component"
 
 // ** Reactstrap Imports
 import { Card, CardHeader, CardTitle } from "reactstrap"
-
+import "./react-dataTable-component.scss"
 const DataTableWithButtons = ({ data, columns }) => {
   // ** State
   const [currentPage, setCurrentPage] = useState(0)
@@ -49,21 +49,19 @@ const DataTableWithButtons = ({ data, columns }) => {
   )
 
   return (
-    <Card className="overflow-hidden">
-      <div className="react-dataTable">
-        <DataTable
-          noHeader
-          pagination
-          data={pagenatedData}
-          columns={columns}
-          //   expandOnRowClicked
-          className="react-dataTable"
-          sortIcon={<ChevronDown size={10} />}
-          paginationComponent={CustomPagination}
-          paginationDefaultPage={currentPage + 1}
-        />
-      </div>
-    </Card>
+    <div className="react-dataTable">
+      <DataTable
+        noHeader
+        pagination
+        data={pagenatedData}
+        columns={columns}
+        expandOnRowClicked
+        className="react-dataTable"
+        sortIcon={<ChevronDown size={10} />}
+        paginationComponent={CustomPagination}
+        paginationDefaultPage={currentPage + 1}
+      />
+    </div>
   )
 }
 
