@@ -49,10 +49,3 @@ $transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
   border: none;
   margin: 0;
 }
-
-[dir] .react-dataTable .rdt_TableHead .rdt_TableHeadRow {
-  background-color: #f3f2f7;
-  border-color: currentcolor #ebe9f1 #ebe9f1;
-  border-top: 1px solid #ebe9f1;
-  text-transform: uppercase;
-}
