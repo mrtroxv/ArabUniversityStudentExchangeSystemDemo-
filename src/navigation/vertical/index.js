@@ -62,23 +62,17 @@ const menuItems = (t) => {
       title: t("candidates"),
       icon: <User size={20} />,
       children: [
-        // {
-        //     id: "ViewCandidates",
-        //     title: t('viewCandidates'),
-        //     icon: <Circle size={20} />,
-        //     navLink: "/view-candidates"
-        // },
-        // {
-        //     id: "EditCandidate",
-        //     title: t('editCandidate'),
-        //     icon: <Circle size={20} />,
-        //     navLink: "/edit-candidate"
-        // },
+        {
+          id: "ViewCandidates",
+          title: t("viewCandidates"),
+          icon: <Circle size={20} />,
+          navLink: "/candidates/view-candidates"
+        },
         {
           id: "CreateCandidate",
           title: t("createCandidate"),
           icon: <Circle size={20} />,
-          navLink: "/new-candidate"
+          navLink: "/candidates/new-candidate"
         }
       ]
     },

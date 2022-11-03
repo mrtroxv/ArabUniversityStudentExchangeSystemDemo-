@@ -10,12 +10,21 @@ import { useSelector } from "react-redux"
 import { selectOfferById } from "../../../redux/project/offers"
 import PreviewCard from "./PreviewCard"
 import PreviewActions from "./PreviewActions"
+import SidebarAddStudent from "./SidebarAddStudent"
+import SidebarSendOffer from "./SidebarSendOffer"
+import { useState } from "react"
 const OfferPreview = () => {
   // ** HooksVars
   const { id } = useParams()
   const offer = useSelector((state) => selectOfferById(state, id))
   const data = offer
-  console.log(data)
+  const [sendSidebarOpen, setSendSidebarOpen] = useState(false)
+  const [addStudent, setAddStudent] = useState(false)
+
+  // ** Functions to toggle add & send sidebar
+  const toggleSendSidebar = () => setSendSidebarOpen(!sendSidebarOpen)
+  const toggleAddSidebar = () => setAddStudent(!addStudent)
+
   return data !== null && data.id !== undefined ? (
     <div className="invoice-preview-wrapper">
       <Row className="invoice-preview">
@@ -26,10 +35,25 @@ const OfferPreview = () => {
         </Col>
         <Col xl={3} md={4} sm={12}>
           <Card>
-            <PreviewActions id={id} />
+            <PreviewActions
+              id={id}
+              status={data.status}
+              setAddStudentOpen={toggleAddSidebar}
+              setSendSidebarOpen={toggleSendSidebar}
+            />
           </Card>
         </Col>
       </Row>
+      <SidebarSendOffer
+        toggleSidebar={toggleSendSidebar}
+        open={sendSidebarOpen}
+        id={id}
+      />
+      <SidebarAddStudent
+        toggleSidebar={toggleAddSidebar}
+        open={addStudent}
+        id={id}
+      />
     </div>
   ) : (
     <Alert color="danger">
