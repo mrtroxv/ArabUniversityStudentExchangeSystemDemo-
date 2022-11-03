@@ -53,6 +53,11 @@ const PreviewActions = ({
             {t("AddStudent")}
           </Button>
         )}
+        {status === 1 && (
+          <Button color="danger" block onClick={() => setAddStudentOpen(true)}>
+            {t("Reject")}
+          </Button>
+        )}
       </CardBody>
     </Card>
   )
