@@ -44,14 +44,10 @@ import OfferWizard from "../Offers/create-offer/OfferWizard"
 import { selectAllOffers } from "../../redux/project/offers"
 import { useForm } from "react-hook-form"
 
-import { selectAllUniversities } from "../../redux/project/universities"
-import { selectAllStudents } from "../../redux/project/students"
-
 function Home() {
   const { register, watch } = useForm()
   const offersList = useSelector(selectAllOffers)
-  const universities = useSelector(selectAllUniversities)
-  const students = useSelector(selectAllStudents)
+
   const [filteredData, setFilteredData] = useState([])
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
@@ -76,7 +72,7 @@ function Home() {
       selector: (row) => row.major_name
     },
     {
-      name: "Status",
+      name: t("offerStatus"),
       minWidth: "50px",
       sortable: (row) => row.status,
       cell: (row) => {
@@ -94,7 +90,7 @@ function Home() {
       selector: (row) => new Date(row.offer_date).toLocaleDateString()
     },
     {
-      name: "Actions",
+      name: t("actions"),
       allowOverflow: true,
       cell: (row) => {
         return (
@@ -160,14 +156,6 @@ function Home() {
     setFilteredData(offersList)
     console.log(offersList)
   }, [offersList])
-
-  useEffect(() => {
-    console.log(universities)
-  }, [universities])
-
-  useEffect(() => {
-    console.log(students)
-  }, [students])
 
   const viewTableHandler = (route) => {
     setFilteredData(
@@ -253,7 +241,7 @@ function Home() {
                   />
                 </Col>
                 <Col lg="4" md="6">
-                  <Label key="college_name">College Name :</Label>
+                  <Label key="college_name">{t("college")} :</Label>
                   <input
                     {...register("college")}
                     placeholder="College"
@@ -262,7 +250,7 @@ function Home() {
                   />
                 </Col>
                 <Col lg="4" md="6">
-                  <Label key="major_name">Major Name :</Label>
+                  <Label key="major_name">{t("major")} :</Label>
                   <input
                     {...register("major")}
                     placeholder="Major"
@@ -295,7 +283,7 @@ function Home() {
             toggle={() => setFormModal(!formModal)}
             className="modal-lg"
           >
-            Add Offer
+            {t("createOffer")}
           </ModalHeader>
           <ModalBody>
             <OfferWizard

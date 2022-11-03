@@ -47,7 +47,7 @@ const DataTableWithButtons = ({ data, columns }) => {
       }
     />
   )
-
+  console.log(data)
   return (
     <div className="react-dataTable">
       <DataTable
@@ -55,11 +55,11 @@ const DataTableWithButtons = ({ data, columns }) => {
         pagination
         data={pagenatedData}
         columns={columns}
-        expandOnRowClicked
         className="react-dataTable"
         sortIcon={<ChevronDown size={10} />}
         paginationComponent={CustomPagination}
         paginationDefaultPage={currentPage + 1}
+        paginationRowsPerPageOptions={[10, 25, 50, 100]}
       />
     </div>
   )

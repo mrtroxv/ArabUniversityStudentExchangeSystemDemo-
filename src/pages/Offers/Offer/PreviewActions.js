@@ -1,21 +1,30 @@
 // ** React Imports
+import { useTranslation } from "react-i18next"
 import { Link } from "react-router-dom"
 
 // ** Reactstrap Imports
 import { Card, CardBody, Button } from "reactstrap"
 
-const PreviewActions = ({ id, setSendSidebarOpen, setAddPaymentOpen }) => {
+const PreviewActions = ({
+  id,
+  setSendSidebarOpen,
+  setAddStudentOpen,
+  status
+}) => {
+  const { t } = useTranslation()
   return (
     <Card className="invoice-action-wrapper">
       <CardBody>
-        <Button
-          color="primary"
-          block
-          className="mb-75"
-          onClick={() => setSendSidebarOpen(true)}
-        >
-          Send Offer
-        </Button>
+        {status === 0 && (
+          <Button
+            color="primary"
+            block
+            className="mb-75"
+            onClick={() => setSendSidebarOpen(true)}
+          >
+            {t("Send")}
+          </Button>
+        )}
         <Button
           color="secondary"
           tag={Link}
@@ -25,21 +34,25 @@ const PreviewActions = ({ id, setSendSidebarOpen, setAddPaymentOpen }) => {
           outline
           className="mb-75"
         >
-          Print
+          {t("Print")}
         </Button>
-        <Button
-          tag={Link}
-          to={`/offers/edit/${id}`}
-          color="secondary"
-          block
-          outline
-          className="mb-75"
-        >
-          Edit
-        </Button>
-        <Button color="success" block onClick={() => setAddPaymentOpen(true)}>
-          Add Student
-        </Button>
+        {status === 0 && (
+          <Button
+            tag={Link}
+            to={`/offers/edit/${id}`}
+            color="secondary"
+            block
+            outline
+            className="mb-75"
+          >
+            {t("Edit")}
+          </Button>
+        )}
+        {status === 1 && (
+          <Button color="success" block onClick={() => setAddStudentOpen(true)}>
+            {t("AddStudent")}
+          </Button>
+        )}
       </CardBody>
     </Card>
   )

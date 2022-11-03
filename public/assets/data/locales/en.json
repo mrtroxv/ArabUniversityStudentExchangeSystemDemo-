@@ -140,5 +140,19 @@
   "studyYearFinished": "Study year finished",
   "healthStatus": "Health Status",
   "universities": "Universities",
-  "list": "List"
+  "list": "List",
+  "offer": "Offer",
+  "dateIssued": "Date Issued",
+  "offerRequirment": "Offer Requirment",
+  "offerDescription": "Offer Description",
+  "offerType": "Offer Type",
+  "offerStartDate": "Start Date",
+  "offerEndDate": "End Date",
+  "candidateRequirment": "Candidate Requirment",
+  "level": "Level",
+  "offerStatus": "Status",
+  "date": "Date",
+  "actions": "Actions",
+  "CreateUniversity": "Create University",
+  "ViewUniversities": "View Universities"
 }

@@ -37,7 +37,10 @@ const OfferWizard = lazy(() =>
   import("../../pages/Offers/create-offer/OfferWizard")
 )
 const CandidateForm = lazy(() =>
-  import("../../pages/users/candidate-form/CandidateForm")
+  import("../../pages/candidates/candidate-form/CandidateForm")
+)
+const Candidates = lazy(() =>
+  import("../../pages/candidates/view-candidates/ViewCandidates")
 )
 const AccountSettings = lazy(() => import("../../pages/account-settings/index"))
 const OfferPreview = lazy(() => import("../../pages/Offers/Offer/index"))
@@ -97,8 +100,12 @@ const Routes = [
     element: <OfferPreview />
   },
   {
-    path: "/new-candidate",
+    path: "/candidates/new-candidate",
     element: <CandidateForm />
+  },
+  {
+    path: "/candidates/view-candidates",
+    element: <Candidates />
   },
 
   {
