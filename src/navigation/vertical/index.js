@@ -31,10 +31,22 @@ const menuItems = (t) => {
       icon: <FileText size={20} />,
       children: [
         {
-          id: "CreateOffer",
-          title: t("createOffer"),
+          id: "CreatedOffers",
+          title: t("Created Offers"),
           icon: <Circle size={20} />,
-          navLink: "/new-offer"
+          navLink: "/offers/created-offers"
+        },
+        {
+          id: "SentOffers",
+          title: t("Sent Offers"),
+          icon: <Circle size={20} />,
+          navLink: "/offers/sent-offers"
+        },
+        {
+          id: "ObtainedOffers",
+          title: t("Obtained Offers"),
+          icon: <Circle size={20} />,
+          navLink: "/offers/obtained-offers"
         }
       ]
     },

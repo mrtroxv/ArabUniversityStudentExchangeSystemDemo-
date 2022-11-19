@@ -3,7 +3,7 @@
   "en": "إنجليزية",
   "previous": "السابق",
   "next": "التالي",
-  "submit": "إرسال",
+  "submit": "إنشاء",
   "title": "بيانات الطالب",
   "subtitle": "أدخل البيانات المرغوبة الخاصة بالطالب المرشح للمنحة",
   "college": "الكلية",
@@ -173,5 +173,20 @@
   "Filters": "الفلاتر",
   "Add Candidate": "إضافة مشارك",
   "Filter": "فلترة",
-  "Reject": "رفض"
+  "Reject": "رفض",
+  "Accept": "قبول",
+  "Created Offers": "العروض المنشأة",
+  "View Offers": "عرض العروض",
+  "Create Offer": "إنشاء عرض",
+  "Offer": "عرض",
+  "Sent Offers": "العروض المرسلة",
+  "Obtained Offers": "العروض المستلمة",
+  "Available": "متاح",
+  "Offers": "العروض",
+  "Creating Offer": "إنشاء العرض",
+  "Sent" : "مرسل",
+  "Student Details": "بيانات الطالب",
+  "Student Report": "تقرير الطالب",
+  "Offer Report": "تقرير العرض"
+
 }

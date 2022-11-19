@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 import React, { Fragment, useState, useEffect } from "react"
 import { useSelector } from "react-redux"
-import { Routes, Route, Link, useNavigate } from "react-router-dom"
+import { Routes, Route, Link, useNavigate, useParams } from "react-router-dom"
 import Breadcrumbs from "@components/breadcrumbs"
 import Toast from "react-hot-toast"
 import {
@@ -38,27 +38,50 @@ import ownedImage from "@src/assets/images/svg/icons8_box.svg"
 import sentImage from "@src/assets/images/svg/icons8_paper_plane.svg"
 import obtainedImage from "@src/assets/images/svg/icons8_post_office.svg"
 import activeImage from "@src/assets/images/svg/icons8_hard_working.svg"
-import DataTableWithButtons from "../../components/custom/table/ReactTable"
+import DataTableWithButtons from "../../../components/custom/table/ReactTable"
 import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
-import OfferWizard from "../Offers/create-offer/OfferWizard"
-import { selectAllOffers } from "../../redux/project/offers"
+import OfferWizard from "../create-offer/OfferWizard"
+import {
+  selectCreatedOffers,
+  selectObtainedOffers,
+  selectSentOffers
+} from "../../../redux/project/offers"
 import { useForm } from "react-hook-form"
+import { selectUserID } from "../../../redux/authentication"
 
-function Home() {
+function ViewOffers() {
   const { register, watch } = useForm()
-  const offersList = useSelector(selectAllOffers)
-
-  const [filteredData, setFilteredData] = useState([])
+  const userId = useSelector(selectUserID)
+  const { status: data } = useParams()
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const [filteredData, setFilteredData] = useState([])
 
+  const breadcrumbs = {
+    "created-offers": {
+      title: "Created Offers",
+      link: "/offers/created-offers",
+      query: (state) => selectCreatedOffers(state, +userId)
+    },
+    "sent-offers": {
+      title: "Sent Offers",
+      link: "/offers/sent-offers",
+      query: (state) => selectSentOffers(state, +userId)
+    },
+    "obtained-offers": {
+      title: "Obtained Offers",
+      link: "/offers/obtained-offers",
+      query: (state) => selectObtainedOffers(state, +userId)
+    }
+  }
+  const offersList = useSelector(breadcrumbs[data].query)
   const status = {
-    0: { title: "Current", color: "light-primary" },
-    1: { title: "Professional", color: "light-success" },
-    2: { title: "Rejected", color: "light-danger" },
-    3: { title: "Resigned", color: "light-warning" },
-    4: { title: "Applied", color: "light-info" }
+    0: { title: t("Creating Offer"), color: "light-primary" },
+    1: { title: t("Sent"), color: "light-danger" },
+    2: { title: t("Student Details"), color: "light-info" },
+    3: { title: t("Student Report"), color: "light-warning" },
+    4: { title: t("Offer Report"), color: "light-success" }
   }
 
   const cols = [
@@ -163,14 +186,15 @@ function Home() {
 
   useEffect(() => {
     setFilteredData(offersList)
-  }, [offersList])
+  }, [])
 
   const viewTableHandler = (route) => {
-    setFilteredData(
-      filteredData.filter((offer) => {
-        return offer.status === route
-      })
-    )
+    console.log(route)
+    // setFilteredData(
+    //   filteredData.filter((offer) => {
+    //     return offer.status === route
+    //   })
+    // )
   }
 
   const handleOfferPopUp = () => {
@@ -187,11 +211,15 @@ function Home() {
       offer.major_name.toLowerCase().includes(major.toLowerCase())
     )
   })
+
   return (
     <Fragment>
       <Breadcrumbs
-        title={`${t("home")}`}
-        data={[{ title: t("home"), link: "/" }]}
+        title={`${t("Offers")}`}
+        data={[
+          { title: t("Offers"), link: "/Offers" },
+          { title: t(breadcrumbs[data].title), link: breadcrumbs[data].link }
+        ]}
       />
       <Row className="match-height">
         <Col lg="6" md="12">
@@ -309,4 +337,4 @@ function Home() {
   )
 }
 
-export default Home
+export default ViewOffers

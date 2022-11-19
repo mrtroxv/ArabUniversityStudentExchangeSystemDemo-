@@ -16,8 +16,7 @@ import { useState } from "react"
 const OfferPreview = () => {
   // ** HooksVars
   const { id } = useParams()
-  const offer = useSelector((state) => selectOfferById(state, id))
-  const data = offer
+  const data = useSelector((state) => selectOfferById(state, id))
   const [sendSidebarOpen, setSendSidebarOpen] = useState(false)
   const [addStudent, setAddStudent] = useState(false)
 

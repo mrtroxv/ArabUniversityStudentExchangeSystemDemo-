@@ -28,6 +28,7 @@ const TemplateTitle = "%s - Internship Management System"
 const DefaultRoute = "/home"
 
 const Home = lazy(() => import("../../pages/home/index"))
+const ViewOffers = lazy(() => import("../../pages/Offers/view-offers/"))
 const SecondPage = lazy(() => import("../../pages/SecondPage"))
 const Login = lazy(() => import("../../pages/Login"))
 const Register = lazy(() => import("../../pages/Register"))
@@ -98,6 +99,10 @@ const Routes = [
   {
     path: "/view-offers/:id",
     element: <OfferPreview />
+  },
+  {
+    path: "/offers/:status",
+    element: <ViewOffers />
   },
   {
     path: "/candidates/new-candidate",

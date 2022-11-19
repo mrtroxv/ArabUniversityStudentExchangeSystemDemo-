@@ -39,11 +39,23 @@ const offersSlice = createSlice({
   }
 })
 
-export default offersSlice.reducer
 export const selectAllOffers = (state) => state.offers.offers
+export const selectCreatedOffers = (state, userId) =>
+  state.offers.offers.filter(
+    (offer) => offer.university_id_src === userId && offer.status === 0
+  )
+export const selectSentOffers = (state, userId) =>
+  state.offers.offers.filter(
+    (offer) => offer.university_id_src === userId && offer.status === 1
+  )
+export const selectObtainedOffers = (state, userId) =>
+  state.offers.offers.filter(
+    (offer) => offer.university_id_src === userId && offer.status === 2
+  )
 
 export const selectOfferById = (state, id) => {
-  return state.offers.offers.find((o) => {
-    return o.id === +id
-  })
+  const offer = state.offers.offers.find((offer) => offer.id === +id)
+  return offer
 }
+
+export default offersSlice.reducer
