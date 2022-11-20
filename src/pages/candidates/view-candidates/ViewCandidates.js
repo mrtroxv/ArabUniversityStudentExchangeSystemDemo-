@@ -76,7 +76,7 @@ const ViewCandidates = () => {
     )
   })
   const clearData = () => {
-    setFilteredData(universities)
+    setFilteredData(candidates)
     setValue("id", "")
     setValue("name", "")
     setValue("email", "")

@@ -34,10 +34,13 @@ import { useTranslation } from "react-i18next"
 
 // import axios from "axios"
 import OffersFilter from "./components/OffersFilter"
-import ownedImage from "@src/assets/images/svg/icons8_box.svg"
-import sentImage from "@src/assets/images/svg/icons8_paper_plane.svg"
-import obtainedImage from "@src/assets/images/svg/icons8_post_office.svg"
-import activeImage from "@src/assets/images/svg/icons8_hard_working.svg"
+// import ownedImage from "@src/assets/images/svg/icons8_box.svg"
+// import sentImage from "@src/assets/images/svg/icons8_paper_plane.svg"
+// import obtainedImage from "@src/assets/images/svg/icons8_post_office.svg"
+// import activeImage from "@src/assets/images/svg/icons8_hard_working.svg"
+import allOffers from "@src/assets/images/svg/docs.svg"
+import activeOffers from "@src/assets/images/svg/clock.svg"
+import expiredOffers from "@src/assets/images/svg/expired.svg"
 import DataTableWithButtons from "../../../components/custom/table/ReactTable"
 import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
 import OfferWizard from "../create-offer/OfferWizard"
@@ -48,10 +51,12 @@ import {
 } from "../../../redux/project/offers"
 import { useForm } from "react-hook-form"
 import { selectUserID } from "../../../redux/authentication"
+import { selectAllUniversities } from "../../../redux/project/universities"
 
 function ViewOffers() {
   const { register, watch } = useForm()
   const userId = useSelector(selectUserID)
+  const universities = useSelector(selectAllUniversities)
   const { status: data } = useParams()
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
@@ -62,26 +67,47 @@ function ViewOffers() {
     "created-offers": {
       title: "Created Offers",
       link: "/offers/created-offers",
-      query: (state) => selectCreatedOffers(state, +userId)
+      query: (state) => selectCreatedOffers(state, +userId),
+      cols: ["ID", "college", "major", "status", "date", "actions"]
     },
     "sent-offers": {
       title: "Sent Offers",
       link: "/offers/sent-offers",
-      query: (state) => selectSentOffers(state, +userId)
+      query: (state) => selectSentOffers(state, +userId),
+      cols: [
+        "ID",
+        "college",
+        "major",
+        "status",
+        "date",
+        "university_id_des",
+        "actions"
+      ]
     },
     "obtained-offers": {
       title: "Obtained Offers",
       link: "/offers/obtained-offers",
-      query: (state) => selectObtainedOffers(state, +userId)
+      query: (state) => selectObtainedOffers(state, +userId),
+      cols: [
+        "ID",
+        "college",
+        "major",
+        "status",
+        "date",
+        "university_id_src",
+        "actions"
+      ]
     }
   }
   const offersList = useSelector(breadcrumbs[data].query)
   const status = {
     0: { title: t("Creating Offer"), color: "light-primary" },
-    1: { title: t("Sent"), color: "light-danger" },
-    2: { title: t("Student Details"), color: "light-info" },
-    3: { title: t("Student Report"), color: "light-warning" },
-    4: { title: t("Offer Report"), color: "light-success" }
+    1: { title: t("Pending Request"), color: "light-warning" },
+    2: { title: t("Accepted"), color: "light-success" },
+    3: { title: t("Rejected"), color: "light-danger" },
+    4: { title: t("Pending Acceptance"), color: "light-warning" },
+    5: { title: t("Offer Report"), color: "light-primary" },
+    6: { title: t("Expired"), color: "light-danger" }
   }
 
   const cols = [
@@ -100,101 +126,142 @@ function ViewOffers() {
     {
       name: t("major"),
       sortable: true,
-      minWidth: "300px",
+      minWidth: "100px",
       selector: (row) => row.major_name
-    },
-    {
-      name: t("offerStatus"),
-      minWidth: "50px",
-      sortable: (row) => row.status,
-      cell: (row) => {
-        return (
-          <Badge color={status[row.status].color} pill>
-            {status[row.status].title}
-          </Badge>
-        )
-      }
-    },
-    {
-      name: t("date"),
-      sortable: true,
-      minWidth: "175px",
-      selector: (row) => new Date(row.offer_date).toLocaleDateString()
-    },
-    {
-      name: t("actions"),
-      allowOverflow: true,
-      cell: (row) => {
-        return (
-          <div className="d-flex">
-            <UncontrolledDropdown>
-              <DropdownToggle className="pe-1" tag="span">
-                <MoreVertical size={15} />
-              </DropdownToggle>
-              <DropdownMenu end>
-                <DropdownItem
-                  tag="a"
-                  href="/"
-                  className="w-100"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    navigate(`/view-offers/${row.id}`)
-                  }}
-                >
-                  <FileText size={15} />
-                  <span className="align-middle ms-50">Details</span>
-                </DropdownItem>
-                <DropdownItem
-                  tag="a"
-                  href="/"
-                  className="w-100"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  <Archive size={15} />
-                  <span className="align-middle ms-50">Archive</span>
-                </DropdownItem>
-                <DropdownItem
-                  tag="a"
-                  href="/"
-                  className="w-100"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  <Trash size={15} />
-                  <span className="align-middle ms-50">Delete</span>
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-            <Button
-              type="button"
-              color="white"
-              className="table-button_edit"
-              onClick={(e) => {
-                e.preventDefault()
-                setEditingOffer(
-                  offersList.filter((offer) => offer.id === row.id)[0]
-                )
-                setFormModal(!formModal)
-              }}
-            >
-              <Edit size={15} />
-            </Button>
-          </div>
-        )
-      }
     }
   ]
+
+  const desUniversityCol = {
+    name: t("Destination University"),
+    sortable: true,
+    minWidth: "100px",
+    selector: (row) => row.university_id_des,
+    cell: (row) => {
+      const university = universities.find(
+        (university) => university.id === row.university_id_des
+      )
+      return university ? university.EN_Name : ""
+    }
+  }
+  const srcUniversityCol = {
+    name: t("Source University"),
+    sortable: true,
+    minWidth: "100px",
+    selector: (row) => row.university_id_src,
+    cell: (row) => {
+      const university = universities.find(
+        (university) => university.id === row.university_id_src
+      )
+      return university ? university.EN_Name : ""
+    }
+  }
+  const statusCol = {
+    name: t("offerStatus"),
+    minWidth: "50px",
+    sortable: (row) => row.status,
+    cell: (row) => {
+      return (
+        <Badge color={status[row.status].color} pill>
+          {status[row.status].title}
+        </Badge>
+      )
+    }
+  }
+  const dateCol = {
+    name: t("date"),
+    sortable: true,
+    minWidth: "175px",
+    selector: (row) => new Date(row.offer_date).toLocaleDateString()
+  }
+  const actionsCol = {
+    name: t("actions"),
+    allowOverflow: true,
+    cell: (row) => {
+      return (
+        <div className="d-flex">
+          <UncontrolledDropdown>
+            <DropdownToggle className="pe-1" tag="span">
+              <MoreVertical size={15} />
+            </DropdownToggle>
+            <DropdownMenu end>
+              <DropdownItem
+                tag="a"
+                href="/"
+                className="w-100"
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigate(`/view-offers/${row.id}`)
+                }}
+              >
+                <FileText size={15} />
+                <span className="align-middle ms-50">Details</span>
+              </DropdownItem>
+              <DropdownItem
+                tag="a"
+                href="/"
+                className="w-100"
+                onClick={(e) => e.preventDefault()}
+              >
+                <Archive size={15} />
+                <span className="align-middle ms-50">Archive</span>
+              </DropdownItem>
+              <DropdownItem
+                tag="a"
+                href="/"
+                className="w-100"
+                onClick={(e) => e.preventDefault()}
+              >
+                <Trash size={15} />
+                <span className="align-middle ms-50">Delete</span>
+              </DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+          <Button
+            type="button"
+            color="white"
+            className="table-button_edit"
+            onClick={(e) => {
+              e.preventDefault()
+              setEditingOffer(
+                offersList.filter((offer) => offer.id === row.id)[0]
+              )
+              setFormModal(!formModal)
+            }}
+          >
+            <Edit size={15} />
+          </Button>
+        </div>
+      )
+    }
+  }
+  const colsMap = {
+    "created-offers": [...cols, statusCol, dateCol, actionsCol],
+    "sent-offers": [...cols, desUniversityCol, statusCol, dateCol, actionsCol],
+    "obtained-offers": [
+      ...cols,
+      srcUniversityCol,
+      statusCol,
+      dateCol,
+      actionsCol
+    ]
+  }
 
   useEffect(() => {
     setFilteredData(offersList)
   }, [])
 
-  const viewTableHandler = (route) => {
-    console.log(route)
-    // setFilteredData(
-    //   filteredData.filter((offer) => {
-    //     return offer.status === route
-    //   })
-    // )
+  const viewTableHandler = (date) => {
+    if (date === "all") {
+      setFilteredData(offersList)
+    } else if (date === "active") {
+      setFilteredData(
+        offersList.filter((offer) => offer.status === 0 || offer.status === 1)
+      )
+    } else if (date === "expired") {
+      setFilteredData(
+        offersList.filter((offer) => offer.status === 2 || offer.status === 3)
+      )
+    }
   }
 
   const handleOfferPopUp = () => {
@@ -204,11 +271,14 @@ function ViewOffers() {
   const id = watch("id")
   const college = watch("college")
   const major = watch("major")
+  const universityID = watch("university_id") || ""
   const offers = filteredData.filter((offer) => {
     return (
       offer.id.toString().includes(id) &&
       offer.college_name.toLowerCase().includes(college.toLowerCase()) &&
-      offer.major_name.toLowerCase().includes(major.toLowerCase())
+      offer.major_name.toLowerCase().includes(major.toLowerCase()) &&
+      (offer.university_id_des?.toString().includes(String(universityID)) ||
+        offer.university_id_src?.toString().includes(String(universityID)))
     )
   })
 
@@ -224,36 +294,28 @@ function ViewOffers() {
       <Row className="match-height">
         <Col lg="6" md="12">
           <Row className="match-height">
-            <Col lg="6" md="3" xs="6">
+            <Col lg="12" md="12">
               <OffersFilter
                 onView={viewTableHandler}
-                filter="owned"
-                title="ownedOffers"
-                src={ownedImage}
-              />
-            </Col>
-            <Col lg="6" md="3" xs="6">
-              <OffersFilter
-                onView={viewTableHandler}
-                filter="sent"
-                title="sentOffers"
-                src={sentImage}
-              />
-            </Col>
-            <Col lg="6" md="3" xs="6">
-              <OffersFilter
-                onView={viewTableHandler}
-                filter="obtained"
-                title="obtainedOffers"
-                src={obtainedImage}
+                filter="all"
+                title="All Offers"
+                src={allOffers}
               />
             </Col>
             <Col lg="6" md="3" xs="6">
               <OffersFilter
                 onView={viewTableHandler}
                 filter="active"
-                title="activeOffers"
-                src={activeImage}
+                title="Active Offers"
+                src={activeOffers}
+              />
+            </Col>
+            <Col lg="6" md="3" xs="6">
+              <OffersFilter
+                onView={viewTableHandler}
+                filter="expired"
+                title="Expired Offers"
+                src={expiredOffers}
               />
             </Col>
           </Row>
@@ -267,8 +329,8 @@ function ViewOffers() {
           <Row>
             <Col lg="10" md="8">
               <Row>
-                <Col lg="4" md="6">
-                  <Label key="id">ID :</Label>
+                <Col lg={data === "created-offers" ? "4" : "3"} md="6">
+                  <Label key="id">{t("ID")} :</Label>
                   <input
                     {...register("id")}
                     placeholder="ID"
@@ -276,7 +338,7 @@ function ViewOffers() {
                     className="form-control"
                   />
                 </Col>
-                <Col lg="4" md="6">
+                <Col lg={data === "created-offers" ? "4" : "3"} md="6">
                   <Label key="college_name">{t("college")} :</Label>
                   <input
                     {...register("college")}
@@ -285,7 +347,7 @@ function ViewOffers() {
                     className="form-control"
                   />
                 </Col>
-                <Col lg="4" md="6">
+                <Col lg={data === "created-offers" ? "4" : "3"} md="6">
                   <Label key="major_name">{t("major")} :</Label>
                   <input
                     {...register("major")}
@@ -294,6 +356,22 @@ function ViewOffers() {
                     className="form-control"
                   />
                 </Col>
+                {data !== "created-offers" && (
+                  <Col lg="3" md="6">
+                    <Label key="university_id">
+                      {data === "sent-offers"
+                        ? t("Destination University")
+                        : t("Source University")}{" "}
+                      :
+                    </Label>
+                    <input
+                      {...register("university_id")}
+                      placeholder="University"
+                      type="text"
+                      className="form-control"
+                    />
+                  </Col>
+                )}
               </Row>
             </Col>
             <Col lg="2" md="4">
@@ -307,7 +385,7 @@ function ViewOffers() {
             </Col>
           </Row>
         </CardBody>
-        <DataTableWithButtons data={offers} columns={cols} />
+        <DataTableWithButtons data={offers} columns={colsMap[data]} />
       </Card>
       {formModal && (
         <Modal

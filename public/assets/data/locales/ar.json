@@ -184,9 +184,17 @@
   "Available": "متاح",
   "Offers": "العروض",
   "Creating Offer": "إنشاء العرض",
-  "Sent" : "مرسل",
-  "Student Details": "بيانات الطالب",
+  "Pending Request" : "قيد الانتظار",
+  "Accepted": "تم القبول",
   "Student Report": "تقرير الطالب",
-  "Offer Report": "تقرير العرض"
+  "Offer Report": "تقرير العرض",
+  "All Offers": "جميع العروض",
+  "Active Offers": "العروض النشطة",
+  "Expired Offers": "العروض المنتهية",
+  "Pending Acceptance": "قيد الانتظار",
+  "Expired": "منتهية",
+  "Destination University": "الجامعة المستلمة",
+  "Source University" : "الجامعة المرسلة",
+  "ID": "الرقم"
 
 }

@@ -18,9 +18,7 @@ const CandidateForm = () => {
     setData((prevData) => {
       return { ...prevData, ...data }
     })
-    console.log(data)
   }
-  console.log(data)
 
   const steps = [
     {

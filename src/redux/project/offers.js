@@ -46,11 +46,17 @@ export const selectCreatedOffers = (state, userId) =>
   )
 export const selectSentOffers = (state, userId) =>
   state.offers.offers.filter(
-    (offer) => offer.university_id_src === userId && offer.status === 1
+    (offer) =>
+      offer.university_id_src === userId &&
+      offer.status === 1 &&
+      offer.status === 2
   )
 export const selectObtainedOffers = (state, userId) =>
   state.offers.offers.filter(
-    (offer) => offer.university_id_src === userId && offer.status === 2
+    (offer) =>
+      offer.university_id_des === userId &&
+      offer.status === 1 &&
+      offer.status === 2
   )
 
 export const selectOfferById = (state, id) => {
