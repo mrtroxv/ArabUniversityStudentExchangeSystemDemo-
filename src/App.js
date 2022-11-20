@@ -14,7 +14,6 @@ const App = () => {
     dispatch(fetchOffers())
     dispatch(fetchUniversities())
     dispatch(fetchStudents())
-
   }, [])
   return (
     <Suspense fallback={null}>

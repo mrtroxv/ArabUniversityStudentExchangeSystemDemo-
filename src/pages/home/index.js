@@ -52,6 +52,15 @@ function Home() {
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
   const navigate = useNavigate()
+
+  const status = {
+    0: { title: "Current", color: "light-primary" },
+    1: { title: "Professional", color: "light-success" },
+    2: { title: "Rejected", color: "light-danger" },
+    3: { title: "Resigned", color: "light-warning" },
+    4: { title: "Applied", color: "light-info" }
+  }
+
   const cols = [
     {
       name: "ID",
@@ -77,8 +86,8 @@ function Home() {
       sortable: (row) => row.status,
       cell: (row) => {
         return (
-          <Badge color={"light-success"} pill>
-            {row.status}
+          <Badge color={status[row.status].color} pill>
+            {status[row.status].title}
           </Badge>
         )
       }
@@ -154,7 +163,6 @@ function Home() {
 
   useEffect(() => {
     setFilteredData(offersList)
-    console.log(offersList)
   }, [offersList])
 
   const viewTableHandler = (route) => {
