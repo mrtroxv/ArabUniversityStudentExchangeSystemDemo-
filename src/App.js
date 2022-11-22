@@ -1,6 +1,6 @@
 import React, { Suspense, useEffect } from "react"
 import { useDispatch } from "react-redux"
-import { fetchOffers } from "./redux/project/offers"
+import { fetchAllOffers } from "./redux/project/offers"
 import { fetchStudents } from "./redux/project/students"
 import { fetchUniversities } from "./redux/project/universities"
 
@@ -11,7 +11,7 @@ const App = () => {
   const dispatch = useDispatch()
   useEffect(() => {
     // load data when app is mounted
-    dispatch(fetchOffers())
+    dispatch(fetchAllOffers())
     dispatch(fetchUniversities())
     dispatch(fetchStudents())
   }, [])
