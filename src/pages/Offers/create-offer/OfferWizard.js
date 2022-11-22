@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useRef, useState } from "react"
+import { Fragment, useEffect, useRef, useState } from "react"
 
 // ** Custom Components
 import Wizard from "@components/wizard"
@@ -10,11 +10,17 @@ import TrainingDetails from "./components/TrainingDetails"
 import StudentDetails from "./components/StudentDetails"
 
 import { useTranslation } from "react-i18next"
-import axios from "axios"
+import { createOffer, fetchAllOffers, selectCreateOfferState } from "../../../redux/project/offers"
+import { useDispatch, useSelector } from "react-redux"
+import toast from "react-hot-toast"
 
 const OfferWizard = ({ type, onClose }) => {
   // ** Ref
   const ref = useRef(null)
+  const dispatch = useDispatch()
+  // eslint-disable-next-line
+  const createOfferState = useSelector(selectCreateOfferState)
+  console.log(createOfferState)
 
   // ** State
   const [stepper, setStepper] = useState(null)
@@ -28,29 +34,24 @@ const OfferWizard = ({ type, onClose }) => {
     // outerSubmit()
     console.log(data)
   }
+
   const handelSubmit = (values) => {
-    console.table({ ...values, ...data })
-    axios
-      .post(
-        "http://localhost:3500/offer/insert_offer",
-        {
-          ...data,
-          ...values
-        },
-        {
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
-        }
-      )
-      .then((response) => {
-        console.log(response)
-        onClose()
-      })
-      .catch((error) => {
-        console.log(error)
-      })
+    dispatch(createOffer({ ...values, ...data }))
   }
+
+  useEffect(() => {
+    console.log("1", createOfferState)
+    if (createOfferState.status) {
+      toast.success(t("Offer Created Successfully"))
+      setTimeout(() => {
+        onClose()
+        dispatch(fetchAllOffers())
+      }, 500)
+    }
+    if (createOfferState.error) {
+      toast.error(createOfferState.error)
+    }
+  }, [createOfferState])
 
   const steps = [
     {
