@@ -47,7 +47,7 @@ export const fetchAllOffers = createAsyncThunk("offers/getOffers", async () => {
         authorization: JSON.parse(localStorage.getItem("accessToken"))
       }
     })
-    return response
+    return response.data
   } catch (error) {
     console.log(error)
   }
