@@ -104,7 +104,7 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
         }}
         validateOnChange="true"
       >
-        {({ errors, touched, values }) => (
+        {({ errors, touched, values, setFieldValue }) => (
           <Form>
             <Row>
               <Col className="mb-1">
@@ -244,12 +244,17 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   {t("institutePhone")}
                 </Label>
                 <Field
-                  type="number"
+                  type="text"
                   name={`inst_phone`}
                   id={`inst_phone`}
                   placeholder="ex. +970 512345678"
                   className={`form-control ${errors.inst_phone && touched.inst_phone ? "is-invalid" : ""
                     }`}
+                  onChange={(e) => {
+                    setFieldValue('inst_phone', e.target.value.replace(/[^0-9]/g, ''))
+                  }
+                  }
+
                 />
                 <ErrorMessage
                   name="inst_phone"
@@ -268,6 +273,10 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   placeholder="09-2945415"
                   className={`form-control ${errors.inst_fax && touched.inst_fax ? "is-invalid" : ""
                     }`}
+                  onChange={(e) => {
+                    setFieldValue('inst_fax', e.target.value.replace(/[^0-9]/g, ''))
+                  }
+                  }
                 />
                 <ErrorMessage
                   name="inst_fax"

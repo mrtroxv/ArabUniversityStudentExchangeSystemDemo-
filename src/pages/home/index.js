@@ -180,7 +180,7 @@ function Home() {
   const id = watch("id")
   const college = watch("college")
   const major = watch("major")
-  const offers = filteredData?.filter((offer) => {
+  const offers = filteredData.filter((offer) => {
     return (
       offer.id.toString().includes(id) &&
       offer.college_name.toLowerCase().includes(college.toLowerCase()) &&
