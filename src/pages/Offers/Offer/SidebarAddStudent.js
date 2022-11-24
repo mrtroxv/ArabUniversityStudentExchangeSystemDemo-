@@ -20,6 +20,7 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
   // ** States
   const { t } = useTranslation()
   const students = useSelector(selectAllStudents)
+
   return (
     <Sidebar
       size="lg"

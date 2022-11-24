@@ -19,11 +19,12 @@ const OfferPreview = () => {
   const data = useSelector((state) => selectOfferById(state, id))
   const [sendSidebarOpen, setSendSidebarOpen] = useState(false)
   const [addStudent, setAddStudent] = useState(false)
+  const [deletePopup, setDeletePopup] = useState(false)
 
   // ** Functions to toggle add & send sidebar
   const toggleSendSidebar = () => setSendSidebarOpen(!sendSidebarOpen)
   const toggleAddSidebar = () => setAddStudent(!addStudent)
-
+  const toggleDeletePopup = () => setDeletePopup(!deletePopup)
   return data !== null && data.id !== undefined ? (
     <div className="invoice-preview-wrapper">
       <Row className="invoice-preview">
@@ -39,6 +40,7 @@ const OfferPreview = () => {
               status={data.status}
               setAddStudentOpen={toggleAddSidebar}
               setSendSidebarOpen={toggleSendSidebar}
+              deletePopup={toggleDeletePopup}
             />
           </Card>
         </Col>

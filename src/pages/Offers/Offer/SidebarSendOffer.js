@@ -3,7 +3,7 @@
 // ** Third Party Components
 import Flatpickr from "react-flatpickr"
 // useSelector
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 // ** Reactstrap Imports
 import { Form, Input, Label, Button } from "reactstrap"
 
@@ -15,11 +15,31 @@ import "@styles/react/libs/flatpickr/flatpickr.scss"
 import "@styles/base/pages/app-invoice.scss"
 import { useTranslation } from "react-i18next"
 import { selectAllUniversities } from "../../../redux/project/universities"
+import {
+  // selectAllOffers,
+  sendOffer
+} from "../../../redux/project/offers"
+import { useState } from "react"
 
 const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
   // ** States
   const { t } = useTranslation()
   const universities = useSelector(selectAllUniversities)
+
+  const [selectedUniversity, setSelectedUniversity] = useState(
+    universities[0].ID
+  )
+  const dispatch = useDispatch()
+
+  const handleSubmit = () => {
+    const uploadData = {
+      university_id: selectedUniversity,
+      offer_id: id
+    }
+    console.log(uploadData)
+    dispatch(sendOffer(uploadData))
+    toggleSidebar()
+  }
   return (
     <Sidebar
       size="lg"
@@ -37,7 +57,14 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
           <Label for="payment-method" className="form-label">
             {t("selectUniversity")}
           </Label>
-          <Input type="select" id="payment-method" defaultValue="">
+          <Input
+            type="select"
+            id="payment-method"
+            defaultValue=""
+            onChange={(e) => {
+              setSelectedUniversity(e.target.value)
+            }}
+          >
             <option value="" disabled>
               {t("UniversityName")}
             </option>
@@ -48,7 +75,7 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
         </div>
 
         <div className="d-flex flex-wrap mb-0">
-          <Button className="me-1" color="primary" onClick={toggleSidebar}>
+          <Button className="me-1" color="primary" onClick={handleSubmit}>
             {t("Send")}
           </Button>
           <Button color="secondary" outline onClick={toggleSidebar}>
