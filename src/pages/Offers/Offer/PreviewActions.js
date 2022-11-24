@@ -9,7 +9,8 @@ const PreviewActions = ({
   id,
   setSendSidebarOpen,
   setAddStudentOpen,
-  status
+  status,
+  deletePopup
 }) => {
   const { t } = useTranslation()
   return (
@@ -48,9 +49,25 @@ const PreviewActions = ({
             {t("Edit")}
           </Button>
         )}
-        {status === 1 && (
+        {status === 0 && (
+          <Button
+            color="danger"
+            block
+            outline
+            className="mb-75"
+            onClick={() => deletePopup(true)}
+          >
+            {t("Delete")}
+          </Button>
+        )}
+        {status === 2 && (
           <Button color="success" block onClick={() => setAddStudentOpen(true)}>
             {t("AddStudent")}
+          </Button>
+        )}
+        {status === 1 && (
+          <Button color="success" block onClick={() => setAddStudentOpen(true)}>
+            {t("Accept")}
           </Button>
         )}
         {status === 1 && (
