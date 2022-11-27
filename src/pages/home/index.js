@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React, { Fragment, useState, useEffect } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Routes, Route, Link, useNavigate } from "react-router-dom"
 import Breadcrumbs from "@components/breadcrumbs"
 import Toast from "react-hot-toast"
@@ -41,7 +41,7 @@ import activeImage from "@src/assets/images/svg/icons8_hard_working.svg"
 import DataTableWithButtons from "../../components/custom/table/ReactTable"
 import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
 import OfferWizard from "../Offers/create-offer/OfferWizard"
-import { selectAllOffers } from "../../redux/project/offers"
+import { deleteOffer, deleteOfferFromStore, resetDeleteOfferState, selectAllOffers, selectDeleteOfferState } from "../../redux/project/offers"
 import { useForm } from "react-hook-form"
 
 function Home() {
@@ -52,6 +52,24 @@ function Home() {
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const deleteOfferState = useSelector(selectDeleteOfferState)
+
+  const handelDeleteOffer = (Offer_id) => {
+    console.log({ Offer_id })
+    dispatch(deleteOffer(Offer_id))
+    dispatch(deleteOfferFromStore(Offer_id))
+  }
+
+  useEffect(() => {
+    if (deleteOfferState.status) {
+      Toast.success(t("Offer Deleted"))
+    }
+    setTimeout(() => {
+      dispatch(resetDeleteOfferState())
+    }, 500)
+  }, [deleteOfferState])
+
 
   const status = {
     0: { title: "Current", color: "light-primary" },
@@ -137,7 +155,7 @@ function Home() {
                   onClick={(e) => e.preventDefault()}
                 >
                   <Trash size={15} />
-                  <span className="align-middle ms-50">Delete</span>
+                  <span className="align-middle ms-50" onClick={() => handelDeleteOffer(row.id)}>Delete</span>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
@@ -180,7 +198,7 @@ function Home() {
   const id = watch("id")
   const college = watch("college")
   const major = watch("major")
-  const offers = filteredData.filter((offer) => {
+  const offers = filteredData?.filter((offer) => {
     return (
       offer.id.toString().includes(id) &&
       offer.college_name.toLowerCase().includes(college.toLowerCase()) &&

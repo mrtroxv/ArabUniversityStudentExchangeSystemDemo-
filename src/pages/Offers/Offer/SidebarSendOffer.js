@@ -16,6 +16,7 @@ import "@styles/base/pages/app-invoice.scss"
 import { useTranslation } from "react-i18next"
 import { selectAllUniversities } from "../../../redux/project/universities"
 import {
+  fetchAllOffers,
   // selectAllOffers,
   sendOffer
 } from "../../../redux/project/offers"
@@ -33,11 +34,12 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
 
   const handleSubmit = () => {
     const uploadData = {
-      university_id: selectedUniversity,
+      university_id_des: selectedUniversity,
       offer_id: id
     }
     console.log(uploadData)
     dispatch(sendOffer(uploadData))
+    dispatch(fetchAllOffers())
     toggleSidebar()
   }
   return (
