@@ -8,6 +8,8 @@ const OBTAINED_OFFER_URL = "http://localhost:3500/offer/obtained-offers"
 const ACTIVE_OFFERS_URL = "http://localhost:3500/offer/active-offers"
 const ENDED_OFFERS_URL = "http://localhost:3500/offer/ended-offers"
 const SEND_OFFER_URL = "http://localhost:3500/offer/send-offer"
+const DELETE_OFFER_URL = "http://localhost:3500/offer/delete-offer"
+const REJECT_OFFER_URL = "http://localhost:3500/offer/reject-offer"
 
 const initialState = {
   offers: [],
@@ -17,7 +19,15 @@ const initialState = {
     status: null,
     error: null
   },
-  SendOfferState: {
+  sendOfferState: {
+    status: null,
+    error: null
+  },
+  deleteOfferState: {
+    status: null,
+    error: null
+  },
+  rejectOfferState: {
     status: null,
     error: null
   }
@@ -117,12 +127,48 @@ export const sendOffer = createAsyncThunk("offers/sendOffer", async (offerData) 
     console.log(error)
   }
 })
+export const deleteOffer = createAsyncThunk("offers/deleteOffer", async (offer_id) => {
+  try {
+    const response = await axios.post(DELETE_OFFER_URL, { offer_id }, {
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("accessToken"))
+      }
+    })
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+)
+export const rejectOffer = createAsyncThunk("offers/rejectOffer", async (offer_id) => {
+  try {
+    const response = await axios.post(REJECT_OFFER_URL, { offer_id }, {
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("accessToken"))
+      }
+    })
+    console.log(response.data)
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
+)
 
 
 const offersSlice = createSlice({
   name: "offers",
   initialState,
-  reducers: {},
+  reducers: {
+    resetDeleteOfferState: (state) => {
+      state.deleteOfferState.status = null
+      state.deleteOfferState.error = null
+    },
+    deleteOfferFromStore: (state, action) => {
+      state.offers = state.offers.filter(offer => offer.id !== action.payload)
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllOffers.fulfilled, (state, action) => {
@@ -182,20 +228,51 @@ const offersSlice = createSlice({
       })
       .addCase(sendOffer.fulfilled, (state, action) => {
         if (action.payload.state === 400) {
-          state.SendOfferState.status = null
-          state.SendOfferState.error = action.payload.message
+          state.sendOfferState.status = null
+          state.sendOfferState.error = action.payload.message
         } else {
-          state.SendOfferState.status = "succeeded"
-          state.SendOfferState.error = null
+          state.sendOfferState.status = "succeeded"
+          state.sendOfferState.error = null
         }
 
       })
       .addCase(sendOffer.rejected, (state, action) => {
-        state.SendOfferState.status = null
-        state.SendOfferState.error = action.payload.data.message
+        state.sendOfferState.status = null
+        state.sendOfferState.error = action.payload.data.message
       }
       )
+      .addCase(deleteOffer.fulfilled, (state, action) => {
+        if (action.payload.status === 404) {
+          state.deleteOfferState.status = null
+          state.deleteOfferState.error = action.payload.message
+        } else {
+          state.deleteOfferState.status = "succeeded"
+          state.deleteOfferState.error = null
+        }
 
+      }
+      )
+      .addCase(deleteOffer.rejected, (state, action) => {
+        state.deleteOfferState.status = null
+        state.deleteOfferState.error = action.payload.data.message
+      }
+      )
+      .addCase(rejectOffer.fulfilled, (state, action) => {
+        if (action.payload.status === 404) {
+          state.rejectOfferState.status = null
+          state.rejectOfferState.error = action.payload.message
+        } else {
+          state.rejectOfferState.status = "succeeded"
+          state.rejectOfferState.error = null
+        }
+
+      }
+      )
+      .addCase(rejectOffer.rejected, (state, action) => {
+        state.rejectOfferState.status = null
+        state.rejectOfferState.error = action.payload.data.message
+      }
+      )
   }
 })
 
@@ -227,4 +304,10 @@ export const selectOfferById = (state, id) => {
 
 export const selectCreateOfferState = (state) => state.offers.createOfferState
 
+// export const selectSendOfferState = (state) => state.offers.sendOfferState
+
+export const selectDeleteOfferState = (state) => state.offers.deleteOfferState
+export const selectRejectOfferState = (state) => state.offers.rejectOfferState
+
+export const { resetDeleteOfferState, deleteOfferFromStore } = offersSlice.actions
 export default offersSlice.reducer

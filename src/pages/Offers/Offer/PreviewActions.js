@@ -1,18 +1,43 @@
 // ** React Imports
+import { useEffect } from "react"
 import { useTranslation } from "react-i18next"
-import { Link } from "react-router-dom"
+import { useDispatch, useSelector } from "react-redux"
+import { Link, useNavigate } from "react-router-dom"
 
 // ** Reactstrap Imports
-import { Card, CardBody, Button } from "reactstrap"
+import { Card, CardBody, Button, Toast } from "reactstrap"
+import { deleteOffer, fetchAllOffers, rejectOffer, resetDeleteOfferState, selectDeleteOfferState, selectRejectOfferState } from "../../../redux/project/offers"
 
 const PreviewActions = ({
   id,
   setSendSidebarOpen,
   setAddStudentOpen,
-  status,
-  deletePopup
-}) => {
+  status }) => {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const rejectOfferState = useSelector(selectRejectOfferState)
+  const deleteOfferState = useSelector(selectDeleteOfferState)
+  const handelRejectOffer = (id) => {
+    dispatch(rejectOffer(id))
+  }
+  const handelDeleteOffer = (id) => {
+    dispatch(deleteOffer(id))
+  }
+
+  useEffect(() => {
+    if (rejectOfferState.status) {
+      dispatch(fetchAllOffers())
+    }
+    if (deleteOfferState.status) {
+      dispatch(fetchAllOffers())
+      dispatch(resetDeleteOfferState())
+      navigate(-1)
+    }
+
+  }, [rejectOfferState.status, deleteOfferState.status])
+
+
   return (
     <Card className="invoice-action-wrapper">
       <CardBody>
@@ -55,7 +80,7 @@ const PreviewActions = ({
             block
             outline
             className="mb-75"
-            onClick={() => deletePopup(true)}
+            onClick={() => handelDeleteOffer(id)}
           >
             {t("Delete")}
           </Button>
@@ -71,12 +96,12 @@ const PreviewActions = ({
           </Button>
         )}
         {status === 1 && (
-          <Button color="danger" block onClick={() => setAddStudentOpen(true)}>
+          <Button color="danger" block onClick={() => handelRejectOffer(id)}>
             {t("Reject")}
           </Button>
         )}
       </CardBody>
-    </Card>
+    </Card >
   )
 }
 
