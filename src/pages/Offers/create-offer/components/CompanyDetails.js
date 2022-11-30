@@ -50,43 +50,39 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
 
   const Schema = Yup.object().shape({
     inst_name: Yup.string()
-      .required("No name provided")
+      // .required("No name provided")
       .min(8, "Too Short - Name must be at least 8 characters long"),
 
     inst_address: Yup.string()
-      .required("No address provided")
+      // .required("No address provided")
       .min(8, "Too Short - address must be at least 8 characters long"),
 
     place_of_work: Yup.string()
-      .required("You have to pick one")
+      // .required("You have to pick one")
       .oneOf(placeOfWorkOptions.map((place) => place.value)),
     train_aria: Yup.string()
-      .required("No aria provided")
+      // .required("No aria provided")
       .min(8, "Too Short - aria must be at least 8 characters long"),
 
     trainer_name: Yup.string()
-      .required("No name provided")
+      // .required("No name provided")
       .min(8, "Too Short - Name must be at least 8 characters long"),
 
-    days_of_work: Yup.array()
-      .min(2, "Please select at least two days")
-      .required("Please select at least two days"),
+    days_of_work: Yup.array(),
+    // .min(2, "Please select at least two days"),
+    // .required("Please select at least two days"),
 
-    inst_phone: Yup.string()
-      .matches(phoneRegExp, "Phone number is not valid")
-      .required("No Phone Number provided"),
+    inst_phone: Yup.string().matches(phoneRegExp, "Phone number is not valid"),
+    // .required("No Phone Number provided"),
 
-    inst_fax: Yup.string()
-      .matches(faxRegExp, "Fax number is not valid")
-      .required("No fax Number provided"),
+    inst_fax: Yup.string().matches(faxRegExp, "Fax number is not valid"),
+    // .required("No fax Number provided"),
 
-    weekly_hours: Yup.number()
-      .min(20, "Please increase Weekly Hours")
-      .required("No weekly Hours provided"),
+    weekly_hours: Yup.number().min(20, "Please increase Weekly Hours"),
+    // .required("No weekly Hours provided"),
 
-    daily_hours: Yup.number()
-      .min(5, "Please increase Daily Hours")
-      .required("No Daily Hours provided")
+    daily_hours: Yup.number().min(5, "Please increase Daily Hours")
+    // .required("No Daily Hours provided")
   })
 
   return (
@@ -116,8 +112,9 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`inst_name`}
                   id={`inst_name`}
                   placeholder="ex. Foothill Technology Solutions"
-                  className={`form-control ${errors.inst_name && touched.inst_name ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.inst_name && touched.inst_name ? "is-invalid" : ""
+                  }`}
                 />
                 <ErrorMessage
                   name="inst_name"
@@ -134,10 +131,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`inst_address`}
                   id={`inst_address`}
                   placeholder="ex. Nablus/Palestine"
-                  className={`form-control ${errors.inst_address && touched.inst_address
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-control ${
+                    errors.inst_address && touched.inst_address
+                      ? "is-invalid"
+                      : ""
+                  }`}
                 />
                 <ErrorMessage
                   name="inst_address"
@@ -157,10 +155,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   theme={selectThemeColors}
                   id="place_of_work"
                   options={placeOfWorkOptions}
-                  className={`react-select ${errors.place_of_work && touched.place_of_work
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`react-select ${
+                    errors.place_of_work && touched.place_of_work
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   classNamePrefix="select"
                   onChange={(value) => {
                     values.place_of_work = value.value
@@ -181,8 +180,9 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`train_aria`}
                   id={`train_aria`}
                   placeholder="ex. Computer Science"
-                  className={`form-control ${errors.train_aria && touched.train_aria ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.train_aria && touched.train_aria ? "is-invalid" : ""
+                  }`}
                 />
                 <ErrorMessage
                   name="train_aria"
@@ -201,10 +201,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`trainer_name`}
                   id={`trainer_name`}
                   placeholder="ex. Eng.Tamer Naana"
-                  className={`form-control ${errors.trainer_name && touched.trainer_name
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-control ${
+                    errors.trainer_name && touched.trainer_name
+                      ? "is-invalid"
+                      : ""
+                  }`}
                 />
                 <ErrorMessage
                   name="trainer_name"
@@ -222,10 +223,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   theme={selectThemeColors}
                   id="days_of_work"
                   options={daysOfWorkOptions}
-                  className={`react-select ${errors.days_of_work && touched.days_of_work
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`react-select ${
+                    errors.days_of_work && touched.days_of_work
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   classNamePrefix="select"
                   onChange={(value) => {
                     values.days_of_work = value.map((item) => item.value)
@@ -248,13 +250,15 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`inst_phone`}
                   id={`inst_phone`}
                   placeholder="ex. +970 512345678"
-                  className={`form-control ${errors.inst_phone && touched.inst_phone ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.inst_phone && touched.inst_phone ? "is-invalid" : ""
+                  }`}
                   onChange={(e) => {
-                    setFieldValue('inst_phone', e.target.value.replace(/[^0-9]/g, ''))
-                  }
-                  }
-
+                    setFieldValue(
+                      "inst_phone",
+                      e.target.value.replace(/[^0-9]/g, "")
+                    )
+                  }}
                 />
                 <ErrorMessage
                   name="inst_phone"
@@ -271,12 +275,15 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`inst_fax`}
                   id={`inst_fax`}
                   placeholder="09-2945415"
-                  className={`form-control ${errors.inst_fax && touched.inst_fax ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.inst_fax && touched.inst_fax ? "is-invalid" : ""
+                  }`}
                   onChange={(e) => {
-                    setFieldValue('inst_fax', e.target.value.replace(/[^0-9]/g, ''))
-                  }
-                  }
+                    setFieldValue(
+                      "inst_fax",
+                      e.target.value.replace(/[^0-9]/g, "")
+                    )
+                  }}
                 />
                 <ErrorMessage
                   name="inst_fax"
@@ -295,10 +302,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`weekly_hours`}
                   id={`weekly_hours`}
                   placeholder="ex. 35"
-                  className={`form-control ${errors.weekly_hours && touched.weekly_hours
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-control ${
+                    errors.weekly_hours && touched.weekly_hours
+                      ? "is-invalid"
+                      : ""
+                  }`}
                 />
                 <ErrorMessage
                   name="weekly_hours"
@@ -315,10 +323,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`daily_hours`}
                   id={`daily_hours`}
                   placeholder="ex. 5"
-                  className={`form-control ${errors.daily_hours && touched.daily_hours
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-control ${
+                    errors.daily_hours && touched.daily_hours
+                      ? "is-invalid"
+                      : ""
+                  }`}
                 />
                 <ErrorMessage
                   name="daily_hours"
