@@ -81,8 +81,9 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
     weekly_hours: Yup.number().min(20, "Please increase Weekly Hours"),
     // .required("No weekly Hours provided"),
 
-    daily_hours: Yup.number().min(5, "Please increase Daily Hours")
-    // .required("No Daily Hours provided")
+    daily_hours: Yup.number()
+      .min(5, "Please increase Daily Hours")
+      .required("No Daily Hours provided")
   })
 
   return (
