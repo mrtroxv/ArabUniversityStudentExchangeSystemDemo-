@@ -1,6 +1,6 @@
 // eslint-disable-next-line
 import React, { Fragment, useState, useEffect } from "react"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Routes, Route, Link, useNavigate, useParams } from "react-router-dom"
 import Breadcrumbs from "@components/breadcrumbs"
 import Toast from "react-hot-toast"
@@ -45,6 +45,7 @@ import DataTableWithButtons from "../../../components/custom/table/ReactTable"
 import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
 import OfferWizard from "../create-offer/OfferWizard"
 import {
+  fetchAllOffers,
   selectCreatedOffers,
   selectObtainedOffers,
   selectSentOffers
@@ -61,6 +62,8 @@ function ViewOffers() {
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
   const navigate = useNavigate()
+
+  const dispatch = useDispatch()
   const [filteredData, setFilteredData] = useState([])
 
   const breadcrumbs = {
@@ -217,6 +220,7 @@ function ViewOffers() {
   }
 
   useEffect(() => {
+    dispatch(fetchAllOffers())
     setFilteredData(offersList)
   }, [])
 
