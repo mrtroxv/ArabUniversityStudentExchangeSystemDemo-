@@ -6,13 +6,21 @@ import { Link, useNavigate } from "react-router-dom"
 
 // ** Reactstrap Imports
 import { Card, CardBody, Button, Toast } from "reactstrap"
-import { deleteOffer, fetchAllOffers, rejectOffer, resetDeleteOfferState, selectDeleteOfferState, selectRejectOfferState } from "../../../redux/project/offers"
+import {
+  deleteOffer,
+  fetchAllOffers,
+  rejectOffer,
+  resetDeleteOfferState,
+  selectDeleteOfferState,
+  selectRejectOfferState
+} from "../../../redux/project/offers"
 
 const PreviewActions = ({
   id,
   setSendSidebarOpen,
   setAddStudentOpen,
-  status }) => {
+  status
+}) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -34,9 +42,7 @@ const PreviewActions = ({
       dispatch(resetDeleteOfferState())
       navigate(-1)
     }
-
   }, [rejectOfferState.status, deleteOfferState.status])
-
 
   return (
     <Card className="invoice-action-wrapper">
@@ -51,24 +57,13 @@ const PreviewActions = ({
             {t("Send")}
           </Button>
         )}
-        <Button
-          color="secondary"
-          tag={Link}
-          to="/offers/print"
-          target="_blank"
-          block
-          outline
-          className="mb-75"
-        >
-          {t("Print")}
-        </Button>
+
         {status === 0 && (
           <Button
             tag={Link}
             to={`/offers/edit/${id}`}
-            color="secondary"
+            color="warning"
             block
-            outline
             className="mb-75"
           >
             {t("Edit")}
@@ -78,7 +73,6 @@ const PreviewActions = ({
           <Button
             color="danger"
             block
-            outline
             className="mb-75"
             onClick={() => handelDeleteOffer(id)}
           >
@@ -86,22 +80,48 @@ const PreviewActions = ({
           </Button>
         )}
         {status === 2 && (
-          <Button color="success" block onClick={() => setAddStudentOpen(true)}>
+          <Button
+            color="success"
+            block
+            onClick={() => setAddStudentOpen(true)}
+            className="mb-75"
+          >
             {t("AddStudent")}
           </Button>
         )}
         {status === 1 && (
-          <Button color="success" block onClick={() => setAddStudentOpen(true)}>
+          <Button
+            color="success"
+            block
+            onClick={(e) => e.preventDefault()}
+            className="mb-75"
+          >
             {t("Accept")}
           </Button>
         )}
         {status === 1 && (
-          <Button color="danger" block onClick={() => handelRejectOffer(id)}>
+          <Button
+            color="danger"
+            block
+            onClick={() => handelRejectOffer(id)}
+            className="mb-75"
+          >
             {t("Reject")}
           </Button>
         )}
+        <Button
+          color="success"
+          tag={Link}
+          to="/offers/print"
+          target="_blank"
+          block
+          outline
+          className="mb-75"
+        >
+          {t("Print")}
+        </Button>
       </CardBody>
-    </Card >
+    </Card>
   )
 }
 

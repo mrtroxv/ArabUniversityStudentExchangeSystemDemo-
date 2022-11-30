@@ -178,58 +178,28 @@ function ViewOffers() {
     allowOverflow: true,
     cell: (row) => {
       return (
-        <div className="d-flex">
-          <UncontrolledDropdown>
-            <DropdownToggle className="pe-1" tag="span">
-              <MoreVertical size={15} />
-            </DropdownToggle>
-            <DropdownMenu end>
-              <DropdownItem
-                tag="a"
-                href="/"
-                className="w-100"
-                onClick={(e) => {
-                  e.preventDefault()
-                  navigate(`/view-offers/${row.id}`)
-                }}
-              >
-                <FileText size={15} />
-                <span className="align-middle ms-50">Details</span>
-              </DropdownItem>
-              <DropdownItem
-                tag="a"
-                href="/"
-                className="w-100"
-                onClick={(e) => e.preventDefault()}
-              >
-                <Archive size={15} />
-                <span className="align-middle ms-50">Archive</span>
-              </DropdownItem>
-              <DropdownItem
-                tag="a"
-                href="/"
-                className="w-100"
-                onClick={(e) => e.preventDefault()}
-              >
-                <Trash size={15} />
-                <span className="align-middle ms-50">Delete</span>
-              </DropdownItem>
-            </DropdownMenu>
-          </UncontrolledDropdown>
+        <div className="d-flex gap-2">
           <Button
             type="button"
             color="white"
             className="table-button_edit"
             onClick={(e) => {
               e.preventDefault()
-              setEditingOffer(
-                offersList.filter((offer) => offer.id === row.id)[0]
-              )
-              setFormModal(!formModal)
+              navigate(`/view-offers/${row.id}`)
             }}
           >
-            <Edit size={15} />
+            <FileText size={15} />
           </Button>
+          {row.status === 0 && (
+            <Button
+              type="button"
+              color="white"
+              className="table-button_edit"
+              onClick={(e) => e.preventDefault()}
+            >
+              <Trash size={15} />
+            </Button>
+          )}
         </div>
       )
     }

@@ -16,22 +16,27 @@ import { useTranslation } from "react-i18next"
 import Timeline from "@components/timeline"
 import { Fragment } from "react"
 import { Share2, User } from "react-feather"
+import { selectUniversityById } from "../../../redux/project/universities"
+import { useSelector } from "react-redux"
 const PreviewCard = ({ data }) => {
   const { t } = useTranslation()
-
+  const creator = useSelector((state) =>
+    selectUniversityById(state, data.university_id_src)
+  )
   const basicData = [
-    {
+    data.status >= 0 && {
       title: "تم انشاء العرض",
       content: "العرض الان جاهز للإرسال, اضغط على زر إرسال لإظهار الجامعات",
       meta: new Date(data.offer_date).toLocaleDateString()
-      // customContent: (
+      // customContent: data.status === 1 && (
       //   <div className="d-flex align-items-center">
       //     <img className="me-1" src={appLogo} alt="pdf" height="23" />
+
       //     <span>invoice.pdf</span>
       //   </div>
       // )
     },
-    {
+    data.status >= 1 && {
       title: "تم استقبال العرض",
       content: "العرض الان جاهز لإرفاق طالب, اضغط على زر إضافة طالب للإستمرار",
       meta: new Date(data.offer_date).toLocaleDateString(),
@@ -45,6 +50,7 @@ const PreviewCard = ({ data }) => {
       // )
     }
   ]
+
   return data !== null ? (
     <Card className="invoice-preview-card">
       <CardBody className="invoice-padding pb-0">
@@ -199,7 +205,9 @@ const PreviewCard = ({ data }) => {
             <div className="invoice-total-wrapper">
               <div className="invoice-total-item">
                 <p className="invoice-total-amount">{t("offerOwner")}:</p>
-                <p className="invoice-total-title">Creator</p>
+              </div>
+              <div className="invoice-total-item">
+                <p className="invoice-total-title">{creator.EN_Name}</p>
               </div>
               <div className="invoice-total-item">
                 <p className="invoice-total-amount">{t("offerType")}:</p>
