@@ -72,11 +72,13 @@ function Home() {
 
 
   const status = {
-    0: { title: "Current", color: "light-primary" },
-    1: { title: "Professional", color: "light-success" },
-    2: { title: "Rejected", color: "light-danger" },
-    3: { title: "Resigned", color: "light-warning" },
-    4: { title: "Applied", color: "light-info" }
+    0: { title: t("Creating Offer"), color: "light-primary" },
+    1: { title: t("Pending Request"), color: "light-warning" },
+    2: { title: t("Accepted"), color: "light-success" },
+    3: { title: t("Rejected"), color: "light-danger" },
+    4: { title: t("Pending Acceptance"), color: "light-warning" },
+    5: { title: t("Offer Report"), color: "light-primary" },
+    6: { title: t("Expired"), color: "light-danger" }
   }
 
   const cols = [
