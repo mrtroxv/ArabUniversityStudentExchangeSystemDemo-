@@ -17,20 +17,25 @@ import { useTranslation } from "react-i18next"
 import { selectAllUniversities } from "../../../redux/project/universities"
 import {
   fetchAllOffers,
+  selectSendOfferState,
   // selectAllOffers,
   sendOffer
 } from "../../../redux/project/offers"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import toast from "react-hot-toast"
 
 const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
   // ** States
   const { t } = useTranslation()
   const universities = useSelector(selectAllUniversities)
+  const sentOfferState = useSelector(selectSendOfferState)
+
 
   const [selectedUniversity, setSelectedUniversity] = useState(
     universities[0].ID
   )
   const dispatch = useDispatch()
+
 
   const handleSubmit = () => {
     const uploadData = {
@@ -39,9 +44,16 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
     }
     console.log(uploadData)
     dispatch(sendOffer(uploadData))
-    dispatch(fetchAllOffers())
     toggleSidebar()
   }
+
+  useEffect(() => {
+    if (sentOfferState.status) {
+      toast.success(t("Offer Created Successfully"))
+      dispatch(fetchAllOffers())
+    }
+  }, [sentOfferState.status])
+
   return (
     <Sidebar
       size="lg"
