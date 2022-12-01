@@ -7,10 +7,12 @@ import { Link, useNavigate } from "react-router-dom"
 // ** Reactstrap Imports
 import { Card, CardBody, Button, Toast } from "reactstrap"
 import {
+  acceptOffer,
   deleteOffer,
   fetchAllOffers,
   rejectOffer,
   resetDeleteOfferState,
+  selectAcceptOfferState,
   selectDeleteOfferState,
   selectRejectOfferState
 } from "../../../redux/project/offers"
@@ -26,11 +28,16 @@ const PreviewActions = ({
   const navigate = useNavigate()
   const rejectOfferState = useSelector(selectRejectOfferState)
   const deleteOfferState = useSelector(selectDeleteOfferState)
+  const acceptOfferState = useSelector(selectAcceptOfferState)
+
   const handelRejectOffer = (id) => {
     dispatch(rejectOffer(id))
   }
   const handelDeleteOffer = (id) => {
     dispatch(deleteOffer(id))
+  }
+  const handelAcceptOffer = (offer_id) => {
+    dispatch(acceptOffer(offer_id))
   }
 
   useEffect(() => {
@@ -42,7 +49,10 @@ const PreviewActions = ({
       dispatch(resetDeleteOfferState())
       navigate(-1)
     }
-  }, [rejectOfferState.status, deleteOfferState.status])
+    if (acceptOfferState.status) {
+      dispatch(fetchAllOffers())
+    }
+  }, [rejectOfferState.status, deleteOfferState.status, acceptOfferState.status])
 
   return (
     <Card className="invoice-action-wrapper">
@@ -93,7 +103,7 @@ const PreviewActions = ({
           <Button
             color="success"
             block
-            onClick={(e) => e.preventDefault()}
+            onClick={() => handelAcceptOffer(id)}
             className="mb-75"
           >
             {t("Accept")}
