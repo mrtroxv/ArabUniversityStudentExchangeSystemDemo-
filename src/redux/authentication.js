@@ -47,7 +47,7 @@ export const authSlice = createSlice({
 })
 
 export const selectUser = (state) => state.auth.userData
-export const selectUserID = (state) => state.auth.userData.id
+export const selectUserID = (state) => state.auth.userData.university_id
 export const { handleLogin, handleLogout } = authSlice.actions
 
 export default authSlice.reducer
