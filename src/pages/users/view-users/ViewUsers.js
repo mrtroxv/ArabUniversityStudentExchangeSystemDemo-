@@ -22,6 +22,8 @@ import { ChevronDown } from "react-feather"
 import { selectAllUniversities } from "../../../redux/project/universities"
 import { useForm } from "react-hook-form"
 
+import NewUser from "../create-user/index"
+
 const ViewUsers = () => {
   const { register, watch, setValue } = useForm()
   const [filteredData, setFilteredData] = useState([])
@@ -174,10 +176,14 @@ const ViewUsers = () => {
             toggle={() => setFormModal(!formModal)}
             className="modal-lg"
           >
-            Add University
+            {t("createOffer")}
           </ModalHeader>
           <ModalBody>
-            Here should be the form for create a new university
+            <NewUser
+              outerSubmit={() => {}}
+              type="modern-vertical"
+              onClose={() => setFormModal(!formModal)}
+            />
           </ModalBody>
         </Modal>
       )}
