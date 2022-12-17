@@ -2,7 +2,7 @@
 import { Fragment } from "react"
 
 // ** Utils
-import { selectThemeColors } from "@utils"
+// import { selectThemeColors } from "@utils"
 
 // ** Third Party Components
 import * as Yup from "yup"
@@ -17,34 +17,20 @@ import Select from "react-select"
 import FormHeader from "./FormHeader"
 import { useTranslation } from "react-i18next"
 
-const CandidateInformation = ({ stepper, onSubmit }) => {
+const UserDetails = ({ stepper, onSubmit }) => {
   const { t } = useTranslation()
-  const genderOptions = [
-    { value: t("male"), label: t("male") },
-    { value: t("female"), label: t("female") }
-  ]
 
   const defaultValues = {
     name: "",
     id: "",
-    gender: "",
-    nationality: "",
-    birthDate: "",
-    birthPlace: "",
-    healthStatus: ""
+    nationality: ""
   }
   const schema = Yup.object({
     name: Yup.string()
       .required("No name provided")
       .min(8, "Too Short - Name must be at least 8 characters long"),
     id: Yup.number().required("No id provided"),
-    gender: Yup.string()
-      .oneOf(genderOptions.map((value) => value.value))
-      .required("You have to pick one"),
-    nationality: Yup.string().required("No nationality provided"),
-    birthDate: Yup.date().required("No birth date provided"),
-    birthPlace: Yup.string().required("No birth place provided"),
-    healthStatus: Yup.string().required("")
+    nationality: Yup.string().required("No nationality provided")
   })
 
   return (
@@ -58,7 +44,7 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
           stepper.next()
         }}
       >
-        {({ errors, touched, values }) => (
+        {({ errors, touched }) => (
           <Form>
             <Row>
               <Col md="6" className="mb-1">
@@ -117,86 +103,6 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                   className="invalid-feedback"
                 />
               </Col>
-              <Col md="6" className="mb-1">
-                <label htmlFor="gender" className="form-label form-label">
-                  {t("gender")}
-                </label>
-                <Select
-                  isClearable={false}
-                  theme={selectThemeColors}
-                  id="gender"
-                  options={genderOptions}
-                  className={`react-select ${
-                    errors.gender && touched.gender ? "is-invalid" : ""
-                  }`}
-                  classNamePrefix="select"
-                  onChange={(value) => {
-                    values.gender = value.value
-                  }}
-                />
-                <ErrorMessage
-                  name="gender"
-                  component="p"
-                  className="invalid-feedback"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col md="6" className="mb-1">
-                <label htmlFor="birthPlace" className="form-label form-label">
-                  {t("birthPlace")}
-                </label>
-                <Field
-                  name="birthPlace"
-                  className={`form-control ${
-                    errors.birthPlace && touched.birthPlace ? "is-invalid" : ""
-                  }`}
-                  placeholder={t("birthPlaceP")}
-                />
-                <ErrorMessage
-                  name="birthPlace"
-                  component="p"
-                  className="invalid-feedback"
-                />
-              </Col>
-              <Col md="6" className="mb-1">
-                <label htmlFor="birthDate" className="form-label form-label">
-                  {t("birthDate")}
-                </label>
-                <Field
-                  name="birthDate"
-                  className={`form-control ${
-                    errors.birthDate && touched.birthDate ? "is-invalid" : ""
-                  }`}
-                  type="date"
-                />
-                <ErrorMessage
-                  name="birthDate"
-                  component="p"
-                  className="invalid-feedback"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col md="6" className="mb-2">
-                <label htmlFor="healthStatus" className="form-label form-label">
-                  {t("healthStatus")}
-                </label>
-                <Field
-                  name="healthStatus"
-                  className={`form-control ${
-                    errors.healthStatus && touched.healthStatus
-                      ? "is-invalid"
-                      : ""
-                  }`}
-                  placeholder={t("healthStatus")}
-                />
-                <ErrorMessage
-                  name="healthStatus"
-                  component="p"
-                  className="invalid-feedback"
-                />
-              </Col>
             </Row>
             <div className="d-flex justify-content-between">
               <Button color="secondary" className="btn-prev" outline disabled>
@@ -225,4 +131,4 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
   )
 }
 
-export default CandidateInformation
+export default UserDetails
