@@ -58,7 +58,7 @@ const Routes = [
     path: "/home",
     element: <Home />,
     meta: {
-      publicRoute: false
+      publicRoute: true
     }
   },
   {
