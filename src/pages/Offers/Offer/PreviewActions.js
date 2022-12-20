@@ -11,6 +11,7 @@ import {
   deleteOffer,
   fetchAllOffers,
   rejectOffer,
+  resetAcceptOfferState,
   resetDeleteOfferState,
   selectAcceptOfferState,
   selectDeleteOfferState,
@@ -41,7 +42,7 @@ const PreviewActions = ({
   }
 
   useEffect(() => {
-    if (rejectOfferState.status) {
+    if (rejectOfferState.status || acceptOfferState.status) {
       dispatch(fetchAllOffers())
     }
     if (deleteOfferState.status) {
@@ -49,9 +50,8 @@ const PreviewActions = ({
       dispatch(resetDeleteOfferState())
       navigate(-1)
     }
-    if (acceptOfferState.status) {
-      dispatch(fetchAllOffers())
-    }
+
+    dispatch(resetAcceptOfferState())
   }, [rejectOfferState.status, deleteOfferState.status, acceptOfferState.status])
 
   return (
