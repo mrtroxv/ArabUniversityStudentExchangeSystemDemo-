@@ -11,6 +11,7 @@ const SEND_OFFER_URL = "http://localhost:3500/offer/send-offer"
 const DELETE_OFFER_URL = "http://localhost:3500/offer/delete-offer"
 const REJECT_OFFER_URL = "http://localhost:3500/offer/reject-offer"
 const ACCEPT_OFFER_URL = "http://localhost:3500/offer/accept-offer"
+const ADD_STUDENT_URL = "http://localhost:3500/offer/add-student"
 
 const initialState = {
   offers: [],
@@ -35,12 +36,17 @@ const initialState = {
   acceptOfferState: {
     status: null,
     error: null
+  },
+  addStudentState: {
+    status: null,
+    error: null
   }
 }
 
 export const createOffer = createAsyncThunk(
   "offers/createOffer",
   async (offerData) => {
+    console.log(2222222)
     let response
     try {
       response = await axios.post(CREATE_OFFER_URL, offerData, {
@@ -48,6 +54,7 @@ export const createOffer = createAsyncThunk(
           authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
       })
+      console.log(response)
       return response.data
     } catch (err) {
       console.log(err)
@@ -205,6 +212,23 @@ export const acceptOffer = createAsyncThunk(
   }
 )
 
+export const addStudent = createAsyncThunk(
+  "offers/addStudent",
+  async (offerIdAndStudentId) => {
+
+    try {
+      const response = await axios.post(ADD_STUDENT_URL, offerIdAndStudentId, {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      })
+      console.log(response.data)
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
 
 const offersSlice = createSlice({
   name: "offers",
@@ -213,6 +237,26 @@ const offersSlice = createSlice({
     resetDeleteOfferState: (state) => {
       state.deleteOfferState.status = null
       state.deleteOfferState.error = null
+    },
+    resetAddStudentState: (state) => {
+      state.addStudentState.status = null
+      state.addStudentState.error = null
+    },
+    resetAcceptOfferState: (state) => {
+      state.acceptOfferState.status = null
+      state.acceptOfferState.error = null
+    },
+    resetRejectOfferState: (state) => {
+      state.rejectOfferState.status = null
+      state.rejectOfferState.error = null
+    },
+    resetSendOfferState: (state) => {
+      state.sendOfferState.status = null
+      state.sendOfferState.error = null
+    },
+    resetCreateOfferState: (state) => {
+      state.createOfferState.status = null
+      state.createOfferState.error = null
     },
     deleteOfferFromStore: (state, action) => {
       state.offers = state.offers.filter((offer) => offer.id !== action.payload)
@@ -261,7 +305,9 @@ const offersSlice = createSlice({
         state.error = action.error.message
       })
       .addCase(createOffer.fulfilled, (state, action) => {
-        if (action.payload.state === 400) {
+        console.log(action.payload)
+
+        if (action.payload.status === 400) {
           state.createOfferState.status = null
           state.createOfferState.error = action.payload.message
         } else {
@@ -326,6 +372,20 @@ const offersSlice = createSlice({
         state.acceptOfferState.status = null
         state.acceptOfferState.error = action.payload.data.message
       })
+      .addCase(addStudent.fulfilled, (state, action) => {
+        if (action.payload.status === 404) {
+          state.addStudentState.status = null
+          state.addStudentState.error = action.payload.message
+        } else {
+          state.addStudentState.status = "succeeded"
+          state.addStudentState.error = null
+        }
+      })
+      .addCase(addStudent.rejected, (state, action) => {
+        state.addStudentState.status = null
+        state.addStudentState.error = action.payload.data.message
+      }
+      )
   }
 })
 
@@ -360,7 +420,9 @@ export const selectSendOfferState = (state) => state.offers.sendOfferState
 export const selectDeleteOfferState = (state) => state.offers.deleteOfferState
 export const selectRejectOfferState = (state) => state.offers.rejectOfferState
 export const selectAcceptOfferState = (state) => state.offers.acceptOfferState
+export const selectAddStudentState = (state) => state.offers.addStudentState
 
-export const { resetDeleteOfferState, deleteOfferFromStore } =
+export const { resetDeleteOfferState, deleteOfferFromStore, resetAddStudentState,
+  resetAcceptOfferState, resetCreateOfferState, resetSendOfferState } =
   offersSlice.actions
 export default offersSlice.reducer
