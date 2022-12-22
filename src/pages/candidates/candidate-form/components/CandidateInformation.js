@@ -26,7 +26,6 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
 
   const defaultValues = {
     name: "",
-    id: "",
     gender: "",
     nationality: "",
     birthDate: "",
@@ -37,7 +36,6 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
     name: Yup.string()
       .required("No name provided")
       .min(8, "Too Short - Name must be at least 8 characters long"),
-    id: Yup.number().required("No id provided"),
     gender: Yup.string()
       .oneOf(genderOptions.map((value) => value.value))
       .required("You have to pick one"),
@@ -67,9 +65,8 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                 </label>
                 <Field
                   name="name"
-                  className={`form-control ${
-                    errors.name && touched.name ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.name && touched.name ? "is-invalid" : ""
+                    }`}
                   placeholder={t("nameP")}
                 />
                 <ErrorMessage
@@ -79,36 +76,15 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                 />
               </Col>
               <Col md="6" className="mb-1">
-                <label htmlFor="id" className="form-label form-label">
-                  {t("id")}
-                </label>
-                <Field
-                  type="number"
-                  name="id"
-                  className={`form-control ${
-                    errors.id && touched.id ? "is-invalid" : ""
-                  }`}
-                  placeholder={t("idP")}
-                />
-                <ErrorMessage
-                  name="id"
-                  component="p"
-                  className="invalid-feedback"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col md="6" className="mb-1">
                 <label htmlFor="nationality" className="form-label form-label">
                   {t("nationality")}
                 </label>
                 <Field
                   name="nationality"
-                  className={`form-control ${
-                    errors.nationality && touched.nationality
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${errors.nationality && touched.nationality
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   placeholder={t("nationalityP")}
                 />
                 <ErrorMessage
@@ -117,6 +93,8 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                   className="invalid-feedback"
                 />
               </Col>
+            </Row>
+            <Row>
               <Col md="6" className="mb-1">
                 <label htmlFor="gender" className="form-label form-label">
                   {t("gender")}
@@ -126,9 +104,8 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                   theme={selectThemeColors}
                   id="gender"
                   options={genderOptions}
-                  className={`react-select ${
-                    errors.gender && touched.gender ? "is-invalid" : ""
-                  }`}
+                  className={`react-select ${errors.gender && touched.gender ? "is-invalid" : ""
+                    }`}
                   classNamePrefix="select"
                   onChange={(value) => {
                     values.gender = value.value
@@ -140,55 +117,16 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                   className="invalid-feedback"
                 />
               </Col>
-            </Row>
-            <Row>
               <Col md="6" className="mb-1">
-                <label htmlFor="birthPlace" className="form-label form-label">
-                  {t("birthPlace")}
-                </label>
-                <Field
-                  name="birthPlace"
-                  className={`form-control ${
-                    errors.birthPlace && touched.birthPlace ? "is-invalid" : ""
-                  }`}
-                  placeholder={t("birthPlaceP")}
-                />
-                <ErrorMessage
-                  name="birthPlace"
-                  component="p"
-                  className="invalid-feedback"
-                />
-              </Col>
-              <Col md="6" className="mb-1">
-                <label htmlFor="birthDate" className="form-label form-label">
-                  {t("birthDate")}
-                </label>
-                <Field
-                  name="birthDate"
-                  className={`form-control ${
-                    errors.birthDate && touched.birthDate ? "is-invalid" : ""
-                  }`}
-                  type="date"
-                />
-                <ErrorMessage
-                  name="birthDate"
-                  component="p"
-                  className="invalid-feedback"
-                />
-              </Col>
-            </Row>
-            <Row>
-              <Col md="6" className="mb-2">
                 <label htmlFor="healthStatus" className="form-label form-label">
                   {t("healthStatus")}
                 </label>
                 <Field
                   name="healthStatus"
-                  className={`form-control ${
-                    errors.healthStatus && touched.healthStatus
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${errors.healthStatus && touched.healthStatus
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   placeholder={t("healthStatus")}
                 />
                 <ErrorMessage
@@ -198,6 +136,41 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                 />
               </Col>
             </Row>
+            <Row>
+              <Col md="6" className="mb-2">
+                <label htmlFor="birthPlace" className="form-label form-label">
+                  {t("birthPlace")}
+                </label>
+                <Field
+                  name="birthPlace"
+                  className={`form-control ${errors.birthPlace && touched.birthPlace ? "is-invalid" : ""
+                    }`}
+                  placeholder={t("birthPlaceP")}
+                />
+                <ErrorMessage
+                  name="birthPlace"
+                  component="p"
+                  className="invalid-feedback"
+                />
+              </Col>
+              <Col md="6" className="mb-2">
+                <label htmlFor="birthDate" className="form-label form-label">
+                  {t("birthDate")}
+                </label>
+                <Field
+                  name="birthDate"
+                  className={`form-control ${errors.birthDate && touched.birthDate ? "is-invalid" : ""
+                    }`}
+                  type="date"
+                />
+                <ErrorMessage
+                  name="birthDate"
+                  component="p"
+                  className="invalid-feedback"
+                />
+              </Col>
+            </Row>
+
             <div className="d-flex justify-content-between">
               <Button color="secondary" className="btn-prev" outline disabled>
                 <ArrowLeft
@@ -224,5 +197,4 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
     </Fragment>
   )
 }
-
 export default CandidateInformation
