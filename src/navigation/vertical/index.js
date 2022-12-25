@@ -56,12 +56,6 @@ const menuItems = (t) => {
       icon: <User size={20} />,
       children: [
         {
-          id: "CreateUniversity",
-          title: t("CreateUniversity"),
-          icon: <Circle size={20} />,
-          navLink: "/new-university"
-        },
-        {
           id: "ViewUniversities",
           title: t("ViewUniversities"),
           icon: <Circle size={20} />,
@@ -79,12 +73,6 @@ const menuItems = (t) => {
           title: t("viewCandidates"),
           icon: <Circle size={20} />,
           navLink: "/candidates/view-candidates"
-        },
-        {
-          id: "CreateCandidate",
-          title: t("createCandidate"),
-          icon: <Circle size={20} />,
-          navLink: "/candidates/new-candidate"
         }
       ]
     },
@@ -98,12 +86,6 @@ const menuItems = (t) => {
           title: t("viewReports"),
           icon: <Circle size={20} />,
           navLink: "/view-reports"
-        },
-        {
-          id: "CreateReport",
-          title: t("createReport"),
-          icon: <Circle size={20} />,
-          navLink: "/new-report"
         }
       ]
     },

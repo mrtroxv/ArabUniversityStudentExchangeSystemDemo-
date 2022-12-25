@@ -78,13 +78,9 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
     inst_fax: Yup.string().matches(faxRegExp, "Fax number is not valid"),
     // .required("No fax Number provided"),
 
-    weekly_hours: Yup.number().min(20, "Please increase Weekly Hours").required(
-      "No weekly Hours provided"),
-    // .required("No weekly Hours provided"),
+    weekly_hours: Yup.number().min(20, "Please increase Weekly Hours"),
 
-    daily_hours: Yup.number()
-      .min(5, "Please increase Daily Hours")
-      .required("No Daily Hours provided")
+    daily_hours: Yup.number().min(5, "Please increase Daily Hours")
   })
 
   return (
@@ -114,8 +110,9 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`inst_name`}
                   id={`inst_name`}
                   placeholder="ex. Foothill Technology Solutions"
-                  className={`form-control ${errors.inst_name && touched.inst_name ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.inst_name && touched.inst_name ? "is-invalid" : ""
+                  }`}
                 />
                 <ErrorMessage
                   name="inst_name"
@@ -132,10 +129,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`inst_address`}
                   id={`inst_address`}
                   placeholder="ex. Nablus/Palestine"
-                  className={`form-control ${errors.inst_address && touched.inst_address
+                  className={`form-control ${
+                    errors.inst_address && touched.inst_address
                       ? "is-invalid"
                       : ""
-                    }`}
+                  }`}
                 />
                 <ErrorMessage
                   name="inst_address"
@@ -155,10 +153,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   theme={selectThemeColors}
                   id="place_of_work"
                   options={placeOfWorkOptions}
-                  className={`react-select ${errors.place_of_work && touched.place_of_work
+                  className={`react-select ${
+                    errors.place_of_work && touched.place_of_work
                       ? "is-invalid"
                       : ""
-                    }`}
+                  }`}
                   classNamePrefix="select"
                   onChange={(value) => {
                     values.place_of_work = value.value
@@ -179,8 +178,9 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`train_aria`}
                   id={`train_aria`}
                   placeholder="ex. Computer Science"
-                  className={`form-control ${errors.train_aria && touched.train_aria ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.train_aria && touched.train_aria ? "is-invalid" : ""
+                  }`}
                 />
                 <ErrorMessage
                   name="train_aria"
@@ -199,10 +199,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`trainer_name`}
                   id={`trainer_name`}
                   placeholder="ex. Eng.Tamer Naana"
-                  className={`form-control ${errors.trainer_name && touched.trainer_name
+                  className={`form-control ${
+                    errors.trainer_name && touched.trainer_name
                       ? "is-invalid"
                       : ""
-                    }`}
+                  }`}
                 />
                 <ErrorMessage
                   name="trainer_name"
@@ -220,10 +221,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   theme={selectThemeColors}
                   id="days_of_work"
                   options={daysOfWorkOptions}
-                  className={`react-select ${errors.days_of_work && touched.days_of_work
+                  className={`react-select ${
+                    errors.days_of_work && touched.days_of_work
                       ? "is-invalid"
                       : ""
-                    }`}
+                  }`}
                   classNamePrefix="select"
                   onChange={(value) => {
                     values.days_of_work = value.map((item) => item.value)
@@ -246,8 +248,9 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`inst_phone`}
                   id={`inst_phone`}
                   placeholder="ex. +970 512345678"
-                  className={`form-control ${errors.inst_phone && touched.inst_phone ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.inst_phone && touched.inst_phone ? "is-invalid" : ""
+                  }`}
                   onChange={(e) => {
                     setFieldValue(
                       "inst_phone",
@@ -270,8 +273,9 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`inst_fax`}
                   id={`inst_fax`}
                   placeholder="09-2945415"
-                  className={`form-control ${errors.inst_fax && touched.inst_fax ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.inst_fax && touched.inst_fax ? "is-invalid" : ""
+                  }`}
                   onChange={(e) => {
                     setFieldValue(
                       "inst_fax",
@@ -296,10 +300,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`weekly_hours`}
                   id={`weekly_hours`}
                   placeholder="ex. 35"
-                  className={`form-control ${errors.weekly_hours && touched.weekly_hours
+                  className={`form-control ${
+                    errors.weekly_hours && touched.weekly_hours
                       ? "is-invalid"
                       : ""
-                    }`}
+                  }`}
                 />
                 <ErrorMessage
                   name="weekly_hours"
@@ -316,10 +321,11 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`daily_hours`}
                   id={`daily_hours`}
                   placeholder="ex. 5"
-                  className={`form-control ${errors.daily_hours && touched.daily_hours
+                  className={`form-control ${
+                    errors.daily_hours && touched.daily_hours
                       ? "is-invalid"
                       : ""
-                    }`}
+                  }`}
                 />
                 <ErrorMessage
                   name="daily_hours"

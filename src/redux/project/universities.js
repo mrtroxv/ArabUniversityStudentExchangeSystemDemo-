@@ -5,7 +5,8 @@ const UNIVERSITIES_URL = "http://localhost:3500/admin/universities"
 const initialState = {
   universities: [],
   status: "idle",
-  error: ""
+  error: "",
+  isLoading: false
 }
 
 export const fetchUniversities = createAsyncThunk(
@@ -32,10 +33,15 @@ const universitiesSlice = createSlice({
       .addCase(fetchUniversities.fulfilled, (state, action) => {
         state.universities = action.payload
         state.status = "succeeded"
+        state.isLoading = false
       })
       .addCase(fetchUniversities.rejected, (state, action) => {
         state.status = "failed"
         state.error = action.error.message
+        state.isLoading = false
+      })
+      .addCase(fetchUniversities.pending, (state) => {
+        state.isLoading = true
       })
   }
 })
@@ -55,3 +61,5 @@ export const selectUniversityById = (state, id) => {
     return u.ID === +id
   })
 }
+
+export const selectIsLoadingUniversities = (state) => state.universities.isLoading

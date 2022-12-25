@@ -1,39 +1,49 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios'
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
+import axios from "axios"
 
-const STUDENTS_URL = 'http://localhost:3500/student/show_student'
+const STUDENTS_URL = "http://localhost:3500/student/show_student"
 const initialState = {
-    students: [],
-    status: 'idle',
-    error: null
+  students: [],
+  status: "idle",
+  error: null,
+  isLoading: false
 }
 
-export const fetchStudents = createAsyncThunk('students/getStudents', async () => {
+export const fetchStudents = createAsyncThunk(
+  "students/getStudents",
+  async () => {
     try {
-        const res = await axios.get(STUDENTS_URL, {
-            headers: {
-                authorization: JSON.parse(localStorage.getItem('accessToken'))
-            }
-        })
-        return res.data
+      const res = await axios.get(STUDENTS_URL, {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      })
+      return res.data
     } catch (error) {
-        console.log(1)
+      console.log(1)
     }
-})
+  }
+)
 
 const studentsSlice = createSlice({
-    name: 'students',
-    initialState,
-    extraReducers: (builder) => {
-        builder.addCase(fetchStudents.fulfilled, (state, action) => {
-            state.students = action.payload
-            state.status = 'succeeded'
-        })
-        builder.addCase(fetchStudents.rejected, (state, action) => {
-            state.status = 'failed'
-            state.error = action.error.message
-        })
-    }
+  name: "students",
+  initialState,
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchStudents.fulfilled, (state, action) => {
+        state.students = action.payload
+        state.status = "succeeded"
+        state.isLoading = false
+      })
+      .addCase(fetchStudents.rejected, (state, action) => {
+        state.status = "failed"
+        state.error = action.error.message
+        state.isLoading = false
+      })
+      .addCase(fetchStudents.pending, (state) => {
+        state.isLoading = true
+      })
+  }
 })
 
 export default studentsSlice.reducer
@@ -41,7 +51,9 @@ export default studentsSlice.reducer
 export const selectAllStudents = (state) => state.students.students
 
 export const selectStudentById = (state, id) => {
-    return state.students.students.find((s) => {
-        return s.id === +id
-    })
+  return state.students.students.find((s) => {
+    return s.id === +id
+  })
 }
+
+export const selectIsLoadingStudents = (state) => state.students.isLoading

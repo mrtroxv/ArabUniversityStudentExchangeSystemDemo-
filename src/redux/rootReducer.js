@@ -32,7 +32,6 @@ const rootReducer = {
   offers,
   students,
   universities
-
 }
 
 export default rootReducer

@@ -19,7 +19,7 @@
   "birthDate": "تاريخ الميلاد",
   "studyTitle": "معلومات الدراسة",
   "studySubtitle": "أدخل البينات المرغوبة الخاصة بمعلومات الدراسة",
-  "universityName": "إسم الحامعة",
+  "universityName": "إسم الجامعة",
   "totalCreditHours": "عدد الساعت المجتازة",
   "fluencyInEnglish": "درجة الإلمام باللغة الانجليزية",
   "contactTitle": "معلومات التواصل",
@@ -195,6 +195,21 @@
   "Expired": "منتهية",
   "Destination University": "الجامعة المستلمة",
   "Source University" : "الجامعة المرسلة",
-  "ID": "الرقم"
-
+  "ID": "الرقم",
+  "User Name": "اسم المستخدم",
+  "Password": "كلمة السر",
+  "Ready to Start" : "جاهز للبدء",
+  "Finished" : "انتهى العرض",
+  "University Name (English)": "إسم الجامعة بالإنجليزية",
+  "University Name (Arabic)": "إسم الجامعة بالعربية",
+  "Member Name": "إسم العضو",
+  "Member Email": "البريد الإلكتروني",
+  "Member Details": "بيانات العضو",
+  "Enter the desired member details...": "أدخل البيانات المرغوبة الخاصة بالعضو المسؤول عن الجامعة"
+  ,"University Information": "بيانات الجامعة",
+  "Enter the desired University details...": "أدخل البيانات الجامعة المرغوب اضافتها"
+  ,"Phone Number": "رقم الهاتف",
+  "Email Address": "البريد الإلكتروني",
+  "University Name": "إسم الجامعة",
+  "Universities": "الجامعات"
 }
