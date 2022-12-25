@@ -18,50 +18,25 @@ import DataTable from "../../../components/custom/table/ReactTable"
 // import { selectAllUniversities } from "../../../redux/project/universities"
 import { useSelector } from "react-redux"
 // import DataTable from "react-data-table-component"
-import { ChevronDown } from "react-feather"
+
 import { selectAllUniversities } from "../../../redux/project/universities"
 import { useForm } from "react-hook-form"
 
 import NewUser from "../create-user/index"
+import useCols from "./useCols"
 
 const ViewUsers = () => {
   const { register, watch, setValue } = useForm()
   const [filteredData, setFilteredData] = useState([])
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
+  const { cols } = useCols()
   // use selector to select universities
   //   const universities = useSelector(selectAllUniversities)
   const universities = useSelector(selectAllUniversities)
   useEffect(() => {
     setFilteredData(universities)
   }, [universities])
-
-  const cols = [
-    {
-      name: "ID",
-      sortable: true,
-      maxWidth: "25px",
-      selector: (row) => row.ID
-    },
-    {
-      name: "Name",
-      sortable: true,
-      minWidth: "100px",
-      selector: (row) => row.EN_Name
-    },
-    {
-      name: "Email",
-      sortable: true,
-      minWidth: "150px",
-      selector: (row) => row.email
-    },
-    {
-      name: "Phone Number",
-      sortable: true,
-      minWidth: "50px",
-      selector: (row) => row.phone
-    }
-  ]
 
   const id = watch("id")
   const name = watch("name")
@@ -90,7 +65,7 @@ const ViewUsers = () => {
   return (
     <>
       <Breadcrumbs
-        title={`${t("universities")}`}
+        title={`${t("Universities")}`}
         data={[{ title: t("list"), link: "/universities/list" }]}
       />
       <Row>
@@ -104,7 +79,7 @@ const ViewUsers = () => {
                 <Col lg="8" md="8">
                   <Row>
                     <Col lg="3" md="6">
-                      <Label key="id">ID :</Label>
+                      <Label key="id">{t("ID")} :</Label>
                       <input
                         {...register("id")}
                         placeholder="ID"
@@ -113,7 +88,7 @@ const ViewUsers = () => {
                       />
                     </Col>
                     <Col lg="3" md="6">
-                      <Label key="name">University Name :</Label>
+                      <Label key="name">{t("University Name")} :</Label>
                       <input
                         {...register("name")}
                         placeholder="University Name"
@@ -122,7 +97,7 @@ const ViewUsers = () => {
                       />
                     </Col>
                     <Col lg="3" md="6">
-                      <Label key="email">Email Address:</Label>
+                      <Label key="email">{t("Email Address")} :</Label>
                       <input
                         {...register("email")}
                         placeholder="Email Address"
@@ -131,7 +106,7 @@ const ViewUsers = () => {
                       />
                     </Col>
                     <Col lg="3" md="6">
-                      <Label key="phone">Phone Number:</Label>
+                      <Label key="phone">{t("Phone Number")} :</Label>
                       <input
                         {...register("phone")}
                         placeholder="Phone Number"

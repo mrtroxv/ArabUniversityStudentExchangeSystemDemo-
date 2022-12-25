@@ -1,5 +1,6 @@
 import React, { Suspense, useEffect } from "react"
 import { useDispatch } from "react-redux"
+import SpinnerComponent from "./@core/components/spinner/Fallback-spinner"
 import { fetchAllOffers } from "./redux/project/offers"
 import { fetchStudents } from "./redux/project/students"
 import { fetchUniversities } from "./redux/project/universities"
@@ -16,7 +17,7 @@ const App = () => {
     dispatch(fetchStudents())
   }, [])
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<SpinnerComponent />}>
       <Router />
     </Suspense>
   )

@@ -1,22 +1,25 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 // eslint-disable-next-line
-const OFFERS_URL = "http://localhost:3500/offer/show_offer"
-const CREATE_OFFER_URL = "http://localhost:3500/offer/insert_offer"
-const OWN_OFFERS_URL = "http://localhost:3500/offer/own-offers"
-const OBTAINED_OFFER_URL = "http://localhost:3500/offer/obtained-offers"
-const ACTIVE_OFFERS_URL = "http://localhost:3500/offer/active-offers"
-const ENDED_OFFERS_URL = "http://localhost:3500/offer/ended-offers"
-const SEND_OFFER_URL = "http://localhost:3500/offer/send-offer"
-const DELETE_OFFER_URL = "http://localhost:3500/offer/delete-offer"
-const REJECT_OFFER_URL = "http://localhost:3500/offer/reject-offer"
-const ACCEPT_OFFER_URL = "http://localhost:3500/offer/accept-offer"
-const ADD_STUDENT_URL = "http://localhost:3500/offer/add-student"
+import {
+  ACCEPT_OFFER_URL,
+  ACTIVE_OFFERS_URL,
+  ADD_STUDENT_URL,
+  CREATE_OFFER_URL,
+  DELETE_OFFER_URL,
+  ENDED_OFFERS_URL,
+  OBTAINED_OFFER_URL,
+  OFFERS_URL,
+  OWN_OFFERS_URL,
+  REJECT_OFFER_URL,
+  SEND_OFFER_URL
+} from "./constants"
 
 const initialState = {
   offers: [],
   status: "idle",
   error: null,
+  isLoading: false,
   createOfferState: {
     status: null,
     error: null
@@ -46,7 +49,6 @@ const initialState = {
 export const createOffer = createAsyncThunk(
   "offers/createOffer",
   async (offerData) => {
-    console.log(2222222)
     let response
     try {
       response = await axios.post(CREATE_OFFER_URL, offerData, {
@@ -54,11 +56,8 @@ export const createOffer = createAsyncThunk(
           authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
       })
-      console.log(response)
       return response.data
-    } catch (err) {
-      console.log(err)
-    }
+    } catch (err) {}
   }
 )
 
@@ -71,9 +70,7 @@ export const fetchAllOffers = createAsyncThunk("offers/getOffers", async () => {
       }
     })
     return response.data
-  } catch (error) {
-    console.log(error)
-  }
+  } catch (error) {}
 })
 
 export const fetchOwnOffer = createAsyncThunk(
@@ -86,9 +83,7 @@ export const fetchOwnOffer = createAsyncThunk(
         }
       })
       return response.data
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
 )
 
@@ -102,9 +97,7 @@ export const fetchObtainedOffer = createAsyncThunk(
         }
       })
       return response.data
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
 )
 
@@ -118,9 +111,7 @@ export const fetchActiveOffers = createAsyncThunk(
         }
       })
       return response.data
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
 )
 
@@ -134,9 +125,7 @@ export const fetchEndedOffers = createAsyncThunk(
         }
       })
       return response.data
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
 )
 
@@ -150,16 +139,14 @@ export const sendOffer = createAsyncThunk(
         }
       })
       return response.data
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
 )
 export const deleteOffer = createAsyncThunk(
   "offers/deleteOffer",
   async (offer_id) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         DELETE_OFFER_URL,
         { offer_id },
         {
@@ -168,11 +155,13 @@ export const deleteOffer = createAsyncThunk(
           }
         }
       )
-      console.log(response.data)
+      const response = await axios.get(OFFERS_URL, {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      })
       return response.data
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
 )
 export const rejectOffer = createAsyncThunk(
@@ -188,11 +177,8 @@ export const rejectOffer = createAsyncThunk(
           }
         }
       )
-      console.log(response.data)
       return response.data
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
 )
 
@@ -200,33 +186,31 @@ export const acceptOffer = createAsyncThunk(
   "offers/acceptOffer",
   async (offer_id) => {
     try {
-      const response = await axios.post(ACCEPT_OFFER_URL, { offer_id }, {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
+      const response = await axios.post(
+        ACCEPT_OFFER_URL,
+        { offer_id },
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
         }
-      })
+      )
       return response.data
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
 )
 
 export const addStudent = createAsyncThunk(
   "offers/addStudent",
   async (offerIdAndStudentId) => {
-
     try {
       const response = await axios.post(ADD_STUDENT_URL, offerIdAndStudentId, {
         headers: {
           authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
       })
-      console.log(response.data)
       return response.data
-    } catch (error) {
-      console.log(error)
-    }
+    } catch (error) {}
   }
 )
 
@@ -257,9 +241,6 @@ const offersSlice = createSlice({
     resetCreateOfferState: (state) => {
       state.createOfferState.status = null
       state.createOfferState.error = null
-    },
-    deleteOfferFromStore: (state, action) => {
-      state.offers = state.offers.filter((offer) => offer.id !== action.payload)
     }
   },
   extraReducers: (builder) => {
@@ -267,10 +248,15 @@ const offersSlice = createSlice({
       .addCase(fetchAllOffers.fulfilled, (state, action) => {
         state.status = "succeeded"
         state.offers = action.payload
+        state.isLoading = false
       })
       .addCase(fetchAllOffers.rejected, (state, action) => {
         state.status = "failed"
         state.error = action.error.message
+        state.isLoading = false
+      })
+      .addCase(fetchAllOffers.pending, (state) => {
+        state.isLoading = true
       })
       .addCase(fetchOwnOffer.fulfilled, (state, action) => {
         state.status = "succeeded"
@@ -334,13 +320,9 @@ const offersSlice = createSlice({
         state.sendOfferState.error = action.payload.data.message
       })
       .addCase(deleteOffer.fulfilled, (state, action) => {
-        if (action.payload.status === 404) {
-          state.deleteOfferState.status = null
-          state.deleteOfferState.error = action.payload.message
-        } else {
-          state.deleteOfferState.status = "succeeded"
-          state.deleteOfferState.error = null
-        }
+        state.status = "succeeded"
+        state.offers = action.payload
+        state.isLoading = false
       })
       .addCase(deleteOffer.rejected, (state, action) => {
         state.deleteOfferState.status = null
@@ -384,22 +366,18 @@ const offersSlice = createSlice({
       .addCase(addStudent.rejected, (state, action) => {
         state.addStudentState.status = null
         state.addStudentState.error = action.payload.data.message
-      }
-      )
+      })
   }
 })
 
 export const selectAllOffers = (state) => state.offers.offers
-
 export const selectCreatedOffers = (state, userId) =>
   state.offers.offers.filter(
     (offer) => offer.university_id_src === userId && offer.status === 0
   )
 export const selectSentOffers = (state, userId) =>
   state.offers.offers.filter(
-    (offer) =>
-      offer.university_id_src === userId &&
-      (offer.status === 1 || offer.status === 2)
+    (offer) => offer.university_id_src === userId && offer.status >= 1
   )
 export const selectObtainedOffers = (state, userId) =>
   state.offers.offers.filter(
@@ -414,15 +392,18 @@ export const selectOfferById = (state, id) => {
 }
 
 export const selectCreateOfferState = (state) => state.offers.createOfferState
-
 export const selectSendOfferState = (state) => state.offers.sendOfferState
-
 export const selectDeleteOfferState = (state) => state.offers.deleteOfferState
 export const selectRejectOfferState = (state) => state.offers.rejectOfferState
 export const selectAcceptOfferState = (state) => state.offers.acceptOfferState
 export const selectAddStudentState = (state) => state.offers.addStudentState
+export const selectIsLoadingOffers = (state) => state.offers.isLoading
 
-export const { resetDeleteOfferState, deleteOfferFromStore, resetAddStudentState,
-  resetAcceptOfferState, resetCreateOfferState, resetSendOfferState } =
-  offersSlice.actions
+export const {
+  resetDeleteOfferState,
+  resetAddStudentState,
+  resetAcceptOfferState,
+  resetCreateOfferState,
+  resetSendOfferState
+} = offersSlice.actions
 export default offersSlice.reducer

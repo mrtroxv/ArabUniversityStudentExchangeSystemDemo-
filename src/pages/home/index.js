@@ -41,8 +41,17 @@ import activeImage from "@src/assets/images/svg/icons8_hard_working.svg"
 import DataTableWithButtons from "../../components/custom/table/ReactTable"
 import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
 import OfferWizard from "../Offers/create-offer/OfferWizard"
-import { deleteOffer, deleteOfferFromStore, resetDeleteOfferState, selectAllOffers, selectDeleteOfferState } from "../../redux/project/offers"
+import {
+  deleteOffer,
+  resetDeleteOfferState,
+  selectAllOffers,
+  selectDeleteOfferState,
+  selectIsLoadingOffers
+} from "../../redux/project/offers"
 import { useForm } from "react-hook-form"
+import Spinner from "../../components/custom/loader/Spinner"
+import { selectIsLoadingStudents } from "../../redux/project/students"
+import { selectIsLoadingUniversities } from "../../redux/project/universities"
 
 function Home() {
   const { register, watch } = useForm()
@@ -54,11 +63,13 @@ function Home() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const deleteOfferState = useSelector(selectDeleteOfferState)
+  const isLoading =
+    useSelector(selectIsLoadingOffers) ||
+    useSelector(selectIsLoadingStudents) ||
+    useSelector(selectIsLoadingUniversities)
 
   const handelDeleteOffer = (Offer_id) => {
-    console.log({ Offer_id })
     dispatch(deleteOffer(Offer_id))
-    dispatch(deleteOfferFromStore(Offer_id))
   }
 
   useEffect(() => {
@@ -69,16 +80,15 @@ function Home() {
       dispatch(resetDeleteOfferState())
     }, 500)
   }, [deleteOfferState])
-
+  useEffect(() => {}, [offersList])
 
   const status = {
     0: { title: t("Creating Offer"), color: "light-primary" },
     1: { title: t("Pending Request"), color: "light-warning" },
-    2: { title: t("Accepted"), color: "light-success" },
-    3: { title: t("Rejected"), color: "light-danger" },
-    4: { title: t("Pending Acceptance"), color: "light-warning" },
-    5: { title: t("Offer Report"), color: "light-primary" },
-    6: { title: t("Expired"), color: "light-danger" }
+    2: { title: t("Accepted"), color: "light-info" },
+    3: { title: t("Ready to Start"), color: "light-success" },
+    4: { title: t("Offer Report"), color: "light-primary" },
+    5: { title: t("Finished"), color: "light-danger" }
   }
 
   const cols = [
@@ -157,7 +167,12 @@ function Home() {
                   onClick={(e) => e.preventDefault()}
                 >
                   <Trash size={15} />
-                  <span className="align-middle ms-50" onClick={() => handelDeleteOffer(row.id)}>Delete</span>
+                  <span
+                    className="align-middle ms-50"
+                    onClick={() => handelDeleteOffer(row.id)}
+                  >
+                    Delete
+                  </span>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
@@ -299,7 +314,8 @@ function Home() {
             </Col>
           </Row>
         </CardBody>
-        <DataTableWithButtons data={offers} columns={cols} />
+        {isLoading && <Spinner />}
+        {!isLoading && <DataTableWithButtons data={offers} columns={cols} />}
       </Card>
       {formModal && (
         <Modal

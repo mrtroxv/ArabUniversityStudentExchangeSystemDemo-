@@ -8,8 +8,17 @@ import { ArrowLeft, ArrowRight } from "react-feather"
 import { Label, Row, Col, Input, Button } from "reactstrap"
 import { Formik, Field, Form, ErrorMessage } from "formik"
 import * as Yup from "yup"
+import { useTranslation } from "react-i18next"
+import {
+  university_AR_Name,
+  university_description,
+  university_EN_Name,
+  university_title
+} from "./translations"
+import FormHeader from "./FormHeader"
 
 const UniversityDetails = ({ stepper, onSubmit }) => {
+  const { t } = useTranslation()
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const faxRegExp = /^\+?[0-9]{6,}$/
@@ -23,29 +32,26 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
   }
 
   const UniversitySchema = Yup.object().shape({
-    uni_name: Yup.string()
+    uni_en_name: Yup.string()
       .required("No name provided")
-      .min(8, "Too Short - Name must be at least 8 characters long"),
-    member_name: Yup.string()
+      .min(8, "Too Short - Name must be at least 8 characters long")
+      .required("No Name provided"),
+    uni_ar_name: Yup.string()
       .required("No name provided")
-      .min(8, "Too Short - Name must be at least 8 characters long"),
-    member_email: Yup.string().email().required("No Email provided"),
+      .min(8, "Too Short - Name must be at least 8 characters long")
+      .required("No Name provided"),
     uni_phone: Yup.string()
       .matches(phoneRegExp, "Phone number is not valid")
       .required("No Phone Number provided"),
-    uni_fax: Yup.string()
-      .matches(faxRegExp, "Fax number is not valid")
-      .required("No fax Number provided")
+    uni_fax: Yup.string().matches(faxRegExp, "Fax number is not valid")
   })
 
   return (
     <Fragment>
-      <div className="content-header">
-        <h5 className="mb-0">University Information</h5>
-        <small className="text-muted">
-          Enter the University and the name of the person in charge.
-        </small>
-      </div>
+      <FormHeader
+        title={t(university_title)}
+        subtitle={t(university_description)}
+      />
       <Formik
         initialValues={defaultValues}
         validationSchema={UniversitySchema}
@@ -57,65 +63,44 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
         {({ errors, touched }) => (
           <Form>
             <Row>
-              <Col className="mb-1">
-                <Label className="form-label" for={`uni_name`}>
-                  University Name
+              <Col md="6" className="mb-1">
+                <Label className="form-label" for={`uni_en_name`}>
+                  {t(university_EN_Name)}
                 </Label>
                 <Field
                   type="text"
-                  name={`uni_name`}
-                  id={`uni_name`}
+                  name={`uni_en_name`}
+                  id={`uni_en_name`}
                   placeholder="ex. Palestinian Technical University"
                   className={`form-control ${
-                    errors.uni_name && touched.uni_name ? "is-invalid" : ""
+                    errors.uni_en_name && touched.uni_en_name
+                      ? "is-invalid"
+                      : ""
                   }`}
                 />
                 <ErrorMessage
-                  name="uni_name"
+                  name="uni_en_name"
                   component="p"
                   className="invalid-feedback"
                 />
               </Col>
-            </Row>
-            <Row>
               <Col md="6" className="mb-1">
-                <Label className="form-label" for={`member_name`}>
-                  Member Name
+                <Label className="form-label" for={`uni_ar_name`}>
+                  {t(university_AR_Name)}
                 </Label>
                 <Field
                   type="text"
-                  name={`member_name`}
-                  id={`member_name`}
-                  placeholder="ex. Dr.Moutmad Al Khateeb"
+                  name={`uni_ar_name`}
+                  id={`uni_ar_name`}
+                  placeholder="ex. جامعة فلسطين التقنية"
                   className={`form-control ${
-                    errors.member_name && touched.member_name
+                    errors.uni_ar_name && touched.uni_ar_name
                       ? "is-invalid"
                       : ""
                   }`}
                 />
                 <ErrorMessage
-                  name="member_name"
-                  component="p"
-                  className="invalid-feedback"
-                />
-              </Col>
-              <Col md="6" className="mb-1">
-                <Label className="form-label" for={`member_email`}>
-                  Member Email
-                </Label>
-                <Field
-                  type="email"
-                  name={`member_email`}
-                  id={`member_email`}
-                  placeholder="ex. m.a.khateeb@teachers.ptuk.edu.ps"
-                  className={`form-control ${
-                    errors.member_email && touched.member_email
-                      ? "is-invalid"
-                      : ""
-                  }`}
-                />
-                <ErrorMessage
-                  name="member_email"
+                  name="uni_ar_name"
                   component="p"
                   className="invalid-feedback"
                 />

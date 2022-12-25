@@ -151,7 +151,7 @@ const Login = () => {
                 <Form className="auth-login-form mt-2">
                   <div className="mb-2">
                     <Label className="form-label" for="email">
-                      {t('username')}
+                      {t('User Name')}
 
                     </Label>
                     <Field
@@ -167,7 +167,7 @@ const Login = () => {
                   <div className="mb-2">
                     <div className="d-flex justify-content-between">
                       <Label className="form-label" for="password">
-                        {t('password')}
+                        {t('Password')}
                       </Label>
                       <Link to="/forgot-password">
                         <small>{t('forgotPassword')}</small>

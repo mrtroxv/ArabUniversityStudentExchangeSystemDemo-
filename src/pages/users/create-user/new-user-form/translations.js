@@ -1,0 +1,8 @@
+export const university_EN_Name = "University Name (English)"
+export const university_AR_Name = "University Name (Arabic)"
+export const member_name = "Member Name"
+export const member_email = "Member Email"
+export const member_title = "Member Details"
+export const member_description = "Enter the desired member details..."
+export const university_title = "University Information"
+export const university_description = "Enter the desired University details..."

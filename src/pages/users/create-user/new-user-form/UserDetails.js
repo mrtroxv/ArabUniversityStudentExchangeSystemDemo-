@@ -11,11 +11,18 @@ import { ArrowLeft, ArrowRight } from "react-feather"
 // import { selectThemeColors } from '@utils'
 
 // ** Reactstrap Imports
-import { Row, Col, Button } from "reactstrap"
+import { Label, Row, Col, Input, Button } from "reactstrap"
+
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import Select from "react-select"
 import FormHeader from "./FormHeader"
 import { useTranslation } from "react-i18next"
+import {
+  member_description,
+  member_email,
+  member_name,
+  member_title
+} from "./translations"
 
 const UserDetails = ({ stepper, onSubmit }) => {
   const { t } = useTranslation()
@@ -26,20 +33,27 @@ const UserDetails = ({ stepper, onSubmit }) => {
     nationality: ""
   }
   const schema = Yup.object({
-    name: Yup.string()
+    username: Yup.string()
+      .required("No UserName provided")
+      .min(8, "Too Short - Name must be at least 8 characters long"),
+    password: Yup.string()
+      .required("No password provided.")
+      .min(8, "Password is too short - should be 8 chars minimum.")
+      .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
+    member_name: Yup.string()
       .required("No name provided")
       .min(8, "Too Short - Name must be at least 8 characters long"),
-    id: Yup.number().required("No id provided"),
-    nationality: Yup.string().required("No nationality provided")
+    member_email: Yup.string().email().required("No Email provided")
   })
 
   return (
     <Fragment>
-      <FormHeader title={t("title")} subtitle={t("subtitle")} />
+      <FormHeader title={t(member_title)} subtitle={t(member_description)} />
       <Formik
         initialValues={defaultValues}
         validationSchema={schema}
         onSubmit={async (values) => {
+          console.log({ values })
           onSubmit(values)
           stepper.next()
         }}
@@ -48,36 +62,43 @@ const UserDetails = ({ stepper, onSubmit }) => {
           <Form>
             <Row>
               <Col md="6" className="mb-1">
-                <label htmlFor="name" className="form-label form-label">
-                  {t("name")}
-                </label>
+                <Label className="form-label" for={`member_name`}>
+                  {t(member_name)}
+                </Label>
                 <Field
-                  name="name"
+                  type="text"
+                  name={`member_name`}
+                  id={`member_name`}
+                  placeholder="ex. Dr.Moutmad Al Khateeb"
                   className={`form-control ${
-                    errors.name && touched.name ? "is-invalid" : ""
+                    errors.member_name && touched.member_name
+                      ? "is-invalid"
+                      : ""
                   }`}
-                  placeholder={t("nameP")}
                 />
                 <ErrorMessage
-                  name="name"
+                  name="member_name"
                   component="p"
                   className="invalid-feedback"
                 />
               </Col>
               <Col md="6" className="mb-1">
-                <label htmlFor="id" className="form-label form-label">
-                  {t("id")}
-                </label>
+                <Label className="form-label" for={`member_email`}>
+                  {t(member_email)}
+                </Label>
                 <Field
-                  type="number"
-                  name="id"
+                  type="email"
+                  name={`member_email`}
+                  id={`member_email`}
+                  placeholder="ex. m.a.khateeb@teachers.ptuk.edu.ps"
                   className={`form-control ${
-                    errors.id && touched.id ? "is-invalid" : ""
+                    errors.member_email && touched.member_email
+                      ? "is-invalid"
+                      : ""
                   }`}
-                  placeholder={t("idP")}
                 />
                 <ErrorMessage
-                  name="id"
+                  name="member_email"
                   component="p"
                   className="invalid-feedback"
                 />
@@ -85,20 +106,36 @@ const UserDetails = ({ stepper, onSubmit }) => {
             </Row>
             <Row>
               <Col md="6" className="mb-1">
-                <label htmlFor="nationality" className="form-label form-label">
-                  {t("nationality")}
+                <label htmlFor="username" className="form-label form-label">
+                  {t("User Name")}
                 </label>
                 <Field
-                  name="nationality"
+                  name="username"
                   className={`form-control ${
-                    errors.nationality && touched.nationality
-                      ? "is-invalid"
-                      : ""
+                    errors.username && touched.username ? "is-invalid" : ""
                   }`}
-                  placeholder={t("nationalityP")}
+                  placeholder={t("nameP")}
                 />
                 <ErrorMessage
-                  name="nationality"
+                  name="username"
+                  component="p"
+                  className="invalid-feedback"
+                />
+              </Col>
+              <Col md="6" className="mb-1">
+                <label htmlFor="password" className="form-label form-label">
+                  {t("Password")}
+                </label>
+                <Field
+                  type="password"
+                  name="password"
+                  className={`form-control ${
+                    errors.password && touched.password ? "is-invalid" : ""
+                  }`}
+                  placeholder={"*********"}
+                />
+                <ErrorMessage
+                  name="password"
                   component="p"
                   className="invalid-feedback"
                 />
