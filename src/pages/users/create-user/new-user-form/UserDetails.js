@@ -17,20 +17,16 @@ import { Formik, Form, Field, ErrorMessage } from "formik"
 import Select from "react-select"
 import FormHeader from "./FormHeader"
 import { useTranslation } from "react-i18next"
-import {
-  member_description,
-  member_email,
-  member_name,
-  member_title
-} from "./translations"
+import { member_description, email, name, member_title } from "./translations"
 
-const UserDetails = ({ stepper, onSubmit }) => {
+const UserDetails = ({ stepper, onStoreData }) => {
   const { t } = useTranslation()
 
   const defaultValues = {
+    username: "",
+    password: "",
     name: "",
-    id: "",
-    nationality: ""
+    email: ""
   }
   const schema = Yup.object({
     username: Yup.string()
@@ -40,10 +36,10 @@ const UserDetails = ({ stepper, onSubmit }) => {
       .required("No password provided.")
       .min(8, "Password is too short - should be 8 chars minimum.")
       .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
-    member_name: Yup.string()
+    name: Yup.string()
       .required("No name provided")
       .min(8, "Too Short - Name must be at least 8 characters long"),
-    member_email: Yup.string().email().required("No Email provided")
+    email: Yup.string().email().required("No Email provided")
   })
 
   return (
@@ -54,7 +50,7 @@ const UserDetails = ({ stepper, onSubmit }) => {
         validationSchema={schema}
         onSubmit={async (values) => {
           console.log({ values })
-          onSubmit(values)
+          onStoreData(values)
           stepper.next()
         }}
       >
@@ -62,43 +58,39 @@ const UserDetails = ({ stepper, onSubmit }) => {
           <Form>
             <Row>
               <Col md="6" className="mb-1">
-                <Label className="form-label" for={`member_name`}>
-                  {t(member_name)}
+                <Label className="form-label" for={`name`}>
+                  {t(name)}
                 </Label>
                 <Field
                   type="text"
-                  name={`member_name`}
-                  id={`member_name`}
+                  name={`name`}
+                  id={`name`}
                   placeholder="ex. Dr.Moutmad Al Khateeb"
                   className={`form-control ${
-                    errors.member_name && touched.member_name
-                      ? "is-invalid"
-                      : ""
+                    errors.name && touched.name ? "is-invalid" : ""
                   }`}
                 />
                 <ErrorMessage
-                  name="member_name"
+                  name="name"
                   component="p"
                   className="invalid-feedback"
                 />
               </Col>
               <Col md="6" className="mb-1">
-                <Label className="form-label" for={`member_email`}>
-                  {t(member_email)}
+                <Label className="form-label" for={`email`}>
+                  {t(email)}
                 </Label>
                 <Field
                   type="email"
-                  name={`member_email`}
-                  id={`member_email`}
+                  name={`email`}
+                  id={`email`}
                   placeholder="ex. m.a.khateeb@teachers.ptuk.edu.ps"
                   className={`form-control ${
-                    errors.member_email && touched.member_email
-                      ? "is-invalid"
-                      : ""
+                    errors.email && touched.email ? "is-invalid" : ""
                   }`}
                 />
                 <ErrorMessage
-                  name="member_email"
+                  name="email"
                   component="p"
                   className="invalid-feedback"
                 />

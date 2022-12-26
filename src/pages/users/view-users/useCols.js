@@ -10,12 +10,6 @@ const useCols = () => {
   const [lang] = useLang()
   const cols = [
     {
-      name: "ID",
-      sortable: true,
-      maxWidth: "25px",
-      selector: (row) => row.ID
-    },
-    {
       name: "Name",
       sortable: true,
       minWidth: "100px",

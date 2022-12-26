@@ -8,30 +8,29 @@ import Wizard from "@components/wizard"
 import UniversityDetails from "./new-user-form/UniversityDetails"
 
 import { useTranslation } from "react-i18next"
-import { useDispatch } from "react-redux"
+// import { useDispatch } from "react-redux"
 import UserDetails from "./new-user-form/UserDetails"
 // import toast from "react-hot-toast"
 
 const NewUser = ({ type }) => {
   // ** Ref
   const ref = useRef(null)
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
   // eslint-disable-next-line
   // ** State
   const [stepper, setStepper] = useState(null)
-
   const [data, setData] = useState({})
   const { t } = useTranslation()
+
   const storeData = (data) => {
     setData((prevData) => {
       return { ...prevData, ...data }
     })
-    // outerSubmit()
-    console.log(data)
   }
 
   const handelSubmit = (values) => {
-    dispatch(createOffer({ ...values, ...data }))
+    console.log({ values, data })
+    // dispatch(createOffer({ ...values, ...data }))
   }
 
   const steps = [

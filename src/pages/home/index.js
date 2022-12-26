@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Routes, Route, Link, useNavigate } from "react-router-dom"
 import Breadcrumbs from "@components/breadcrumbs"
-import Toast from "react-hot-toast"
+import Toast, { Toaster } from "react-hot-toast"
 import {
   Card,
   CardHeader,
@@ -338,9 +338,6 @@ function Home() {
           </ModalBody>
         </Modal>
       )}
-      {
-        // <ToastContainer />
-      }
     </Fragment>
   )
 }
