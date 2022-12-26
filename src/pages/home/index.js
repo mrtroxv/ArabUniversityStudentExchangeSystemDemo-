@@ -327,9 +327,6 @@ function Home() {
           </ModalBody>
         </Modal>
       )}
-      {
-        // <ToastContainer />
-      }
     </Fragment>
   )
 }

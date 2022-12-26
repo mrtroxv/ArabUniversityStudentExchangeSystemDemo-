@@ -16,14 +16,16 @@ import {
 import { useTranslation } from "react-i18next"
 import DataTable from "../../../components/custom/table/ReactTable"
 // import { selectAllUniversities } from "../../../redux/project/universities"
-import { useSelector } from "react-redux"
+// import { useSelector } from "react-redux"
 // import DataTable from "react-data-table-component"
 
-import { selectAllUniversities } from "../../../redux/project/universities"
+// import { selectAllUniversities } from "../../../redux/project/universities"
 import { useForm } from "react-hook-form"
-
+import { PlusCircle } from "react-feather"
 import NewUser from "../create-user/index"
 import useCols from "./useCols"
+import useUniversityApi from "../../../utility/hooks/custom/useUniversityApi"
+import Spinner from "../../../components/custom/loader/Spinner"
 
 const ViewUsers = () => {
   const { register, watch, setValue } = useForm()
@@ -33,18 +35,16 @@ const ViewUsers = () => {
   const { cols } = useCols()
   // use selector to select universities
   //   const universities = useSelector(selectAllUniversities)
-  const universities = useSelector(selectAllUniversities)
+  const { isLoading, universities } = useUniversityApi()
   useEffect(() => {
     setFilteredData(universities)
   }, [universities])
 
-  const id = watch("id")
   const name = watch("name")
   const email = watch("email")
   const phone = watch("phone")
   const filtered = filteredData.filter((item) => {
     return (
-      item.ID.toString().includes(id) &&
       item.EN_Name.toLowerCase().includes(name.toLowerCase()) &&
       item.email.toLowerCase().includes(email.toLowerCase()) &&
       item.phone.includes(phone)
@@ -53,14 +53,13 @@ const ViewUsers = () => {
 
   const clearData = () => {
     setFilteredData(universities)
-    setValue("id", "")
     setValue("name", "")
     setValue("email", "")
     setValue("phone", "")
   }
 
   const isBlank = () => {
-    return id === "" && name === "" && email === "" && phone === ""
+    return name === "" && email === "" && phone === ""
   }
   return (
     <>
@@ -75,18 +74,9 @@ const ViewUsers = () => {
               <CardTitle>Filters</CardTitle>
             </CardHeader>
             <CardBody>
-              <Row>
-                <Col lg="8" md="8">
+              <Row className="match-height">
+                <Col lg="9" md="10">
                   <Row>
-                    <Col lg="3" md="6">
-                      <Label key="id">{t("ID")} :</Label>
-                      <input
-                        {...register("id")}
-                        placeholder="ID"
-                        type="text"
-                        className="form-control"
-                      />
-                    </Col>
                     <Col lg="3" md="6">
                       <Label key="name">{t("University Name")} :</Label>
                       <input
@@ -116,28 +106,34 @@ const ViewUsers = () => {
                     </Col>
                   </Row>
                 </Col>
-                <Col lg="4" md="4">
+                <Col lg="3" md="2">
                   <Row className="m-2">
-                    <Col lg="4" md="4">
+                    <Col lg="6" md="6">
                       <Button outline onClick={clearData}>
                         {isBlank() ? "Filter" : "Reset"}
                       </Button>
                     </Col>
-                    <Col lg="6" md="4">
+                    <Col lg="6" md="6">
                       <Button
                         color="primary"
                         onClick={() => {
                           setFormModal(!formModal)
                         }}
                       >
-                        Add University
+                        Add
                       </Button>
                     </Col>
                   </Row>
                 </Col>
               </Row>
             </CardBody>
-            <DataTable data={filtered} columns={cols} />
+            {isLoading ? (
+              <Spinner />
+            ) : (
+              <>
+                <DataTable data={filtered} columns={cols} />
+              </>
+            )}
           </Card>
         </Col>
       </Row>
