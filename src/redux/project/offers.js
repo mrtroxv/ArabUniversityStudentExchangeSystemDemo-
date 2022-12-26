@@ -8,6 +8,7 @@ import {
   CREATE_OFFER_URL,
   DELETE_OFFER_URL,
   ENDED_OFFERS_URL,
+  headersApi,
   OBTAINED_OFFER_URL,
   OFFERS_URL,
   OWN_OFFERS_URL,
@@ -23,41 +24,21 @@ const initialState = {
   createOfferState: {
     status: null,
     error: null
-  },
-  sendOfferState: {
-    status: null,
-    error: null
-  },
-  deleteOfferState: {
-    status: null,
-    error: null
-  },
-  rejectOfferState: {
-    status: null,
-    error: null
-  },
-  acceptOfferState: {
-    status: null,
-    error: null
-  },
-  addStudentState: {
-    status: null,
-    error: null
   }
 }
 
 export const createOffer = createAsyncThunk(
   "offers/createOffer",
   async (offerData) => {
-    let response
     try {
-      response = await axios.post(CREATE_OFFER_URL, offerData, {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+      const response = await axios.post(CREATE_OFFER_URL, offerData, {
+        headers: headersApi
       })
+
       return response.data
-    } catch (err) {}
+    } catch (err) {
+      console.log("eee", err)
+    }
   }
 )
 
@@ -65,9 +46,7 @@ export const createOffer = createAsyncThunk(
 export const fetchAllOffers = createAsyncThunk("offers/getOffers", async () => {
   try {
     const response = await axios.get(OFFERS_URL, {
-      headers: {
-        authorization: JSON.parse(localStorage.getItem("accessToken"))
-      }
+      headers: headersApi
     })
     return response.data
   } catch (error) {}
@@ -78,9 +57,7 @@ export const fetchOwnOffer = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get(OWN_OFFERS_URL, {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+        headers: headersApi
       })
       return response.data
     } catch (error) {}
@@ -92,9 +69,7 @@ export const fetchObtainedOffer = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get(OBTAINED_OFFER_URL, {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+        headers: headersApi
       })
       return response.data
     } catch (error) {}
@@ -106,9 +81,7 @@ export const fetchActiveOffers = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get(ACTIVE_OFFERS_URL, {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+        headers: headersApi
       })
       return response.data
     } catch (error) {}
@@ -120,9 +93,7 @@ export const fetchEndedOffers = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get(ENDED_OFFERS_URL, {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+        headers: headersApi
       })
       return response.data
     } catch (error) {}
@@ -133,10 +104,11 @@ export const sendOffer = createAsyncThunk(
   "offers/sendOffer",
   async (offerData) => {
     try {
-      const response = await axios.post(SEND_OFFER_URL, offerData, {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+      await axios.post(SEND_OFFER_URL, offerData, {
+        headers: headersApi
+      })
+      const response = await axios.get(OFFERS_URL, {
+        headers: headersApi
       })
       return response.data
     } catch (error) {}
@@ -150,15 +122,11 @@ export const deleteOffer = createAsyncThunk(
         DELETE_OFFER_URL,
         { offer_id },
         {
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
+          headers: headersApi
         }
       )
       const response = await axios.get(OFFERS_URL, {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+        headers: headersApi
       })
       return response.data
     } catch (error) {}
@@ -168,15 +136,16 @@ export const rejectOffer = createAsyncThunk(
   "offers/rejectOffer",
   async (offer_id) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         REJECT_OFFER_URL,
         { offer_id },
         {
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
+          headers: headersApi
         }
       )
+      const response = await axios.get(OFFERS_URL, {
+        headers: headersApi
+      })
       return response.data
     } catch (error) {}
   }
@@ -186,15 +155,16 @@ export const acceptOffer = createAsyncThunk(
   "offers/acceptOffer",
   async (offer_id) => {
     try {
-      const response = await axios.post(
+      await axios.post(
         ACCEPT_OFFER_URL,
         { offer_id },
         {
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
+          headers: headersApi
         }
       )
+      const response = await axios.get(OFFERS_URL, {
+        headers: headersApi
+      })
       return response.data
     } catch (error) {}
   }
@@ -204,10 +174,11 @@ export const addStudent = createAsyncThunk(
   "offers/addStudent",
   async (offerIdAndStudentId) => {
     try {
-      const response = await axios.post(ADD_STUDENT_URL, offerIdAndStudentId, {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+      await axios.post(ADD_STUDENT_URL, offerIdAndStudentId, {
+        headers: headersApi
+      })
+      const response = await axios.get(OFFERS_URL, {
+        headers: headersApi
       })
       return response.data
     } catch (error) {}
@@ -218,31 +189,14 @@ const offersSlice = createSlice({
   name: "offers",
   initialState,
   reducers: {
-    resetDeleteOfferState: (state) => {
-      state.deleteOfferState.status = null
-      state.deleteOfferState.error = null
-    },
-    resetAddStudentState: (state) => {
-      state.addStudentState.status = null
-      state.addStudentState.error = null
-    },
-    resetAcceptOfferState: (state) => {
-      state.acceptOfferState.status = null
-      state.acceptOfferState.error = null
-    },
-    resetRejectOfferState: (state) => {
-      state.rejectOfferState.status = null
-      state.rejectOfferState.error = null
-    },
-    resetSendOfferState: (state) => {
-      state.sendOfferState.status = null
-      state.sendOfferState.error = null
-    },
     resetCreateOfferState: (state) => {
-      state.createOfferState.status = null
-      state.createOfferState.error = null
+      state.createOfferState = {
+        status: null,
+        error: null
+      }
     }
   },
+
   extraReducers: (builder) => {
     builder
       .addCase(fetchAllOffers.fulfilled, (state, action) => {
@@ -301,71 +255,49 @@ const offersSlice = createSlice({
           state.createOfferState.error = null
         }
       })
-      // eslint-disable-next-line
-      .addCase(createOffer.rejected, (state, action) => {
+      .addCase(createOffer.rejected, (state) => {
         state.createOfferState.status = null
         state.createOfferState.error = action.payload.data.message
       })
       .addCase(sendOffer.fulfilled, (state, action) => {
-        if (action.payload.state === 400) {
-          state.sendOfferState.status = null
-          state.sendOfferState.error = action.payload.message
-        } else {
-          state.sendOfferState.status = "succeeded"
-          state.sendOfferState.error = null
-        }
+        state.status = "succeeded"
+        state.isLoading = false
+        state.offers = action.payload
       })
-      .addCase(sendOffer.rejected, (state, action) => {
-        state.sendOfferState.status = null
-        state.sendOfferState.error = action.payload.data.message
+      .addCase(sendOffer.pending, (state) => {
+        state.isLoading = true
       })
       .addCase(deleteOffer.fulfilled, (state, action) => {
         state.status = "succeeded"
+        state.isLoading = false
         state.offers = action.payload
+      })
+      .addCase(deleteOffer.pending, (state) => {
         state.isLoading = false
       })
-      .addCase(deleteOffer.rejected, (state, action) => {
-        state.deleteOfferState.status = null
-        state.deleteOfferState.error = action.payload.data.message
-      })
       .addCase(rejectOffer.fulfilled, (state, action) => {
-        if (action.payload.status === 404) {
-          state.rejectOfferState.status = null
-          state.rejectOfferState.error = action.payload.message
-        } else {
-          state.rejectOfferState.status = "succeeded"
-          state.rejectOfferState.error = null
-        }
+        state.status = "succeeded"
+        state.isLoading = false
+        state.offers = action.payload
       })
-      .addCase(rejectOffer.rejected, (state, action) => {
-        state.rejectOfferState.status = null
-        state.rejectOfferState.error = action.payload.data.message
+      .addCase(rejectOffer.pending, (state) => {
+        state.isLoading = false
       })
       .addCase(acceptOffer.fulfilled, (state, action) => {
-        if (action.payload.status === 404) {
-          state.acceptOfferState.status = null
-          state.acceptOfferState.error = action.payload.message
-        } else {
-          state.acceptOfferState.status = "succeeded"
-          state.acceptOfferState.error = null
-        }
+        state.status = "succeeded"
+        state.isLoading = false
+        state.offers = action.payload
       })
-      .addCase(acceptOffer.rejected, (state, action) => {
-        state.acceptOfferState.status = null
-        state.acceptOfferState.error = action.payload.data.message
+      .addCase(acceptOffer.pending, (state) => {
+        state.isLoading = false
       })
       .addCase(addStudent.fulfilled, (state, action) => {
-        if (action.payload.status === 404) {
-          state.addStudentState.status = null
-          state.addStudentState.error = action.payload.message
-        } else {
-          state.addStudentState.status = "succeeded"
-          state.addStudentState.error = null
-        }
+        state.status = "succeeded"
+        state.isLoading = false
+        state.offers = action.payload
       })
-      .addCase(addStudent.rejected, (state, action) => {
-        state.addStudentState.status = null
-        state.addStudentState.error = action.payload.data.message
+      .addCase(addStudent.pending, (state) => {
+        state.isLoading = false
       })
   }
 })
@@ -392,18 +324,7 @@ export const selectOfferById = (state, id) => {
 }
 
 export const selectCreateOfferState = (state) => state.offers.createOfferState
-export const selectSendOfferState = (state) => state.offers.sendOfferState
-export const selectDeleteOfferState = (state) => state.offers.deleteOfferState
-export const selectRejectOfferState = (state) => state.offers.rejectOfferState
-export const selectAcceptOfferState = (state) => state.offers.acceptOfferState
-export const selectAddStudentState = (state) => state.offers.addStudentState
 export const selectIsLoadingOffers = (state) => state.offers.isLoading
 
-export const {
-  resetDeleteOfferState,
-  resetAddStudentState,
-  resetAcceptOfferState,
-  resetCreateOfferState,
-  resetSendOfferState
-} = offersSlice.actions
+export const { resetCreateOfferState } = offersSlice.actions
 export default offersSlice.reducer

@@ -10,7 +10,12 @@ import TrainingDetails from "./components/TrainingDetails"
 import StudentDetails from "./components/StudentDetails"
 
 import { useTranslation } from "react-i18next"
-import { createOffer, fetchAllOffers, resetCreateOfferState, selectCreateOfferState } from "../../../redux/project/offers"
+import {
+  createOffer,
+  fetchAllOffers,
+  resetCreateOfferState,
+  selectCreateOfferState
+} from "../../../redux/project/offers"
 import { useDispatch, useSelector } from "react-redux"
 import toast from "react-hot-toast"
 
@@ -31,12 +36,10 @@ const OfferWizard = ({ type, onClose }) => {
     setData((prevData) => {
       return { ...prevData, ...data }
     })
-    // outerSubmit()
     console.log(data)
   }
 
   const handelSubmit = (values) => {
-    console.log(1111111)
     dispatch(createOffer({ ...values, ...data }))
   }
 
@@ -53,7 +56,7 @@ const OfferWizard = ({ type, onClose }) => {
       toast.error(createOfferState.error)
     }
     dispatch(resetCreateOfferState())
-  }, [createOfferState])
+  }, [createOfferState.status, createOfferState.error])
 
   const steps = [
     {

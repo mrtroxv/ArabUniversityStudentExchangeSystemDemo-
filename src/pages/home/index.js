@@ -3,7 +3,7 @@ import React, { Fragment, useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { Routes, Route, Link, useNavigate } from "react-router-dom"
 import Breadcrumbs from "@components/breadcrumbs"
-import Toast, { Toaster } from "react-hot-toast"
+import { toast } from "react-hot-toast"
 import {
   Card,
   CardHeader,
@@ -43,9 +43,7 @@ import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
 import OfferWizard from "../Offers/create-offer/OfferWizard"
 import {
   deleteOffer,
-  resetDeleteOfferState,
   selectAllOffers,
-  selectDeleteOfferState,
   selectIsLoadingOffers
 } from "../../redux/project/offers"
 import { useForm } from "react-hook-form"
@@ -62,24 +60,20 @@ function Home() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const deleteOfferState = useSelector(selectDeleteOfferState)
   const isLoading =
     useSelector(selectIsLoadingOffers) ||
     useSelector(selectIsLoadingStudents) ||
     useSelector(selectIsLoadingUniversities)
 
-  const handelDeleteOffer = (Offer_id) => {
-    dispatch(deleteOffer(Offer_id))
+  const handelDeleteOffer = (e, Offer_id) => {
+    e.preventDefault()
+    toast.promise(dispatch(deleteOffer(Offer_id)), {
+      loading: "Deleting...",
+      success: "Deleted Successfully",
+      error: "Error Deleting"
+    })
   }
 
-  useEffect(() => {
-    if (deleteOfferState.status) {
-      Toast.success(t("Offer Deleted"))
-    }
-    setTimeout(() => {
-      dispatch(resetDeleteOfferState())
-    }, 500)
-  }, [deleteOfferState])
   useEffect(() => {}, [offersList])
 
   const status = {
@@ -164,15 +158,10 @@ function Home() {
                   tag="a"
                   href="/"
                   className="w-100"
-                  onClick={(e) => e.preventDefault()}
+                  onClick={(e) => handelDeleteOffer(e, row.id)}
                 >
                   <Trash size={15} />
-                  <span
-                    className="align-middle ms-50"
-                    onClick={() => handelDeleteOffer(row.id)}
-                  >
-                    Delete
-                  </span>
+                  <span className="align-middle ms-50">Delete</span>
                 </DropdownItem>
               </DropdownMenu>
             </UncontrolledDropdown>
