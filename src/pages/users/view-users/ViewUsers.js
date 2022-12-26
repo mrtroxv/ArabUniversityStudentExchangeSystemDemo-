@@ -26,7 +26,6 @@ import NewUser from "../create-user/index"
 import useCols from "./useCols"
 import useUniversityApi from "../../../utility/hooks/custom/useUniversityApi"
 import Spinner from "../../../components/custom/loader/Spinner"
-import DataTableAdvSearch from "../../../views/tables/data-tables/advance/TableAdvSearch"
 
 const ViewUsers = () => {
   const { register, watch, setValue } = useForm()
@@ -133,7 +132,6 @@ const ViewUsers = () => {
             ) : (
               <>
                 <DataTable data={filtered} columns={cols} />
-                <DataTableAdvSearch />
               </>
             )}
           </Card>
