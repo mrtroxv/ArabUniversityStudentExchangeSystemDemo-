@@ -15,44 +15,32 @@ import "@styles/react/libs/flatpickr/flatpickr.scss"
 import "@styles/base/pages/app-invoice.scss"
 import { useTranslation } from "react-i18next"
 import { selectAllUniversities } from "../../../redux/project/universities"
-import {
-  fetchAllOffers,
-  selectSendOfferState,
-  // selectAllOffers,
-  sendOffer
-} from "../../../redux/project/offers"
-import { useState, useEffect } from "react"
+import { sendOffer } from "../../../redux/project/offers"
+import { useState } from "react"
 import toast from "react-hot-toast"
 
 const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
   // ** States
   const { t } = useTranslation()
   const universities = useSelector(selectAllUniversities)
-  const sentOfferState = useSelector(selectSendOfferState)
-
-
   const [selectedUniversity, setSelectedUniversity] = useState(
     universities[0].ID
   )
   const dispatch = useDispatch()
-
 
   const handleSubmit = () => {
     const uploadData = {
       university_id_des: selectedUniversity,
       offer_id: id
     }
-    console.log(uploadData)
-    dispatch(sendOffer(uploadData))
+    toast.promise(dispatch(sendOffer(uploadData)), {
+      loading: "Sending Offer",
+      success: "Offer Sent Successfully",
+      error: "Error Sending Offer"
+    })
+
     toggleSidebar()
   }
-
-  useEffect(() => {
-    if (sentOfferState.status) {
-      toast.success(t("Offer Created Successfully"))
-      dispatch(fetchAllOffers())
-    }
-  }, [sentOfferState.status])
 
   return (
     <Sidebar
@@ -83,7 +71,9 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
               {t("UniversityName")}
             </option>
             {universities.map((university) => (
-              <option value={university.ID}>{university.EN_Name}</option>
+              <option value={university.ID} key={university.ID}>
+                {university.EN_Name}
+              </option>
             ))}
           </Input>
         </div>

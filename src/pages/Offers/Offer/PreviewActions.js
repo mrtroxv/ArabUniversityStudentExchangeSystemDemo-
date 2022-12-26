@@ -1,21 +1,15 @@
 // ** React Imports
-import { useEffect } from "react"
+import toast from "react-hot-toast"
 import { useTranslation } from "react-i18next"
-import { useDispatch, useSelector } from "react-redux"
-import { Link, useNavigate } from "react-router-dom"
+import { useDispatch } from "react-redux"
+import { Link } from "react-router-dom"
 
 // ** Reactstrap Imports
 import { Card, CardBody, Button, Toast } from "reactstrap"
 import {
   acceptOffer,
   deleteOffer,
-  fetchAllOffers,
-  rejectOffer,
-  resetAcceptOfferState,
-  resetDeleteOfferState,
-  selectAcceptOfferState,
-  selectDeleteOfferState,
-  selectRejectOfferState
+  rejectOffer
 } from "../../../redux/project/offers"
 
 const PreviewActions = ({
@@ -26,33 +20,24 @@ const PreviewActions = ({
 }) => {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const navigate = useNavigate()
-  const rejectOfferState = useSelector(selectRejectOfferState)
-  const deleteOfferState = useSelector(selectDeleteOfferState)
-  const acceptOfferState = useSelector(selectAcceptOfferState)
 
   const handelRejectOffer = (id) => {
-    dispatch(rejectOffer(id))
+    toast.promise(dispatch(rejectOffer(id)), {
+      loading: t("Rejecting"),
+      success: t("Rejected"),
+      error: t("Error")
+    })
   }
   const handelDeleteOffer = (id) => {
     dispatch(deleteOffer(id))
   }
   const handelAcceptOffer = (offer_id) => {
-    dispatch(acceptOffer(offer_id))
+    toast.promise(dispatch(acceptOffer(offer_id)), {
+      loading: t("Accepting"),
+      success: t("Accepted"),
+      error: t("Error")
+    })
   }
-
-  useEffect(() => {
-    if (rejectOfferState.status || acceptOfferState.status) {
-      dispatch(fetchAllOffers())
-    }
-    if (deleteOfferState.status) {
-      dispatch(fetchAllOffers())
-      dispatch(resetDeleteOfferState())
-      navigate(-1)
-    }
-
-    dispatch(resetAcceptOfferState())
-  }, [rejectOfferState.status, deleteOfferState.status, acceptOfferState.status])
 
   return (
     <Card className="invoice-action-wrapper">
