@@ -1,5 +1,5 @@
 // ** React Imports
-import { useEffect, useState } from "react"
+import { useState } from "react"
 // ** Third Party Components
 import Flatpickr from "react-flatpickr"
 //useSelector
@@ -15,12 +15,7 @@ import "@styles/react/libs/flatpickr/flatpickr.scss"
 import "@styles/base/pages/app-invoice.scss"
 import { useTranslation } from "react-i18next"
 import { selectAllStudents } from "../../../redux/project/students"
-import {
-  addStudent,
-  fetchAllOffers,
-  resetAddStudentState,
-  selectAddStudentState
-} from "../../../redux/project/offers"
+import { addStudent } from "../../../redux/project/offers"
 import toast from "react-hot-toast"
 
 const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
@@ -29,31 +24,21 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
   const { t } = useTranslation()
   const [student_id, setStudent_id] = useState(-1)
   const students = useSelector(selectAllStudents)
-  const addStudentState = useSelector(selectAddStudentState)
-  console.log(students)
   const dispatch = useDispatch()
 
   const handelAddStudent = () => {
-    console.log("add student")
-    dispatch(addStudent({ offer_id: id, student_id }))
+    toast.promise(dispatch(addStudent({ offer_id: id, student_id })), {
+      loading: "Adding Student",
+      success: "Student Added Successfully",
+      error: "Error Adding Student"
+    })
+
+    toggleSidebar()
   }
+
   const handelSelectStudent = (e) => {
-    console.log(e.target.value)
     setStudent_id(e.target.value)
   }
-
-  useEffect(() => {
-    if (addStudentState.status) {
-      toast.success(t("Student Added Successfully"))
-      toggleSidebar()
-      dispatch(fetchAllOffers())
-      dispatch(resetAddStudentState())
-    }
-    if (addStudentState.error) {
-      toast.error(addStudentState.error)
-    }
-
-  }, [addStudentState.status])
 
   return (
     <Sidebar
@@ -82,7 +67,9 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
               {t("selectStudent")}
             </option>
             {students.map((student) => (
-              <option value={student.ID}>{student.name}</option>
+              <option value={student.ID} key={student.ID}>
+                {student.name}
+              </option>
             ))}
           </Input>
         </div>
