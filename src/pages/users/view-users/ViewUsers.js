@@ -43,11 +43,11 @@ const ViewUsers = () => {
   const name = watch("name")
   const email = watch("email")
   const phone = watch("phone")
-  const filtered = filteredData.filter((item) => {
+  const filtered = filteredData?.filter((item) => {
     return (
-      item.EN_Name.toLowerCase().includes(name.toLowerCase()) &&
-      item.email.toLowerCase().includes(email.toLowerCase()) &&
-      item.phone.includes(phone)
+      item.EN_Name?.toLowerCase().includes(name.toLowerCase()) &&
+      item.email?.toLowerCase().includes(email.toLowerCase()) &&
+      item.phone?.includes(phone)
     )
   })
 
