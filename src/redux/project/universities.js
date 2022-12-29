@@ -1,7 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
+import { headersApi } from "./constants"
 
 const UNIVERSITIES_URL = "http://localhost:3500/admin/universities"
+const ADD_USER_URL = "http://localhost:3500/admin/add-user"
 const initialState = {
   universities: [],
   status: "idle",
@@ -24,6 +26,19 @@ export const fetchUniversities = createAsyncThunk(
     }
   }
 )
+
+export const addUser = async (data) => {
+  try {
+    const response = await axios.post(ADD_USER_URL, data, {
+      headers: headersApi
+    })
+    console.log("response is successful", { response })
+    return response
+  } catch (error) {
+    console.log("my error is ", { error })
+    return error
+  }
+}
 
 const universitiesSlice = createSlice({
   name: "universities",
@@ -50,7 +65,7 @@ export default universitiesSlice.reducer
 
 export const selectAllUniversities = (state) => {
   const user_university_id = state.auth.userData.university_id
-  const universities = state.universities.universities.filter(
+  const universities = state.universities.universities?.filter(
     (university) => university.ID !== user_university_id
   )
   return universities
@@ -62,4 +77,5 @@ export const selectUniversityById = (state, id) => {
   })
 }
 
-export const selectIsLoadingUniversities = (state) => state.universities.isLoading
+export const selectIsLoadingUniversities = (state) =>
+  state.universities.isLoading

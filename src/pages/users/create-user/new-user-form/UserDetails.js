@@ -39,7 +39,7 @@ const UserDetails = ({ stepper, onStoreData }) => {
     name: Yup.string()
       .required("No name provided")
       .min(8, "Too Short - Name must be at least 8 characters long"),
-    email: Yup.string().email().required("No Email provided")
+    email: Yup.string().email().required("No email provided")
   })
 
   return (
@@ -66,9 +66,8 @@ const UserDetails = ({ stepper, onStoreData }) => {
                   name={`name`}
                   id={`name`}
                   placeholder="ex. Dr.Moutmad Al Khateeb"
-                  className={`form-control ${
-                    errors.name && touched.name ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.name && touched.name ? "is-invalid" : ""
+                    }`}
                 />
                 <ErrorMessage
                   name="name"
@@ -85,9 +84,8 @@ const UserDetails = ({ stepper, onStoreData }) => {
                   name={`email`}
                   id={`email`}
                   placeholder="ex. m.a.khateeb@teachers.ptuk.edu.ps"
-                  className={`form-control ${
-                    errors.email && touched.email ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.email && touched.email ? "is-invalid" : ""
+                    }`}
                 />
                 <ErrorMessage
                   name="email"
@@ -103,9 +101,8 @@ const UserDetails = ({ stepper, onStoreData }) => {
                 </label>
                 <Field
                   name="username"
-                  className={`form-control ${
-                    errors.username && touched.username ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.username && touched.username ? "is-invalid" : ""
+                    }`}
                   placeholder={t("nameP")}
                 />
                 <ErrorMessage
@@ -121,9 +118,8 @@ const UserDetails = ({ stepper, onStoreData }) => {
                 <Field
                   type="password"
                   name="password"
-                  className={`form-control ${
-                    errors.password && touched.password ? "is-invalid" : ""
-                  }`}
+                  className={`form-control ${errors.password && touched.password ? "is-invalid" : ""
+                    }`}
                   placeholder={"*********"}
                 />
                 <ErrorMessage
