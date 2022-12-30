@@ -211,5 +211,12 @@
   ,"Phone Number": "رقم الهاتف",
   "Email Address": "البريد الإلكتروني",
   "University Name": "إسم الجامعة",
-  "Universities": "الجامعات"
+  "Universities": "الجامعات",
+  "Fax Number": "رقم الفاكس",
+  "Country": "الدولة",
+  "Create New User": "إنشاء مستخدم جديد",
+  "Duplicate Offer": "تكرار العرض",
+  "Chose a Number": "إختر رقم",
+  "Submit": "تأكيد",
+  "Cancel": "الغاء"
 }

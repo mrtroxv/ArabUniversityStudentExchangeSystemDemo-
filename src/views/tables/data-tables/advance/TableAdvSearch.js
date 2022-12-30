@@ -71,7 +71,7 @@ const DataTableAdvSearch = () => {
   )
 
   // ** Function to handle name filter
-  const handleNameFilter = e => {
+  const handleNameFilter = e => { 
     const value = e.target.value
     let updatedData = []
     const dataToFilter = () => {

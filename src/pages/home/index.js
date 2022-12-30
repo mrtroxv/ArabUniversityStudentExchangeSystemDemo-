@@ -60,10 +60,11 @@ function Home() {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const isLoadingOffers = useSelector(selectIsLoadingOffers)
+  const isLoadingStudents = useSelector(selectIsLoadingStudents)
+  const isLoadingUniversities = useSelector(selectIsLoadingUniversities)
   const isLoading =
-    useSelector(selectIsLoadingOffers) ||
-    useSelector(selectIsLoadingStudents) ||
-    useSelector(selectIsLoadingUniversities)
+    isLoadingOffers || isLoadingStudents || isLoadingUniversities
 
   const handelDeleteOffer = (e, Offer_id) => {
     e.preventDefault()
@@ -73,8 +74,6 @@ function Home() {
       error: "Error Deleting"
     })
   }
-
-  useEffect(() => {}, [offersList])
 
   const status = {
     0: { title: t("Creating Offer"), color: "light-primary" },
@@ -206,9 +205,9 @@ function Home() {
   const major = watch("major")
   const offers = filteredData?.filter((offer) => {
     return (
-      offer.id.toString().includes(id) &&
-      offer.college_name.toLowerCase().includes(college.toLowerCase()) &&
-      offer.major_name.toLowerCase().includes(major.toLowerCase())
+      offer?.id.toString().includes(id) &&
+      offer?.college_name.toLowerCase().includes(college.toLowerCase()) &&
+      offer?.major_name.toLowerCase().includes(major.toLowerCase())
     )
   })
   return (

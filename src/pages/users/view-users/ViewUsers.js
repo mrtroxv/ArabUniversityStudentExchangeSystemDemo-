@@ -45,9 +45,9 @@ const ViewUsers = () => {
   const phone = watch("phone")
   const filtered = filteredData.filter((item) => {
     return (
-      item.EN_Name.toLowerCase().includes(name.toLowerCase()) &&
-      item.email.toLowerCase().includes(email.toLowerCase()) &&
-      item.phone.includes(phone)
+      item?.EN_Name?.toLowerCase().includes(name.toLowerCase()) &&
+      item?.email?.toLowerCase().includes(email.toLowerCase()) &&
+      item?.phone?.includes(phone)
     )
   })
 
@@ -147,7 +147,7 @@ const ViewUsers = () => {
             toggle={() => setFormModal(!formModal)}
             className="modal-lg"
           >
-            {t("createOffer")}
+            {t("Create New User")}
           </ModalHeader>
           <ModalBody>
             <NewUser

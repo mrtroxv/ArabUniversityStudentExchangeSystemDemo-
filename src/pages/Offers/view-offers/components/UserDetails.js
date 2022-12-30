@@ -19,10 +19,10 @@ function UserDetails() {
   const userDetails = useSelector((state) =>
     selectUniversityById(state, user.university_id)
   )
-  console.log({
-    user,
-    userDetails
-  })
+  // console.log({
+  //   user,
+  //   userDetails
+  // })
   return (
     <Card>
       <CardBody>

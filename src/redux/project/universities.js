@@ -62,4 +62,5 @@ export const selectUniversityById = (state, id) => {
   })
 }
 
-export const selectIsLoadingUniversities = (state) => state.universities.isLoading
+export const selectIsLoadingUniversities = (state) =>
+  state.universities.isLoading

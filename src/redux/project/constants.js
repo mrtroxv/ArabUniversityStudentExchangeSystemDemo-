@@ -11,6 +11,7 @@ export const DELETE_OFFER_URL = `${BE_LINK}${OFFERS}/delete-offer`
 export const REJECT_OFFER_URL = `${BE_LINK}${OFFERS}/reject-offer`
 export const ACCEPT_OFFER_URL = `${BE_LINK}${OFFERS}/accept-offer`
 export const ADD_STUDENT_URL = `${BE_LINK}${OFFERS}/add-student`
+export const DUPLICATE_OFFER_URL = `${BE_LINK}${OFFERS}/duplicate`
 export const headersApi = {
   authorization: JSON.parse(localStorage.getItem("accessToken"))
 }
