@@ -6,6 +6,10 @@ import { ArrowLeft, ArrowRight } from "react-feather"
 
 // ** Reactstrap Imports
 import { Label, Row, Col, Input, Button } from "reactstrap"
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
+// import { selectThemeColors } from "@utils"
+
 import { Formik, Field, Form, ErrorMessage } from "formik"
 import * as Yup from "yup"
 import { useTranslation } from "react-i18next"
@@ -16,14 +20,12 @@ import {
   university_title
 } from "./translations"
 import FormHeader from "./FormHeader"
+import { faxRegExp, phoneRegExp, urlRegExp } from "./constants"
+import useCountries from "../../../../utility/hooks/custom/useCountries"
 
 const UniversityDetails = ({ stepper, onSubmit }) => {
   const { t } = useTranslation()
-  const phoneRegExp =
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
-  const faxRegExp = /^\+?[0-9]{6,}$/
-  const urlRegExp = /^https?$/
-  const cityRegExp = /^((\\+[a-z]{1,2}))$/
+  const { selectCountries } = useCountries()
   const defaultValues = {
     AR_Name: "",
     EN_Name: "",
@@ -52,12 +54,13 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
     Fax: Yup.string().matches(faxRegExp, "Fax number is not valid"),
     hour_no_week: Yup.number().min(20, "Please increase Weekly Hours"),
     hour_no_day: Yup.number().min(5, "Please increase Daily Hours"),
-    Location_O: Yup.string()
-      // .required("No address provided")
-      .min(8, "Too Short - address must be at least 8 characters long"),
+    Location_O: Yup.string().min(
+      8,
+      "Too Short - address must be at least 8 characters long"
+    ),
     Study_buisness: Yup.string(),
     url: Yup.string().matches(urlRegExp, "Please provide a valid URL"),
-    city_id: Yup.string().matches(cityRegExp, "Please provide a valid city ID")
+    city_id: Yup.string().oneOf(selectCountries.map((place) => place.value))
   })
 
   return (
@@ -74,7 +77,7 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
           stepper.next()
         }}
       >
-        {({ errors, touched }) => (
+        {({ values, errors, touched }) => (
           <Form>
             <Row>
               <Col md="6" className="mb-1">
@@ -119,7 +122,7 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
             <Row>
               <Col md="6" className="mb-2">
                 <Label className="form-label" for={`phone`}>
-                  Phone Number
+                  {t("Phone Number")}
                 </Label>
                 <Field
                   type="number"
@@ -138,7 +141,7 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
               </Col>
               <Col md="6" className="mb-2">
                 <Label className="form-label" for={`Fax`}>
-                  Fax
+                  {t("Fax Number")}
                 </Label>
                 <Field
                   type="number"
@@ -158,6 +161,41 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
             </Row>
             <Row>
               <Col md="6" className="mb-2">
+                <Label className="form-label" for={`city_id`}>
+                  {t("Country")}
+                </Label>
+                {/* <Field
+                  type="text"
+                  name={`city_id`}
+                  id={`city_id`}
+                  placeholder="09-2945415"
+                  className={`form-control ${
+                    errors.city_id && touched.city_id ? "is-invalid" : ""
+                  }`}
+                /> */}
+                <Select
+                  // theme={selectThemeColors}
+                  components={makeAnimated()}
+                  id="city_id"
+                  options={selectCountries}
+                  getOptionLabel={(value) => value.lable}
+                  className={`react-select ${
+                    errors.days_of_work && touched.days_of_work
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                  classNamePrefix="select"
+                  onChange={(value) => {
+                    values.city_id = value.value
+                  }}
+                />
+                <ErrorMessage
+                  name="city_id"
+                  component="p"
+                  className="invalid-feedback"
+                />
+              </Col>
+              <Col md="6" className="mb-2">
                 <Label className="form-label" for={`Location_O`}>
                   {t("instituteAddress")}
                 </Label>
@@ -172,25 +210,6 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
                 />
                 <ErrorMessage
                   name="Location_O"
-                  component="p"
-                  className="invalid-feedback"
-                />
-              </Col>
-              <Col md="6" className="mb-2">
-                <Label className="form-label" for={`city_id`}>
-                  City
-                </Label>
-                <Field
-                  type="text"
-                  name={`city_id`}
-                  id={`city_id`}
-                  placeholder="09-2945415"
-                  className={`form-control ${
-                    errors.city_id && touched.city_id ? "is-invalid" : ""
-                  }`}
-                />
-                <ErrorMessage
-                  name="city_id"
                   component="p"
                   className="invalid-feedback"
                 />
@@ -267,7 +286,7 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
                   URL
                 </Label>
                 <Field
-                  type="number"
+                  type="text"
                   name={`url`}
                   id={`url`}
                   placeholder="ex. 5"

@@ -12,7 +12,8 @@ import {
   ModalHeader,
   Modal,
   ModalBody,
-  Label
+  Label,
+  Input
 } from "reactstrap"
 
 import UserDetails from "./components/UserDetails"
@@ -24,7 +25,7 @@ import expiredOffers from "@src/assets/images/svg/expired.svg"
 import DataTableWithButtons from "../../../components/custom/table/ReactTable"
 import OfferWizard from "../create-offer/OfferWizard"
 import {
-  fetchAllOffers,
+  dupliateOffer,
   selectCreatedOffers,
   selectIsLoadingOffers,
   selectObtainedOffers,
@@ -34,19 +35,20 @@ import { useForm } from "react-hook-form"
 import { selectUserID } from "../../../redux/authentication"
 import Spinner from "../../../components/custom/loader/Spinner"
 import useCols from "./useCols"
+import SimpleFormDialog from "../../../components/custom/SimpleFormDialog"
+import toast from "react-hot-toast"
 // import { selectIsLoadingStudents } from "../../../redux/project/students"
 
 function ViewOffers() {
-  const { register, watch } = useForm()
+  const { register, watch, getValues, setValue } = useForm()
   const userId = useSelector(selectUserID)
   const isLoading = useSelector(selectIsLoadingOffers)
   const { status: data } = useParams()
-  const dispatch = useDispatch()
   const { t } = useTranslation()
-  const { cols } = useCols()
+  const { cols, toggleDuplicateDialog, duplicateDialogData } = useCols()
   const [formModal, setFormModal] = useState(false)
   const [filteredData, setFilteredData] = useState([])
-
+  const dispatch = useDispatch()
   const breadcrumbs = {
     "created-offers": {
       title: "Created Offers",
@@ -86,9 +88,8 @@ function ViewOffers() {
   const offersList = useSelector(breadcrumbs[data].query)
 
   useEffect(() => {
-    dispatch(fetchAllOffers())
     setFilteredData(offersList)
-  }, [])
+  }, [isLoading])
 
   const viewTableHandler = (date) => {
     if (date === "all") {
@@ -108,17 +109,36 @@ function ViewOffers() {
     setFormModal(!formModal)
   }
 
+  const handleCloseDuplicate = () => {
+    setValue("duplicate", undefined)
+    toggleDuplicateDialog()
+  }
+
+  const handleDuplicateOffer = () => {
+    const number = getValues("duplicate")
+    const { id } = duplicateDialogData
+    const uploadData = {
+      offer_id: id,
+      number
+    }
+    toast.promise(dispatch(dupliateOffer(uploadData)), {
+      loading: "Dupliating...",
+      success: "Duplicate offer"
+    })
+    handleCloseDuplicate()
+  }
+
   const id = watch("id")
   const college = watch("college")
   const major = watch("major")
   const universityID = watch("university_id") || ""
-  const offers = filteredData.filter((offer) => {
+  const offers = filteredData?.filter((offer) => {
     return (
-      offer.id.toString().includes(id) &&
-      offer.college_name.toLowerCase().includes(college.toLowerCase()) &&
-      offer.major_name.toLowerCase().includes(major.toLowerCase()) &&
-      (offer.university_id_des?.toString().includes(String(universityID)) ||
-        offer.university_id_src?.toString().includes(String(universityID)))
+      offer?.id.toString().includes(id) &&
+      offer?.college_name.toLowerCase().includes(college.toLowerCase()) &&
+      offer?.major_name.toLowerCase().includes(major.toLowerCase()) &&
+      (offer?.university_id_des?.toString().includes(String(universityID)) ||
+        offer?.university_id_src?.toString().includes(String(universityID)))
     )
   })
 
@@ -179,7 +199,7 @@ function ViewOffers() {
                   />
                 </Col>
                 <Col lg={data === "created-offers" ? "4" : "3"} md="6">
-                  <Label key="college_name">{t("college")} :</Label>
+                  <Label key="college">{t("college")} :</Label>
                   <input
                     {...register("college")}
                     placeholder="College"
@@ -188,7 +208,7 @@ function ViewOffers() {
                   />
                 </Col>
                 <Col lg={data === "created-offers" ? "4" : "3"} md="6">
-                  <Label key="major_name">{t("major")} :</Label>
+                  <Label key="major">{t("major")} :</Label>
                   <input
                     {...register("major")}
                     placeholder="Major"
@@ -250,6 +270,23 @@ function ViewOffers() {
             />
           </ModalBody>
         </Modal>
+      )}
+      {duplicateDialogData.isOpen && (
+        <SimpleFormDialog
+          open={duplicateDialogData.isOpen}
+          toggleModal={handleCloseDuplicate}
+          handleSubmit={handleDuplicateOffer}
+        >
+          <Col md="12">
+            <Label key="duplicate">{t("Chose a Number")} :</Label>
+            <input
+              {...register("duplicate")}
+              placeholder="#"
+              type="number"
+              className="form-control"
+            />
+          </Col>
+        </SimpleFormDialog>
       )}
       {
         // <ToastContainer />

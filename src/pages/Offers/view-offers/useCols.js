@@ -1,36 +1,28 @@
-import React from "react"
+import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
 import useUniversityApi from "../../../utility/hooks/custom/useUniversityApi"
 import { findDestinationUniversity, findSourceUniversity } from "./utils"
-import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
-import {
-  Card,
-  CardHeader,
-  CardBody,
-  CardTitle,
-  CardText,
-  CardLink,
-  Row,
-  Col,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
-  Badge,
-  Button,
-  ModalHeader,
-  Modal,
-  ModalBody,
-  Label,
-  Input,
-  ModalFooter,
-  ButtonToggle
-} from "reactstrap"
+import { FileText, Trash, Copy } from "react-feather"
+import { Badge, Button } from "reactstrap"
+import { deleteOffer } from "../../../redux/project/offers"
+import { useDispatch } from "react-redux"
+import toast from "react-hot-toast"
+import DuplicateDialog from "./DuplicateDialog"
+
 const useCols = () => {
   const { t } = useTranslation()
   const { universities } = useUniversityApi()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const [duplicateDialogData, setDuplicateDialogData] = useState({
+    id: undefined,
+    isOpen: false
+  })
+
+  const handleToggleDuplicateDialog = (data) => setDuplicateDialogData(data)
+  const toggleDuplicateDialog = () =>
+    setDuplicateDialogData((prev) => ({ ...prev, isOpen: !prev.isOpen }))
   const cols = [
     {
       name: "ID",
@@ -111,14 +103,36 @@ const useCols = () => {
             <FileText size={15} />
           </Button>
           {row.status === 0 && (
-            <Button
-              type="button"
-              color="white"
-              className="table-button_edit"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Trash size={15} />
-            </Button>
+            <>
+              <Button
+                type="button"
+                color="white"
+                className="table-button_edit"
+                onClick={(e) => {
+                  e.preventDefault()
+                  toast.promise(dispatch(deleteOffer(row.id)), {
+                    loading: t("Deleting"),
+                    success: t("Deleted"),
+                    error: t("Error")
+                  })
+                }}
+              >
+                <Trash size={15} />
+              </Button>
+              <Button
+                type="button"
+                color="white"
+                className="table-button_edit"
+                onClick={() =>
+                  handleToggleDuplicateDialog({
+                    id: row.id,
+                    isOpen: true
+                  })
+                }
+              >
+                <Copy size={15} />
+              </Button>
+            </>
           )}
         </div>
       )
@@ -135,7 +149,11 @@ const useCols = () => {
       actionsCol
     ]
   }
-  return { cols: colsMap }
+  return {
+    cols: colsMap,
+    toggleDuplicateDialog,
+    duplicateDialogData
+  }
 }
 
 export default useCols

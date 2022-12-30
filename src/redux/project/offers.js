@@ -7,8 +7,9 @@ import {
   ADD_STUDENT_URL,
   CREATE_OFFER_URL,
   DELETE_OFFER_URL,
+  DUPLICATE_OFFER_URL,
   ENDED_OFFERS_URL,
-  headersApi,
+  // headersApi,
   OBTAINED_OFFER_URL,
   OFFERS_URL,
   OWN_OFFERS_URL,
@@ -32,7 +33,9 @@ export const createOffer = createAsyncThunk(
   async (offerData) => {
     try {
       const response = await axios.post(CREATE_OFFER_URL, offerData, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
 
       return response.data
@@ -43,21 +46,30 @@ export const createOffer = createAsyncThunk(
 )
 
 // getAllOffers
-export const fetchAllOffers = createAsyncThunk("offers/getOffers", async () => {
-  try {
-    const response = await axios.get(OFFERS_URL, {
-      headers: headersApi
-    })
-    return response.data
-  } catch (error) {}
-})
+export const fetchAllOffers = createAsyncThunk(
+  "offers/show_offer",
+  async () => {
+    try {
+      const response = await axios.get(OFFERS_URL, {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      })
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
 
 export const fetchOwnOffer = createAsyncThunk(
   "offers/getOwnOffers",
   async () => {
     try {
       const response = await axios.get(OWN_OFFERS_URL, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
       return response.data
     } catch (error) {}
@@ -69,7 +81,9 @@ export const fetchObtainedOffer = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get(OBTAINED_OFFER_URL, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
       return response.data
     } catch (error) {}
@@ -81,7 +95,9 @@ export const fetchActiveOffers = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get(ACTIVE_OFFERS_URL, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
       return response.data
     } catch (error) {}
@@ -93,7 +109,9 @@ export const fetchEndedOffers = createAsyncThunk(
   async () => {
     try {
       const response = await axios.get(ENDED_OFFERS_URL, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
       return response.data
     } catch (error) {}
@@ -105,10 +123,14 @@ export const sendOffer = createAsyncThunk(
   async (offerData) => {
     try {
       await axios.post(SEND_OFFER_URL, offerData, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
       const response = await axios.get(OFFERS_URL, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
       return response.data
     } catch (error) {}
@@ -122,11 +144,37 @@ export const deleteOffer = createAsyncThunk(
         DELETE_OFFER_URL,
         { offer_id },
         {
-          headers: headersApi
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
         }
       )
       const response = await axios.get(OFFERS_URL, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      })
+      return response.data
+    } catch (error) {}
+  }
+)
+export const dupliateOffer = createAsyncThunk(
+  "offers/duplicate-offer",
+  async (body) => {
+    try {
+      await axios.post(
+        DUPLICATE_OFFER_URL,
+        { body },
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      const response = await axios.get(OFFERS_URL, {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
       return response.data
     } catch (error) {}
@@ -140,11 +188,15 @@ export const rejectOffer = createAsyncThunk(
         REJECT_OFFER_URL,
         { offer_id },
         {
-          headers: headersApi
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
         }
       )
       const response = await axios.get(OFFERS_URL, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
       return response.data
     } catch (error) {}
@@ -159,11 +211,15 @@ export const acceptOffer = createAsyncThunk(
         ACCEPT_OFFER_URL,
         { offer_id },
         {
-          headers: headersApi
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
         }
       )
       const response = await axios.get(OFFERS_URL, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
       return response.data
     } catch (error) {}
@@ -175,10 +231,14 @@ export const addStudent = createAsyncThunk(
   async (offerIdAndStudentId) => {
     try {
       await axios.post(ADD_STUDENT_URL, offerIdAndStudentId, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
       const response = await axios.get(OFFERS_URL, {
-        headers: headersApi
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
       })
       return response.data
     } catch (error) {}
@@ -299,27 +359,34 @@ const offersSlice = createSlice({
       .addCase(addStudent.pending, (state) => {
         state.isLoading = false
       })
+      .addCase(dupliateOffer.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.offers = action.payload
+      })
+      .addCase(dupliateOffer.pending, (state) => {
+        state.isLoading = true
+      })
   }
 })
 
 export const selectAllOffers = (state) => state.offers.offers
 export const selectCreatedOffers = (state, userId) =>
-  state.offers.offers.filter(
+  state.offers.offers?.filter(
     (offer) => offer.university_id_src === userId && offer.status === 0
   )
 export const selectSentOffers = (state, userId) =>
-  state.offers.offers.filter(
+  state.offers.offers?.filter(
     (offer) => offer.university_id_src === userId && offer.status >= 1
   )
 export const selectObtainedOffers = (state, userId) =>
-  state.offers.offers.filter(
+  state.offers.offers?.filter(
     (offer) =>
       offer.university_id_des === userId &&
       (offer.status === 1 || offer.status === 2)
   )
 
 export const selectOfferById = (state, id) => {
-  const offer = state.offers.offers.find((offer) => offer.id === +id)
+  const offer = state.offers.offers?.find((offer) => offer.id === +id)
   return offer
 }
 

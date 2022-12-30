@@ -29,7 +29,11 @@ const PreviewActions = ({
     })
   }
   const handelDeleteOffer = (id) => {
-    dispatch(deleteOffer(id))
+    toast.promise(dispatch(deleteOffer(id)), {
+      loading: t("Deleting"),
+      success: t("Deleted"),
+      error: t("Error")
+    })
   }
   const handelAcceptOffer = (offer_id) => {
     toast.promise(dispatch(acceptOffer(offer_id)), {

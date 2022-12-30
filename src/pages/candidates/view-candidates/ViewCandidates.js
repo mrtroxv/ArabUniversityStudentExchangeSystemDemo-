@@ -69,9 +69,9 @@ const ViewCandidates = () => {
   // const phone = watch("phone")
   const filtered = filteredData.filter((item) => {
     return (
-      item.ID.toString().includes(id) &&
-      item.name.toLowerCase().includes(name.toLowerCase()) &&
-      item.email.toLowerCase().includes(email.toLowerCase())
+      item?.ID.toString().includes(id) &&
+      item?.name.toLowerCase().includes(name.toLowerCase()) &&
+      item?.email.toLowerCase().includes(email.toLowerCase())
       // item.phone.includes(phone)
     )
   })
