@@ -38,7 +38,6 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
       success: "Offer Sent Successfully",
       error: "Error Sending Offer"
     })
-
     toggleSidebar()
   }
 
@@ -62,14 +61,11 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
           <Input
             type="select"
             id="payment-method"
-            defaultValue=""
+            defaultValue={selectedUniversity}
             onChange={(e) => {
               setSelectedUniversity(e.target.value)
             }}
           >
-            <option value="" disabled>
-              {t("UniversityName")}
-            </option>
             {universities.map((university) => (
               <option value={university.ID} key={university.ID}>
                 {university.EN_Name}

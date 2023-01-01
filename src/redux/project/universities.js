@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
-import { headersApi } from "./constants"
 
 const UNIVERSITIES_URL = "http://localhost:3500/admin/universities"
 const ADD_USER_URL = "http://localhost:3500/admin/add-user"
@@ -20,6 +19,7 @@ export const fetchUniversities = createAsyncThunk(
           authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
       })
+      // console.log(res.data)
       return res.data
     } catch (error) {
       console.log(1)
@@ -27,18 +27,28 @@ export const fetchUniversities = createAsyncThunk(
   }
 )
 
-export const addUser = async (data) => {
-  try {
-    const response = await axios.post(ADD_USER_URL, data, {
-      headers: headersApi
-    })
-    console.log("response is successful", { response })
-    return response
-  } catch (error) {
-    console.log("my error is ", { error })
-    return error
+export const addUser = createAsyncThunk(
+  "universities/addUniversity",
+  async (data, { rejectWithValue }) => {
+    try {
+      await axios.post(ADD_USER_URL, data, {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      })
+      const response = axios.get(UNIVERSITIES_URL, {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      })
+      // console.log("response is successful", { response })
+      return response
+    } catch (error) {
+      // console.log("my error is ", { error })
+      return rejectWithValue(error.response.data)
+    }
   }
-}
+)
 
 const universitiesSlice = createSlice({
   name: "universities",

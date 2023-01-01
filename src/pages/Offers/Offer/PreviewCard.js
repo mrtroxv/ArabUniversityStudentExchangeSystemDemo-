@@ -18,8 +18,10 @@ import { Fragment } from "react"
 import { Share2, User } from "react-feather"
 import { selectUniversityById } from "../../../redux/project/universities"
 import { useSelector } from "react-redux"
+import { useLang } from "../../../utility/hooks/custom/useLang"
 const PreviewCard = ({ data }) => {
   const { t } = useTranslation()
+  const [lang] = useLang()
   const creator = useSelector((state) =>
     selectUniversityById(state, data.university_id_src)
   )
@@ -59,11 +61,15 @@ const PreviewCard = ({ data }) => {
           <div>
             <div className="logo-wrapper">
               <img src={appLogo} alt="logo" height="46" width="50" />
-              <h3 className="text-primary invoice-logo">Internship Manager</h3>
+              <h4 className="text-primary invoice-logo">
+                {t("Association of Arab Universities")}
+              </h4>
             </div>
-            <CardText className="mb-25">{data.companyName}</CardText>
-            <CardText className="mb-25">{data.companyAddress}</CardText>
-            <CardText className="mb-0">{data.companyEmail}</CardText>
+            <CardText className="mb-25">
+              {lang === "en" ? creator.EN_Name : creator.AR_Name}
+            </CardText>
+            <CardText className="mb-25">{creator.Location_O}</CardText>
+            <CardText className="mb-0">{creator.email}</CardText>
           </div>
           <div className="mt-md-0 mt-2">
             <h4 className="invoice-title">
@@ -203,12 +209,6 @@ const PreviewCard = ({ data }) => {
             order={{ md: 2, lg: 1 }}
           >
             <div className="invoice-total-wrapper">
-              <div className="invoice-total-item">
-                <p className="invoice-total-amount">{t("offerOwner")}:</p>
-              </div>
-              <div className="invoice-total-item">
-                <p className="invoice-total-title">{creator.EN_Name}</p>
-              </div>
               <div className="invoice-total-item">
                 <p className="invoice-total-amount">{t("offerType")}:</p>
                 <p className="invoice-total-title">{data.train_type}</p>

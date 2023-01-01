@@ -15,7 +15,6 @@ const useCountries = () => {
     value: country,
     lable: data[country]
   }))
-  console.log(selectCountries)
   return {
     countries: data,
     selectCountries

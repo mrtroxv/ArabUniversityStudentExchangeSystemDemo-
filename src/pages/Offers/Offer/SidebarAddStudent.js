@@ -22,18 +22,21 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
   console.log(id)
   // ** States
   const { t } = useTranslation()
-  const [student_id, setStudent_id] = useState(-1)
   const students = useSelector(selectAllStudents)
+  const [student_id, setStudent_id] = useState(students ? students[0]?.ID : -1)
   const dispatch = useDispatch()
 
   const handelAddStudent = () => {
-    toast.promise(dispatch(addStudent({ offer_id: id, student_id })), {
-      loading: "Adding Student",
-      success: "Student Added Successfully",
-      error: "Error Adding Student"
-    })
-
-    toggleSidebar()
+    if (student_id === -1) {
+      toast.error(t("msg.noStudentSelected"))
+    } else {
+      toast.promise(dispatch(addStudent({ offer_id: id, student_id })), {
+        loading: "Adding Student",
+        success: "Student Added Successfully",
+        error: "Error Adding Student"
+      })
+      toggleSidebar()
+    }
   }
 
   const handelSelectStudent = (e) => {

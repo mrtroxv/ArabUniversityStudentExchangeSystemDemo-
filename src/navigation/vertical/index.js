@@ -20,12 +20,6 @@ const menuItems = (t) => {
       navLink: "/home"
     },
     {
-      id: "secondPage",
-      title: t("secondPage"),
-      icon: <Mail size={20} />,
-      navLink: "/second-page"
-    },
-    {
       id: "Offers",
       title: t("offers"),
       icon: <FileText size={20} />,
@@ -90,17 +84,13 @@ const menuItems = (t) => {
       ]
     },
     {
-      id: "Pages",
-      title: t("pages"),
-      icon: <File size={20} />,
-      children: [
-        {
-          id: "AccountSettings",
-          title: t("accountSettings"),
-          icon: <Circle size={20} />,
-          navLink: "/pages/account-settings"
-        }
-      ]
+      header: "Apps & Pages"
+    },
+    {
+      id: "email",
+      title: "Email",
+      icon: <Mail size={20} />,
+      navLink: "/apps/email"
     }
   ]
   return items
