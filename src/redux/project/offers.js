@@ -369,7 +369,7 @@ const offersSlice = createSlice({
   }
 })
 
-export const selectAllOffers = (state) => state.offers.offers
+export const selectAllOffers = (state) => state.offers?.offers
 export const selectCreatedOffers = (state, userId) =>
   state.offers.offers?.filter(
     (offer) => offer.university_id_src === userId && offer.status === 0
@@ -378,12 +378,13 @@ export const selectSentOffers = (state, userId) =>
   state.offers.offers?.filter(
     (offer) => offer.university_id_src === userId && offer.status >= 1
   )
-export const selectObtainedOffers = (state, userId) =>
-  state.offers.offers?.filter(
-    (offer) =>
-      offer.university_id_des === userId &&
-      (offer.status === 1 || offer.status === 2)
-  )
+export const selectObtainedOffers = (state, userId) => {
+  console.log(userId)
+  return state.offers.offers?.filter((offer) => {
+    console.log(offer)
+    return offer.University_id_des === userId && offer.status >= 1
+  })
+}
 
 export const selectOfferById = (state, id) => {
   const offer = state.offers.offers?.find((offer) => offer.id === +id)

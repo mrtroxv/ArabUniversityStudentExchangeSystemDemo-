@@ -26,7 +26,7 @@ const OfferPreview = () => {
   const toggleAddSidebar = () => setAddStudent(!addStudent)
   const toggleDeletePopup = () => setDeletePopup(!deletePopup)
 
-  return data !== null && data.id !== undefined ? (
+  return data !== null && data?.id !== undefined ? (
     <div className="invoice-preview-wrapper">
       <Row className="invoice-preview">
         <Col xl={9} md={8} sm={12}>

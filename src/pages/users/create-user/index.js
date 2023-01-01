@@ -15,7 +15,7 @@ import { useDispatch } from "react-redux"
 import { addUser, fetchUniversities } from "../../../redux/project/universities"
 // import toast from "react-hot-toast"
 
-const NewUser = ({ type }) => {
+const NewUser = ({ type, onClose }) => {
   // ** Ref
   const ref = useRef(null)
   const dispatch = useDispatch()
@@ -34,13 +34,15 @@ const NewUser = ({ type }) => {
   const handelSubmit = (values) => {
     console.log(JSON.stringify({ ...values, ...data }))
 
-    toast.promise(addUser({ ...values, ...data }), {
+    toast.promise(dispatch(addUser({ ...values, ...data })), {
       loading: "Loading",
       success: (res) => {
-        if (res?.response?.status === 400) {
-          throw new Error(res.response.data.err)
+        console.log(res)
+        if (res?.meta?.rejectedWithValue) {
+          throw new Error(res.payload)
         } else {
           dispatch(fetchUniversities())
+          onClose()
           return "User Added Successfully"
         }
       },

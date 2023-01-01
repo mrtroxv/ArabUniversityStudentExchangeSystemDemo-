@@ -1,48 +1,28 @@
 // eslint-disable-next-line
 import React, { Fragment, useState, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { Routes, Route, Link, useNavigate } from "react-router-dom"
+import { Routes, Route, Link } from "react-router-dom"
 import Breadcrumbs from "@components/breadcrumbs"
-import { toast } from "react-hot-toast"
 import {
   Card,
-  CardHeader,
   CardBody,
-  CardTitle,
-  CardText,
-  CardLink,
   Row,
   Col,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownItem,
-  DropdownMenu,
-  Badge,
   Button,
   ModalHeader,
   Modal,
   ModalBody,
-  Label,
-  Input,
-  ModalFooter,
-  ButtonToggle
+  Label
 } from "reactstrap"
 
-import UserDetails from "./components/UserDetails"
 // import TableBasic from './components/table/Table'
 import { useTranslation } from "react-i18next"
 
 // import axios from "axios"
-import OffersFilter from "./components/OffersFilter"
-import ownedImage from "@src/assets/images/svg/icons8_box.svg"
-import sentImage from "@src/assets/images/svg/icons8_paper_plane.svg"
-import obtainedImage from "@src/assets/images/svg/icons8_post_office.svg"
-import activeImage from "@src/assets/images/svg/icons8_hard_working.svg"
 import DataTableWithButtons from "../../components/custom/table/ReactTable"
-import { Archive, Edit, FileText, MoreVertical, Trash } from "react-feather"
 import OfferWizard from "../Offers/create-offer/OfferWizard"
 import {
-  deleteOffer,
+  dupliateOffer,
   selectAllOffers,
   selectIsLoadingOffers
 } from "../../redux/project/offers"
@@ -50,154 +30,48 @@ import { useForm } from "react-hook-form"
 import Spinner from "../../components/custom/loader/Spinner"
 import { selectIsLoadingStudents } from "../../redux/project/students"
 import { selectIsLoadingUniversities } from "../../redux/project/universities"
+import useCols from "./useCols"
+import SimpleFormDialog from "../../components/custom/SimpleFormDialog"
+import toast from "react-hot-toast"
 
 function Home() {
-  const { register, watch } = useForm()
+  const { register, watch, setValue, getValues } = useForm()
   const offersList = useSelector(selectAllOffers)
-
+  const { cols, duplicateDialogData, toggleDuplicateDialog } = useCols()
   const [filteredData, setFilteredData] = useState([])
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
-  const navigate = useNavigate()
-  const dispatch = useDispatch()
   const isLoadingOffers = useSelector(selectIsLoadingOffers)
   const isLoadingStudents = useSelector(selectIsLoadingStudents)
   const isLoadingUniversities = useSelector(selectIsLoadingUniversities)
   const isLoading =
     isLoadingOffers || isLoadingStudents || isLoadingUniversities
-
-  const handelDeleteOffer = (e, Offer_id) => {
-    e.preventDefault()
-    toast.promise(dispatch(deleteOffer(Offer_id)), {
-      loading: "Deleting...",
-      success: "Deleted Successfully",
-      error: "Error Deleting"
-    })
-  }
-
-  const status = {
-    0: { title: t("Creating Offer"), color: "light-primary" },
-    1: { title: t("Pending Request"), color: "light-warning" },
-    2: { title: t("Accepted"), color: "light-info" },
-    3: { title: t("Ready to Start"), color: "light-success" },
-    4: { title: t("Offer Report"), color: "light-primary" },
-    5: { title: t("Finished"), color: "light-danger" }
-  }
-
-  const cols = [
-    {
-      name: "ID",
-      sortable: true,
-      maxWidth: "25px",
-      selector: (row) => row.id
-    },
-    {
-      name: t("college"),
-      sortable: true,
-      minWidth: "150px",
-      selector: (row) => row.college_name
-    },
-    {
-      name: t("major"),
-      sortable: true,
-      minWidth: "300px",
-      selector: (row) => row.major_name
-    },
-    {
-      name: t("offerStatus"),
-      minWidth: "50px",
-      sortable: (row) => row.status,
-      cell: (row) => {
-        return (
-          <Badge color={status[row.status].color} pill>
-            {status[row.status].title}
-          </Badge>
-        )
-      }
-    },
-    {
-      name: t("date"),
-      sortable: true,
-      minWidth: "175px",
-      selector: (row) => new Date(row.offer_date).toLocaleDateString()
-    },
-    {
-      name: t("actions"),
-      allowOverflow: true,
-      cell: (row) => {
-        return (
-          <div className="d-flex">
-            <UncontrolledDropdown>
-              <DropdownToggle className="pe-1" tag="span">
-                <MoreVertical size={15} />
-              </DropdownToggle>
-              <DropdownMenu end>
-                <DropdownItem
-                  tag="a"
-                  href="/"
-                  className="w-100"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    navigate(`/view-offers/${row.id}`)
-                  }}
-                >
-                  <FileText size={15} />
-                  <span className="align-middle ms-50">Details</span>
-                </DropdownItem>
-                <DropdownItem
-                  tag="a"
-                  href="/"
-                  className="w-100"
-                  onClick={(e) => e.preventDefault()}
-                >
-                  <Archive size={15} />
-                  <span className="align-middle ms-50">Archive</span>
-                </DropdownItem>
-                <DropdownItem
-                  tag="a"
-                  href="/"
-                  className="w-100"
-                  onClick={(e) => handelDeleteOffer(e, row.id)}
-                >
-                  <Trash size={15} />
-                  <span className="align-middle ms-50">Delete</span>
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-            <Button
-              type="button"
-              color="white"
-              className="table-button_edit"
-              onClick={(e) => {
-                e.preventDefault()
-                setEditingOffer(
-                  offersList.filter((offer) => offer.id === row.id)[0]
-                )
-                setFormModal(!formModal)
-              }}
-            >
-              <Edit size={15} />
-            </Button>
-          </div>
-        )
-      }
-    }
-  ]
-
+  const dispatch = useDispatch()
   useEffect(() => {
     setFilteredData(offersList)
   }, [offersList])
 
-  const viewTableHandler = (route) => {
-    setFilteredData(
-      filteredData.filter((offer) => {
-        return offer.status === route
-      })
-    )
-  }
-
   const handleOfferPopUp = () => {
     setFormModal(!formModal)
+  }
+
+  const handleCloseDuplicate = () => {
+    setValue("duplicate", undefined)
+    toggleDuplicateDialog()
+  }
+
+  const handleDuplicateOffer = () => {
+    const number = getValues("duplicate")
+    const { id } = duplicateDialogData
+    const uploadData = {
+      offer_id: id,
+      number
+    }
+    toast.promise(dispatch(dupliateOffer(uploadData)), {
+      loading: "Dupliating...",
+      success: "Duplicate offer"
+    })
+    handleCloseDuplicate()
   }
 
   const id = watch("id")
@@ -216,47 +90,7 @@ function Home() {
         title={`${t("home")}`}
         data={[{ title: t("home"), link: "/" }]}
       />
-      <Row className="match-height">
-        <Col lg="6" md="12">
-          <Row className="match-height">
-            <Col lg="6" md="3" xs="6">
-              <OffersFilter
-                onView={viewTableHandler}
-                filter="owned"
-                title="ownedOffers"
-                src={ownedImage}
-              />
-            </Col>
-            <Col lg="6" md="3" xs="6">
-              <OffersFilter
-                onView={viewTableHandler}
-                filter="sent"
-                title="sentOffers"
-                src={sentImage}
-              />
-            </Col>
-            <Col lg="6" md="3" xs="6">
-              <OffersFilter
-                onView={viewTableHandler}
-                filter="obtained"
-                title="obtainedOffers"
-                src={obtainedImage}
-              />
-            </Col>
-            <Col lg="6" md="3" xs="6">
-              <OffersFilter
-                onView={viewTableHandler}
-                filter="active"
-                title="activeOffers"
-                src={activeImage}
-              />
-            </Col>
-          </Row>
-        </Col>
-        <Col lg="6" md="12">
-          <UserDetails />
-        </Col>
-      </Row>
+
       <Card>
         <CardBody>
           <Row>
@@ -320,11 +154,28 @@ function Home() {
           <ModalBody>
             <OfferWizard
               outerSubmit={handleOfferPopUp}
-              type="modern-vertical"
+              type="modern-horizontal"
               onClose={() => setFormModal(!formModal)}
             />
           </ModalBody>
         </Modal>
+      )}
+      {duplicateDialogData.isOpen && (
+        <SimpleFormDialog
+          open={duplicateDialogData.isOpen}
+          toggleModal={handleCloseDuplicate}
+          handleSubmit={handleDuplicateOffer}
+        >
+          <Col md="12">
+            <Label key="duplicate">{t("Chose a Number")} :</Label>
+            <input
+              {...register("duplicate")}
+              placeholder="#"
+              type="number"
+              className="form-control"
+            />
+          </Col>
+        </SimpleFormDialog>
       )}
     </Fragment>
   )

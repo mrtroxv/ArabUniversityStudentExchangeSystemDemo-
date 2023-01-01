@@ -130,24 +130,22 @@ const ViewCandidates = () => {
                     </Col>
                   </Row>
                 </Col>
-                <Col lg="4" md="4">
-                  <Row className="m-2">
-                    <Col lg="4" md="4">
-                      <Button outline onClick={clearData}>
-                        {isBlank() ? t("Filter") : "Reset"}
-                      </Button>
-                    </Col>
-                    <Col lg="6" md="4">
-                      <Button
-                        color="primary"
-                        onClick={() => {
-                          setFormModal(!formModal)
-                        }}
-                      >
-                        {t("Add Candidate")}
-                      </Button>
-                    </Col>
-                  </Row>
+                <Col
+                  lg="3"
+                  sm="6"
+                  className="d-flex justify-content-end align-items-end gap-2"
+                >
+                  <Button outline onClick={clearData}>
+                    {isBlank() ? t("Filter") : t("Reset")}
+                  </Button>
+                  <Button
+                    color="primary"
+                    onClick={() => {
+                      setFormModal(!formModal)
+                    }}
+                  >
+                    {t("Add")}
+                  </Button>
                 </Col>
               </Row>
             </CardBody>

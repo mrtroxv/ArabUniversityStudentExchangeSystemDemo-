@@ -89,7 +89,8 @@ function ViewOffers() {
 
   useEffect(() => {
     setFilteredData(offersList)
-  }, [isLoading])
+    console.log(offersList)
+  }, [offersList.length])
 
   const viewTableHandler = (date) => {
     if (date === "all") {
@@ -142,6 +143,17 @@ function ViewOffers() {
     )
   })
 
+  const clearData = () => {
+    setFilteredData(offersList)
+    setValue("id", "")
+    setValue("college", "")
+    setValue("major", "")
+    setValue("university_id", "")
+  }
+
+  const isBlank = () => {
+    return id === "" && college === "" && major === "" && universityID === ""
+  }
   return (
     <Fragment>
       <Breadcrumbs
@@ -187,9 +199,9 @@ function ViewOffers() {
       <Card>
         <CardBody>
           <Row>
-            <Col lg="10" md="8">
-              <Row>
-                <Col lg={data === "created-offers" ? "4" : "3"} md="6">
+            <Col lg="12" md="8">
+              <Row className="d-flex">
+                <Col lg="2" md="6">
                   <Label key="id">{t("ID")} :</Label>
                   <input
                     {...register("id")}
@@ -198,7 +210,7 @@ function ViewOffers() {
                     className="form-control"
                   />
                 </Col>
-                <Col lg={data === "created-offers" ? "4" : "3"} md="6">
+                <Col lg="2" md="6">
                   <Label key="college">{t("college")} :</Label>
                   <input
                     {...register("college")}
@@ -207,7 +219,7 @@ function ViewOffers() {
                     className="form-control"
                   />
                 </Col>
-                <Col lg={data === "created-offers" ? "4" : "3"} md="6">
+                <Col lg="2" md="6">
                   <Label key="major">{t("major")} :</Label>
                   <input
                     {...register("major")}
@@ -217,7 +229,7 @@ function ViewOffers() {
                   />
                 </Col>
                 {data !== "created-offers" && (
-                  <Col lg="3" md="6">
+                  <Col lg="2" md="6">
                     <Label key="university_id">
                       {data === "sent-offers"
                         ? t("Destination University")
@@ -232,16 +244,19 @@ function ViewOffers() {
                     />
                   </Col>
                 )}
+                <Col
+                  lg="4"
+                  md="3"
+                  className="p-2 d-flex justify-content-end align-items-end gap-2"
+                >
+                  <Button outline onClick={clearData}>
+                    {isBlank() ? "Filter" : "Reset"}
+                  </Button>
+                  <Button color="primary" onClick={handleOfferPopUp}>
+                    {t("createOffer")}
+                  </Button>
+                </Col>
               </Row>
-            </Col>
-            <Col lg="2" md="4">
-              <Button
-                color="primary"
-                className="m-2"
-                onClick={handleOfferPopUp}
-              >
-                {t("createOffer")}
-              </Button>
             </Col>
           </Row>
         </CardBody>

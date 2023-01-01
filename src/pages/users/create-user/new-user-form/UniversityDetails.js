@@ -17,11 +17,13 @@ import {
   AR_Name,
   university_description,
   EN_Name,
-  university_title
+  university_title,
+  email
 } from "./translations"
 import FormHeader from "./FormHeader"
 import { faxRegExp, phoneRegExp, urlRegExp } from "./constants"
 import useCountries from "../../../../utility/hooks/custom/useCountries"
+import { selectThemeColors } from "../../../../utility/Utils"
 
 const UniversityDetails = ({ stepper, onSubmit }) => {
   const { t } = useTranslation()
@@ -36,7 +38,8 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
     Location_O: "",
     Study_buisness: "",
     url: "",
-    city_id: ""
+    city_id: "",
+    email: ""
   }
 
   const UniversitySchema = Yup.object().shape({
@@ -59,8 +62,11 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
       "Too Short - address must be at least 8 characters long"
     ),
     Study_buisness: Yup.string(),
-    url: Yup.string().matches(urlRegExp, "Please provide a valid URL"),
-    city_id: Yup.string().oneOf(selectCountries.map((place) => place.value))
+    url: Yup.string()
+      .matches(urlRegExp, "Please provide a valid URL")
+      .required("No URL specified"),
+    city_id: Yup.string().oneOf(selectCountries.map((place) => place.value)),
+    email: Yup.string().email().required("No email provided")
   })
 
   return (
@@ -125,7 +131,7 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
                   {t("Phone Number")}
                 </Label>
                 <Field
-                  type="number"
+                  type="text"
                   name={`phone`}
                   id={`phone`}
                   placeholder="+970-594360110"
@@ -144,7 +150,7 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
                   {t("Fax Number")}
                 </Label>
                 <Field
-                  type="number"
+                  type="text"
                   name={`Fax`}
                   id={`Fax`}
                   placeholder="09-2945415"
@@ -164,17 +170,8 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
                 <Label className="form-label" for={`city_id`}>
                   {t("Country")}
                 </Label>
-                {/* <Field
-                  type="text"
-                  name={`city_id`}
-                  id={`city_id`}
-                  placeholder="09-2945415"
-                  className={`form-control ${
-                    errors.city_id && touched.city_id ? "is-invalid" : ""
-                  }`}
-                /> */}
                 <Select
-                  // theme={selectThemeColors}
+                  theme={selectThemeColors}
                   components={makeAnimated()}
                   id="city_id"
                   options={selectCountries}
@@ -268,7 +265,7 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
                   type="text"
                   name={`Study_buisness`}
                   id={`Study_buisness`}
-                  placeholder="ex. 35"
+                  placeholder="ex. Private, non-profit"
                   className={`form-control ${
                     errors.Study_buisness && touched.Study_buisness
                       ? "is-invalid"
@@ -281,6 +278,8 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
                   className="invalid-feedback"
                 />
               </Col>
+            </Row>
+            <Row>
               <Col md="6" className="mb-2">
                 <Label className="form-label" for={`url`}>
                   URL
@@ -289,13 +288,32 @@ const UniversityDetails = ({ stepper, onSubmit }) => {
                   type="text"
                   name={`url`}
                   id={`url`}
-                  placeholder="ex. 5"
+                  placeholder="ex. https://ptuk.edu.ps/ar/"
                   className={`form-control ${
                     errors.url && touched.url ? "is-invalid" : ""
                   }`}
                 />
                 <ErrorMessage
                   name="url"
+                  component="p"
+                  className="invalid-feedback"
+                />
+              </Col>
+              <Col md="6" className="mb-1">
+                <Label className="form-label" for={`email`}>
+                  {t(email)}
+                </Label>
+                <Field
+                  type="email"
+                  name={`email`}
+                  id={`email`}
+                  placeholder="ex. m.a.khateeb@teachers.ptuk.edu.ps"
+                  className={`form-control ${
+                    errors.email && touched.email ? "is-invalid" : ""
+                  }`}
+                />
+                <ErrorMessage
+                  name="email"
                   component="p"
                   className="invalid-feedback"
                 />

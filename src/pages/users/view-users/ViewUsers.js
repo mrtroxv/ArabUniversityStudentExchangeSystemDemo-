@@ -13,46 +13,43 @@ import {
   ModalHeader,
   ModalBody
 } from "reactstrap"
+import "../../../components/custom/table/react-dataTable-component.scss"
+
 import { useTranslation } from "react-i18next"
-import DataTable from "../../../components/custom/table/ReactTable"
+// import DataTable from "../../../components/custom/table/ReactTable"
+import DataTable from "react-data-table-component"
+
 // import { selectAllUniversities } from "../../../redux/project/universities"
 // import { useSelector } from "react-redux"
 // import DataTable from "react-data-table-component"
 
 // import { selectAllUniversities } from "../../../redux/project/universities"
 import { useForm } from "react-hook-form"
-import { PlusCircle } from "react-feather"
+import { ChevronDown } from "react-feather"
 import NewUser from "../create-user/index"
 import useCols from "./useCols"
-import useUniversityApi from "../../../utility/hooks/custom/useUniversityApi"
 import Spinner from "../../../components/custom/loader/Spinner"
+import { getAllData } from "../store"
+import { useDispatch, useSelector } from "react-redux"
 
 const ViewUsers = () => {
   const { register, watch, setValue } = useForm()
-  const [filteredData, setFilteredData] = useState([])
+  const store = useSelector((state) => state.users)
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
   const { cols } = useCols()
+  const dispatch = useDispatch()
   // use selector to select universities
   //   const universities = useSelector(selectAllUniversities)
-  const { isLoading, universities } = useUniversityApi()
   useEffect(() => {
-    setFilteredData(universities)
-  }, [universities])
+    dispatch(getAllData())
+  }, [dispatch, store.allData.length])
 
   const name = watch("name")
   const email = watch("email")
   const phone = watch("phone")
-  const filtered = filteredData?.filter((item) => {
-    return (
-      item?.EN_Name?.toLowerCase().includes(name.toLowerCase()) &&
-      item?.email?.toLowerCase().includes(email.toLowerCase()) &&
-      item?.phone?.includes(phone)
-    )
-  })
 
   const clearData = () => {
-    setFilteredData(universities)
     setValue("name", "")
     setValue("email", "")
     setValue("phone", "")
@@ -60,6 +57,39 @@ const ViewUsers = () => {
 
   const isBlank = () => {
     return name === "" && email === "" && phone === ""
+  }
+
+  const dataToRender = () => {
+    if (store.allData.length === 0) return []
+    const { users, relations, universities } = store.allData
+    const data = relations
+      .map((relation) => {
+        const user = users.find((user) => user.id === relation.user_id)
+        const university = universities.find(
+          (university) => university.ID === relation.university_id
+        )
+        if (university && user) {
+          return {
+            ...user,
+            ...university,
+            startDate: relation.startDate,
+            status: relation.status
+          }
+        }
+      })
+      .filter((item) => item !== undefined)
+      .filter(
+        (item) =>
+          item.name?.includes(name) ||
+          item.email?.includes(email) ||
+          item.phone?.includes(phone)
+      )
+    console.log(data)
+    if (data.length > 0) {
+      return data
+    } else if (data.length === 0) {
+      return []
+    }
   }
   return (
     <>
@@ -75,9 +105,9 @@ const ViewUsers = () => {
             </CardHeader>
             <CardBody>
               <Row className="match-height">
-                <Col lg="9" md="10">
-                  <Row>
-                    <Col lg="3" md="6">
+                <Col>
+                  <Row className="d-flex justify-content-end">
+                    <Col lg="3" sm="6">
                       <Label key="name">{t("University Name")} :</Label>
                       <input
                         {...register("name")}
@@ -86,7 +116,7 @@ const ViewUsers = () => {
                         className="form-control"
                       />
                     </Col>
-                    <Col lg="3" md="6">
+                    <Col lg="3" sm="6">
                       <Label key="email">{t("Email Address")} :</Label>
                       <input
                         {...register("email")}
@@ -95,7 +125,7 @@ const ViewUsers = () => {
                         className="form-control"
                       />
                     </Col>
-                    <Col lg="3" md="6">
+                    <Col lg="3" sm="6">
                       <Label key="phone">{t("Phone Number")} :</Label>
                       <input
                         {...register("phone")}
@@ -104,34 +134,40 @@ const ViewUsers = () => {
                         className="form-control"
                       />
                     </Col>
-                  </Row>
-                </Col>
-                <Col lg="3" md="2">
-                  <Row className="m-2">
-                    <Col lg="6" md="6">
+                    <Col
+                      lg="3"
+                      sm="6"
+                      className="d-flex justify-content-end align-items-end gap-2"
+                    >
                       <Button outline onClick={clearData}>
-                        {isBlank() ? "Filter" : "Reset"}
+                        {isBlank() ? t("Filter") : t("Reset")}
                       </Button>
-                    </Col>
-                    <Col lg="6" md="6">
                       <Button
                         color="primary"
                         onClick={() => {
                           setFormModal(!formModal)
                         }}
                       >
-                        Add
+                        {t("Add")}
                       </Button>
                     </Col>
                   </Row>
                 </Col>
               </Row>
             </CardBody>
-            {isLoading ? (
+            {store.isLoading ? (
               <Spinner />
             ) : (
               <>
-                <DataTable data={filtered} columns={cols} />
+                <DataTable
+                  noHeader
+                  pagination
+                  responsive
+                  columns={cols}
+                  sortIcon={<ChevronDown />}
+                  className="react-dataTable"
+                  data={dataToRender()}
+                />
               </>
             )}
           </Card>
@@ -152,7 +188,7 @@ const ViewUsers = () => {
           <ModalBody>
             <NewUser
               outerSubmit={() => {}}
-              type="modern-vertical"
+              type="modern-horizontal"
               onClose={() => setFormModal(!formModal)}
             />
           </ModalBody>

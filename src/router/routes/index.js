@@ -47,6 +47,7 @@ const AccountSettings = lazy(() => import("../../pages/account-settings/index"))
 const OfferPreview = lazy(() => import("../../pages/Offers/Offer/index"))
 const ViewUsers = lazy(() => import("../../pages/users/view-users/ViewUsers"))
 const UserView = lazy(() => import("../../pages/users/view/index"))
+const Email = lazy(() => import("../../views/apps/email"))
 
 // ** Merge Routes
 const Routes = [
@@ -129,6 +130,34 @@ const Routes = [
   {
     path: "/universities/profile/:id",
     element: <UserView />
+  },
+  {
+    element: <Email />,
+    path: "/apps/email",
+    meta: {
+      appLayout: true,
+      className: "email-application"
+    }
+  },
+  {
+    element: <Email />,
+    path: "/apps/email/:folder",
+    meta: {
+      appLayout: true,
+      className: "email-application"
+    }
+  },
+  {
+    element: <Email />,
+    path: "/apps/email/label/:label",
+    meta: {
+      appLayout: true,
+      className: "email-application"
+    }
+  },
+  {
+    element: <Email />,
+    path: "/apps/email/:filter"
   }
 ]
 

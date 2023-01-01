@@ -17,7 +17,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik"
 import Select from "react-select"
 import FormHeader from "./FormHeader"
 import { useTranslation } from "react-i18next"
-import { member_description, email, name, member_title } from "./translations"
+import { member_description, name, member_title } from "./translations"
 
 const UserDetails = ({ stepper, onStoreData }) => {
   const { t } = useTranslation()
@@ -25,8 +25,7 @@ const UserDetails = ({ stepper, onStoreData }) => {
   const defaultValues = {
     username: "",
     password: "",
-    name: "",
-    email: ""
+    name: ""
   }
   const schema = Yup.object({
     username: Yup.string()
@@ -38,8 +37,7 @@ const UserDetails = ({ stepper, onStoreData }) => {
       .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
     name: Yup.string()
       .required("No name provided")
-      .min(8, "Too Short - Name must be at least 8 characters long"),
-    email: Yup.string().email().required("No email provided")
+      .min(8, "Too Short - Name must be at least 8 characters long")
   })
 
   return (
@@ -66,8 +64,9 @@ const UserDetails = ({ stepper, onStoreData }) => {
                   name={`name`}
                   id={`name`}
                   placeholder="ex. Dr.Moutmad Al Khateeb"
-                  className={`form-control ${errors.name && touched.name ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.name && touched.name ? "is-invalid" : ""
+                  }`}
                 />
                 <ErrorMessage
                   name="name"
@@ -75,34 +74,19 @@ const UserDetails = ({ stepper, onStoreData }) => {
                   className="invalid-feedback"
                 />
               </Col>
-              <Col md="6" className="mb-1">
-                <Label className="form-label" for={`email`}>
-                  {t(email)}
-                </Label>
-                <Field
-                  type="email"
-                  name={`email`}
-                  id={`email`}
-                  placeholder="ex. m.a.khateeb@teachers.ptuk.edu.ps"
-                  className={`form-control ${errors.email && touched.email ? "is-invalid" : ""
-                    }`}
-                />
-                <ErrorMessage
-                  name="email"
-                  component="p"
-                  className="invalid-feedback"
-                />
-              </Col>
             </Row>
+            <FormHeader title={t("Login Details")} subtitle={t("")} />
+
             <Row>
-              <Col md="6" className="mb-1">
+              <Col md="6" className="mb-4">
                 <label htmlFor="username" className="form-label form-label">
                   {t("User Name")}
                 </label>
                 <Field
                   name="username"
-                  className={`form-control ${errors.username && touched.username ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.username && touched.username ? "is-invalid" : ""
+                  }`}
                   placeholder={t("nameP")}
                 />
                 <ErrorMessage
@@ -118,8 +102,9 @@ const UserDetails = ({ stepper, onStoreData }) => {
                 <Field
                   type="password"
                   name="password"
-                  className={`form-control ${errors.password && touched.password ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.password && touched.password ? "is-invalid" : ""
+                  }`}
                   placeholder={"*********"}
                 />
                 <ErrorMessage

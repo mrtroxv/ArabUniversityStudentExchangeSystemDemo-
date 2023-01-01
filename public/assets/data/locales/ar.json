@@ -171,8 +171,9 @@
   "UniversityName": "اسم الجامعة",
   "Candidates": "المشاركين",
   "Filters": "الفلاتر",
-  "Add Candidate": "إضافة مشارك",
+  "Add": "إضافة",
   "Filter": "فلترة",
+  "Reset": "إعادة تعيين",
   "Reject": "رفض",
   "Accept": "قبول",
   "Created Offers": "العروض المنشأة",
@@ -218,5 +219,13 @@
   "Duplicate Offer": "تكرار العرض",
   "Chose a Number": "إختر رقم",
   "Submit": "تأكيد",
-  "Cancel": "الغاء"
+  "Cancel": "الغاء",
+  "Login Details": "بيانات الحساب",
+  "University Details": "بيانات الجامعة",
+  "User Details": "بيانات المستخدم",
+  "Offers List": "قائمة المنح",
+  "Username": "اسم المستخدم",
+  "Status": "الحالة",
+  "Role": "الدور",
+  "Association of Arab Universities": "اتحاد الجامعات العربية"
 }
