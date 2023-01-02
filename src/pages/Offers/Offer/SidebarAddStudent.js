@@ -23,7 +23,7 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
   // ** States
   const { t } = useTranslation()
   const students = useSelector(selectAllStudents)
-  const [student_id, setStudent_id] = useState(students ? students[0]?.ID : -1)
+  const [student_id, setStudent_id] = useState(students[0]?.ID)
   const dispatch = useDispatch()
 
   const handelAddStudent = () => {
@@ -63,12 +63,9 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
           <Input
             type="select"
             id="payment-method"
-            defaultValue=""
+            defaultValue={student_id}
             onChange={(e) => handelSelectStudent(e)}
           >
-            <option value="" disabled>
-              {t("selectStudent")}
-            </option>
             {students.map((student) => (
               <option value={student.ID} key={student.ID}>
                 {student.name}

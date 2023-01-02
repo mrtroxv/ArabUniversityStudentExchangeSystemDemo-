@@ -37,6 +37,7 @@ import Spinner from "../../../components/custom/loader/Spinner"
 import useCols from "./useCols"
 import SimpleFormDialog from "../../../components/custom/SimpleFormDialog"
 import toast from "react-hot-toast"
+import Error from "../../../views/pages/misc/Error"
 // import { selectIsLoadingStudents } from "../../../redux/project/students"
 
 function ViewOffers() {
@@ -85,7 +86,7 @@ function ViewOffers() {
       ]
     }
   }
-  const offersList = useSelector(breadcrumbs[data].query)
+  const offersList = useSelector(breadcrumbs[data]?.query)
 
   useEffect(() => {
     setFilteredData(offersList)

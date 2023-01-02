@@ -48,7 +48,7 @@ const OfferPreview = lazy(() => import("../../pages/Offers/Offer/index"))
 const ViewUsers = lazy(() => import("../../pages/users/view-users/ViewUsers"))
 const UserView = lazy(() => import("../../pages/users/view/index"))
 const Email = lazy(() => import("../../views/apps/email"))
-
+const CandidateView = lazy(() => import("../../pages/candidates/view/index"))
 // ** Merge Routes
 const Routes = [
   {
@@ -114,7 +114,10 @@ const Routes = [
     path: "/candidates/view-candidates",
     element: <Candidates />
   },
-
+  {
+    path: "/candidates/profile/:id",
+    element: <CandidateView />
+  },
   {
     path: "/pages/account-settings",
     element: <AccountSettings />

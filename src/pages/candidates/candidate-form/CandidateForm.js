@@ -3,12 +3,10 @@ import Wizard from "@components/wizard"
 import CandidateInformation from "./components/CandidateInformation"
 import StudyInformation from "./components/StudyInformation"
 import ContactInformation from "./components/ContactInformation"
-import { Col } from "reactstrap"
 import { useTranslation } from "react-i18next"
 
 const CandidateForm = () => {
   const { t } = useTranslation()
-
   const [stepper, setStepper] = useState(null)
   const ref = useRef(null)
 

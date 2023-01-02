@@ -108,15 +108,7 @@ const PreviewActions = ({
             {t("Reject")}
           </Button>
         )}
-        <Button
-          color="success"
-          tag={Link}
-          to="/offers/print"
-          target="_blank"
-          block
-          outline
-          className="mb-75"
-        >
+        <Button color="success" block outline className="mb-75">
           {t("Print")}
         </Button>
       </CardBody>
