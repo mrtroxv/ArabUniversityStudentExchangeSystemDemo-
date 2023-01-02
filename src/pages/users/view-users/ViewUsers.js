@@ -63,7 +63,7 @@ const ViewUsers = () => {
     if (store.allData.length === 0) return []
     const { users, relations, universities } = store.allData
     const data = relations
-      .map((relation) => {
+      ?.map((relation) => {
         const user = users.find((user) => user.id === relation.user_id)
         const university = universities.find(
           (university) => university.ID === relation.university_id
@@ -77,19 +77,19 @@ const ViewUsers = () => {
           }
         }
       })
-      .filter((item) => item !== undefined)
-      .filter(
+      ?.filter((item) => item !== undefined)
+      ?.filter(
         (item) =>
-          item.name?.includes(name) ||
-          item.email?.includes(email) ||
+          item.EN_Name?.toLowerCase().includes(name.toLowerCase()) &&
+          item.AR_Name?.toLowerCase().includes(name.toLowerCase()) &&
+          item.email?.toLowerCase().includes(email.toLowerCase()) &&
           item.phone?.includes(phone)
       )
     console.log(data)
-    if (data.length > 0) {
+    if (data?.length > 0) {
       return data
-    } else if (data.length === 0) {
-      return []
     }
+    return []
   }
   return (
     <>

@@ -68,7 +68,7 @@ const useCols = () => {
   }
   const statusCol = {
     name: t("offerStatus"),
-    minWidth: "50px",
+    minWidth: "40px",
     sortable: (row) => row.status,
     cell: (row) => {
       return (
@@ -81,20 +81,20 @@ const useCols = () => {
   const dateCol = {
     name: t("date"),
     sortable: true,
-    minWidth: "100px",
+    minWidth: "50px",
     selector: (row) => new Date(row.offer_date).toLocaleDateString()
   }
   const actionsCol = {
     name: t("actions"),
     allowOverflow: true,
-    minWidth: "75px",
+    minWidth: "200px",
     cell: (row) => {
       return (
-        <div className="d-flex gap-2">
+        <div className="d-flex">
           <Button
             type="button"
             color="white"
-            className="table-button_edit"
+            // className="table-button_edit"
             onClick={(e) => {
               e.preventDefault()
               navigate(`/view-offers/${row.id}`)
@@ -107,7 +107,7 @@ const useCols = () => {
               <Button
                 type="button"
                 color="white"
-                className="table-button_edit"
+                // className="table-button_edit"
                 onClick={(e) => {
                   e.preventDefault()
                   toast.promise(dispatch(deleteOffer(row.id)), {
@@ -122,7 +122,7 @@ const useCols = () => {
               <Button
                 type="button"
                 color="white"
-                className="table-button_edit"
+                // className="table-button_edit"
                 onClick={() =>
                   handleToggleDuplicateDialog({
                     id: row.id,

@@ -1,17 +1,23 @@
 import React from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import { useLang } from "../../../utility/hooks/custom/useLang"
 import { Button } from "reactstrap"
 import { FileText, Trash } from "react-feather"
 import ReactCountryFlag from "react-country-flag"
+
 const useCols = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
-  const [lang] = useLang()
+
   const cols = [
     {
-      name: "Name",
+      name: t("id"),
+      sortable: true,
+      maxWidth: "25px",
+      selector: (row) => row.ID
+    },
+    {
+      name: t("name"),
       sortable: true,
       minWidth: "100px",
       cell: (row) => {
@@ -20,21 +26,21 @@ const useCols = () => {
             <ReactCountryFlag
               svg
               className="country-flag flag-icon"
-              countryCode={row.city_id.toLowerCase()}
+              countryCode={row.nationality.toLowerCase()}
             />
-            {lang === "en" ? row.EN_Name : row.AR_Name}
+            {row.name}
           </div>
         )
       }
     },
     {
-      name: "Email",
+      name: t("email"),
       sortable: true,
       minWidth: "150px",
       selector: (row) => row.email
     },
     {
-      name: "Phone Number",
+      name: t("phone"),
       sortable: true,
       minWidth: "50px",
       selector: (row) => row.phone
@@ -50,15 +56,15 @@ const useCols = () => {
               color="white"
               onClick={(e) => {
                 e.preventDefault()
-                navigate(`/universities/profile/${row.id}`)
+                navigate(`/candidates/profile/${row.ID}`)
               }}
             >
               <FileText size={15} />
             </Button>
-
             <Button
               type="button"
               color="white"
+              // className="table-button_edit"
               onClick={(e) => e.preventDefault()}
             >
               <Trash size={15} />

@@ -5,7 +5,7 @@ import { Fragment } from "react"
 import { ArrowLeft, ArrowRight } from "react-feather"
 
 // ** Reactstrap Imports
-import { Label, Row, Col, Input, Button } from "reactstrap"
+import { Label, Row, Col, Button } from "reactstrap"
 import Select from "react-select"
 import makeAnimated from "react-select/animated"
 // import { selectThemeColors } from "@utils"

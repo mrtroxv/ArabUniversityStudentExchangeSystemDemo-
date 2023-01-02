@@ -6,19 +6,20 @@ import { selectThemeColors } from "@utils"
 
 // ** Third Party Components
 import * as Yup from "yup"
-// import { useForm, Controller } from 'react-hook-form'
 import { ArrowLeft, ArrowRight } from "react-feather"
-// import { selectThemeColors } from '@utils'
 
 // ** Reactstrap Imports
-import { Row, Col, Button } from "reactstrap"
+import { Row, Col, Button, Label } from "reactstrap"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 import Select from "react-select"
 import FormHeader from "./FormHeader"
 import { useTranslation } from "react-i18next"
+import useCountries from "../../../../utility/hooks/custom/useCountries"
+import makeAnimated from "react-select/animated"
 
 const CandidateInformation = ({ stepper, onSubmit }) => {
   const { t } = useTranslation()
+  const { selectCountries } = useCountries()
   const genderOptions = [
     { value: t("male"), label: t("male") },
     { value: t("female"), label: t("female") }
@@ -39,7 +40,9 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
     gender: Yup.string()
       .oneOf(genderOptions.map((value) => value.value))
       .required("You have to pick one"),
-    nationality: Yup.string().required("No nationality provided"),
+    city_id: Yup.string()
+      .oneOf(selectCountries.map((place) => place.value))
+      .required("No nationality provided"),
     birthDate: Yup.date().required("No birth date provided"),
     birthPlace: Yup.string().required("No birth place provided"),
     healthStatus: Yup.string().required("")
@@ -65,8 +68,9 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                 </label>
                 <Field
                   name="name"
-                  className={`form-control ${errors.name && touched.name ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.name && touched.name ? "is-invalid" : ""
+                  }`}
                   placeholder={t("nameP")}
                 />
                 <ErrorMessage
@@ -76,16 +80,24 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                 />
               </Col>
               <Col md="6" className="mb-1">
-                <label htmlFor="nationality" className="form-label form-label">
-                  {t("nationality")}
-                </label>
-                <Field
-                  name="nationality"
-                  className={`form-control ${errors.nationality && touched.nationality
-                    ? "is-invalid"
-                    : ""
-                    }`}
-                  placeholder={t("nationalityP")}
+                <Label className="form-label" for={`nationality`}>
+                  {t("Country")}
+                </Label>
+                <Select
+                  theme={selectThemeColors}
+                  components={makeAnimated()}
+                  id="nationality"
+                  options={selectCountries}
+                  getOptionLabel={(value) => value.lable}
+                  className={`react-select ${
+                    errors.nationality && touched.nationality
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                  classNamePrefix="select"
+                  onChange={(value) => {
+                    values.city_id = value.value
+                  }}
                 />
                 <ErrorMessage
                   name="nationality"
@@ -104,8 +116,9 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                   theme={selectThemeColors}
                   id="gender"
                   options={genderOptions}
-                  className={`react-select ${errors.gender && touched.gender ? "is-invalid" : ""
-                    }`}
+                  className={`react-select ${
+                    errors.gender && touched.gender ? "is-invalid" : ""
+                  }`}
                   classNamePrefix="select"
                   onChange={(value) => {
                     values.gender = value.value
@@ -123,10 +136,11 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                 </label>
                 <Field
                   name="healthStatus"
-                  className={`form-control ${errors.healthStatus && touched.healthStatus
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-control ${
+                    errors.healthStatus && touched.healthStatus
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   placeholder={t("healthStatus")}
                 />
                 <ErrorMessage
@@ -143,8 +157,9 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                 </label>
                 <Field
                   name="birthPlace"
-                  className={`form-control ${errors.birthPlace && touched.birthPlace ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.birthPlace && touched.birthPlace ? "is-invalid" : ""
+                  }`}
                   placeholder={t("birthPlaceP")}
                 />
                 <ErrorMessage
@@ -159,8 +174,9 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                 </label>
                 <Field
                   name="birthDate"
-                  className={`form-control ${errors.birthDate && touched.birthDate ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.birthDate && touched.birthDate ? "is-invalid" : ""
+                  }`}
                   type="date"
                 />
                 <ErrorMessage

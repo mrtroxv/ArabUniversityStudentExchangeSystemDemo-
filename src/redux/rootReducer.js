@@ -6,6 +6,7 @@ import offers from "./project/offers"
 import universities from "./project/universities"
 import students from "./project/students"
 import users from "../pages/users/store"
+import candidates from "../pages/candidates/store"
 
 // import todo from "@src/views/apps/todo/store"
 import chat from "@src/views/apps/chat/store"
@@ -33,7 +34,8 @@ const rootReducer = {
   // permissions,
   offers,
   students,
-  universities
+  universities,
+  candidates
 }
 
 export default rootReducer

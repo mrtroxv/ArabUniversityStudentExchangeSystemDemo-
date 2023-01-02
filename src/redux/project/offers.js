@@ -305,8 +305,6 @@ const offersSlice = createSlice({
         state.error = action.error.message
       })
       .addCase(createOffer.fulfilled, (state, action) => {
-        console.log(action.payload)
-
         if (action.payload.status === 400) {
           state.createOfferState.status = null
           state.createOfferState.error = action.payload.message
@@ -379,9 +377,7 @@ export const selectSentOffers = (state, userId) =>
     (offer) => offer.university_id_src === userId && offer.status >= 1
   )
 export const selectObtainedOffers = (state, userId) => {
-  console.log(userId)
   return state.offers.offers?.filter((offer) => {
-    console.log(offer)
     return offer.University_id_des === userId && offer.status >= 1
   })
 }
