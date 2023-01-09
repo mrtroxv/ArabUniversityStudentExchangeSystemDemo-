@@ -51,9 +51,15 @@ const menuItems = (t) => {
       children: [
         {
           id: "ViewUniversities",
-          title: t("ViewUniversities"),
+          title: t("Active"),
           icon: <Circle size={20} />,
-          navLink: "/universities/list"
+          navLink: "/universities/list/active"
+        },
+        {
+          id: "ViewSuspended",
+          title: t("Suspended"),
+          icon: <Circle size={20} />,
+          navLink: "/universities/list/suspended"
         }
       ]
     },

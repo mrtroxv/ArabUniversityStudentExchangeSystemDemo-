@@ -19,7 +19,6 @@ export const fetchUniversities = createAsyncThunk(
           authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
       })
-      // console.log(res.data)
       return res.data
     } catch (error) {
       console.log(1)
@@ -33,8 +32,10 @@ export const addUser = createAsyncThunk(
     try {
       await axios.post(ADD_USER_URL, data, {
         headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+          authorization: JSON.parse(localStorage.getItem("accessToken")),
+          "Content-Type": "multipart/form-data"
+        },
+        file: data.avatar
       })
       const response = axios.get(UNIVERSITIES_URL, {
         headers: {
@@ -82,7 +83,7 @@ export const selectAllUniversities = (state) => {
 }
 
 export const selectUniversityById = (state, id) => {
-  return state.universities.universities.find((u) => {
+  return state.universities.universities?.find((u) => {
     return u.ID === +id
   })
 }

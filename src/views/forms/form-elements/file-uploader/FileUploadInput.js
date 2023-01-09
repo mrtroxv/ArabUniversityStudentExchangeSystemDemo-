@@ -16,14 +16,15 @@ import {
 import { useDropzone } from "react-dropzone"
 import { FileText, X, DownloadCloud } from "react-feather"
 
-const FileUploaderSingle = () => {
+const FileUploadInput = ({ uploadPhoto }) => {
   // ** State
   const [files, setFiles] = useState([])
 
   const { getRootProps, getInputProps } = useDropzone({
     multiple: false,
     onDrop: (acceptedFiles) => {
-      setFiles([...files, ...acceptedFiles.map((file) => Object.assign(file))])
+      setFiles([...acceptedFiles.map((file) => Object.assign(file))])
+      uploadPhoto([...acceptedFiles.map((file) => Object.assign(file))][0])
     }
   })
 
@@ -81,49 +82,27 @@ const FileUploaderSingle = () => {
     </ListGroupItem>
   ))
 
-  const handleRemoveAllFiles = () => {
-    setFiles([])
-  }
-
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle tag="h4">Single</CardTitle>
-      </CardHeader>
-      <CardBody>
+    <>
+      {files.length ? (
+        <Fragment>
+          <ListGroup>{fileList}</ListGroup>
+        </Fragment>
+      ) : (
         <div {...getRootProps({ className: "dropzone" })}>
           <input {...getInputProps()} />
           <div className="d-flex align-items-center justify-content-center flex-column">
-            <DownloadCloud size={64} />
-            <h5>Drop Files here or click to upload</h5>
             <p className="text-secondary">
-              Drop files here or click{" "}
               <a href="/" onClick={(e) => e.preventDefault()}>
-                browse
-              </a>{" "}
-              thorough your machine
+                <DownloadCloud size={24} />
+                <span className="mx-2">Browse</span>
+              </a>
             </p>
           </div>
         </div>
-        {files.length ? (
-          <Fragment>
-            <ListGroup className="my-2">{fileList}</ListGroup>
-            <div className="d-flex justify-content-end">
-              <Button
-                className="me-1"
-                color="danger"
-                outline
-                onClick={handleRemoveAllFiles}
-              >
-                Remove All
-              </Button>
-              <Button color="primary">Upload Files</Button>
-            </div>
-          </Fragment>
-        ) : null}
-      </CardBody>
-    </Card>
+      )}
+    </>
   )
 }
 
-export default FileUploaderSingle
+export default FileUploadInput

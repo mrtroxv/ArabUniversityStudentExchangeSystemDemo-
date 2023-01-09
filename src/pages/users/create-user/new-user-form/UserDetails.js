@@ -18,6 +18,7 @@ import Select from "react-select"
 import FormHeader from "./FormHeader"
 import { useTranslation } from "react-i18next"
 import { member_description, name, member_title } from "./translations"
+import FileUploadInput from "../../../../views/forms/form-elements/file-uploader/FileUploadInput"
 
 const UserDetails = ({ stepper, onStoreData }) => {
   const { t } = useTranslation()
@@ -25,7 +26,8 @@ const UserDetails = ({ stepper, onStoreData }) => {
   const defaultValues = {
     username: "",
     password: "",
-    name: ""
+    name: "",
+    avatar: undefined
   }
   const schema = Yup.object({
     username: Yup.string()
@@ -47,12 +49,11 @@ const UserDetails = ({ stepper, onStoreData }) => {
         initialValues={defaultValues}
         validationSchema={schema}
         onSubmit={async (values) => {
-          console.log({ values })
           onStoreData(values)
           stepper.next()
         }}
       >
-        {({ errors, touched }) => (
+        {({ errors, touched, setFieldValue }) => (
           <Form>
             <Row>
               <Col md="6" className="mb-1">
@@ -70,6 +71,21 @@ const UserDetails = ({ stepper, onStoreData }) => {
                 />
                 <ErrorMessage
                   name="name"
+                  component="p"
+                  className="invalid-feedback"
+                />
+              </Col>
+              <Col md="6" className="mb-1">
+                <Label className="form-label" for={`avatar`}>
+                  {t("Profile Picture")}
+                </Label>
+                <FileUploadInput
+                  uploadPhoto={(file) => {
+                    setFieldValue("avatar", file)
+                  }}
+                />
+                <ErrorMessage
+                  name="avatar"
                   component="p"
                   className="invalid-feedback"
                 />

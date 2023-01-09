@@ -127,11 +127,15 @@ const Routes = [
     element: <CandidateForm />
   },
   {
-    path: "/universities/list",
+    path: "/universities/list/:status",
     element: <ViewUsers />
   },
   {
     path: "/universities/profile/:id",
+    element: <UserView />
+  },
+  {
+    path: "/pages/profile",
     element: <UserView />
   },
   {

@@ -15,10 +15,27 @@ import { useSelector } from "react-redux"
 import Spinner from "../../../components/custom/loader/Spinner"
 import { useTranslation } from "react-i18next"
 
+const ExpandableTable = ({ data }) => {
+  return (
+    <div className="expandable-content p-2">
+      <p>
+        <span className="fw-bold">Start Date:</span> {data.train_start_date}
+      </p>
+      <p>
+        <span className="fw-bold">End Date:</span> {data.train_end_date}
+      </p>
+      <p className="m-0">
+        <span className="fw-bold">Description:</span> {data.train_description}
+      </p>
+    </div>
+  )
+}
+
 const UserProjectsList = () => {
   const { cols } = useColumns()
-  const store = useSelector((state) => state.users)
+  const store = useSelector((state) => state.candidates)
   const { t } = useTranslation()
+  const offer = store.selectedUser?.offer ? [store.selectedUser.offer] : []
   return (
     <Card>
       <CardHeader tag="h4">{t("Offers List")}</CardHeader>
@@ -29,13 +46,15 @@ const UserProjectsList = () => {
         ) : (
           <DataTable
             noHeader
-            responsive
             pagination
+            expandableRows
             columns={cols}
-            data={store.selectedUser.offers}
+            data={offer}
+            expandOnRowClicked
             className="react-dataTable"
             sortIcon={<ChevronDown size={10} />}
-            paginationRowsPerPageOptions={[5, 10, 15, 20]}
+            expandableRowsComponent={ExpandableTable}
+            paginationRowsPerPageOptions={[10, 25, 50, 100]}
           />
         )}
       </div>

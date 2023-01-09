@@ -5,27 +5,64 @@ import Flatpickr from "react-flatpickr"
 //useSelector
 import { useDispatch, useSelector } from "react-redux"
 // ** Reactstrap Imports
-import { Form, Input, Label, Button } from "reactstrap"
 
 // ** Custom Components
 import Sidebar from "@components/sidebar"
 
+// ** Reactstrap Imports
+import {
+  Card,
+  Button,
+  Label,
+  Modal,
+  CardBody,
+  CardText,
+  CardTitle,
+  ListGroup,
+  ModalBody,
+  ModalHeader,
+  DropdownMenu,
+  DropdownItem,
+  ListGroupItem,
+  DropdownToggle,
+  UncontrolledDropdown,
+  Form,
+  Input
+} from "reactstrap"
+
+// ** Third Party Components
+import Select, { components } from "react-select"
+import { FileText, Users, Link } from "react-feather"
+
+// ** Utils
+import { selectThemeColors } from "@utils"
 // ** Styles
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 import "@styles/base/pages/app-invoice.scss"
 import { useTranslation } from "react-i18next"
-import { selectAllStudents } from "../../../redux/project/students"
 import { addStudent } from "../../../redux/project/offers"
 import toast from "react-hot-toast"
+import { selectUser } from "../../../redux/authentication"
+import Avatar from "../../../@core/components/avatar"
+
+const OptionComponent = ({ data, ...props }) => {
+  return (
+    <components.Option key={data.id} {...props}>
+      <div className="d-flex flex-wrap align-items-center">
+        <Avatar className="my-0 me-1" size="sm" img={data.avatar} />
+        <div>{data.label}</div>
+      </div>
+    </components.Option>
+  )
+}
 
 const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
-  console.log(id)
   // ** States
   const { t } = useTranslation()
-  const students = useSelector(selectAllStudents)
-  const [student_id, setStudent_id] = useState(students[0]?.ID)
+  const students = useSelector((state) => state.candidates)
+  const [student_id, setStudent_id] = useState(-1)
   const dispatch = useDispatch()
-
+  const user = useSelector(selectUser)
   const handelAddStudent = () => {
     if (student_id === -1) {
       toast.error(t("msg.noStudentSelected"))
@@ -40,50 +77,103 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
   }
 
   const handelSelectStudent = (e) => {
-    setStudent_id(e.target.value)
+    setStudent_id(e?.ID)
   }
 
-  return (
-    <Sidebar
-      size="lg"
-      open={open}
-      title={t("AddStudent")}
-      headerClassName="mb-1"
-      contentClassName="p-0"
-      toggleSidebar={toggleSidebar}
-    >
-      <Form>
-        <div className="mb-1">
-          <Input id="id" defaultValue={`${t("offerID")} : #${id}`} disabled />
-        </div>
-        <div className="mb-1">
-          <Label for="payment-method" className="form-label">
-            {t("selectStudent")}
-          </Label>
-          <Input
-            type="select"
-            id="payment-method"
-            defaultValue={student_id}
-            onChange={(e) => handelSelectStudent(e)}
-          >
-            {students.map((student) => (
-              <option value={student.ID} key={student.ID}>
-                {student.name}
-              </option>
-            ))}
-          </Input>
-        </div>
+  const data = [
+    ...students.allData.map((student) => ({
+      id: student.ID,
+      type: "Student",
+      name: student.name,
+      username: student.email
+    }))
+  ]
 
-        <div className="d-flex flex-wrap mb-0">
-          <Button className="me-1" color="primary" onClick={handelAddStudent}>
-            {t("AddStudent")}
-          </Button>
-          <Button color="secondary" outline onClick={toggleSidebar}>
-            {t("cancel")}
+  const options = [
+    ...data.map((item) => ({
+      label: item.name,
+      value: item.id,
+      avatar: user.logo
+    }))
+  ]
+
+  return (
+    <Modal
+      isOpen={open}
+      toggle={toggleSidebar}
+      className="modal-dialog-centered modal-lg"
+    >
+      <ModalHeader
+        className="bg-transparent"
+        toggle={toggleSidebar}
+      ></ModalHeader>
+      <ModalBody className="px-sm-5 mx-50 pb-4">
+        <h1 className="text-center mb-1">Share Offer #{id}</h1>
+        <p className="text-center">Share offer with another Student</p>
+        <Label
+          for="addStudentSelect"
+          className="form-label fw-bolder font-size font-small-4 mb-50"
+        >
+          Add Student
+        </Label>
+        <Select
+          options={options}
+          isClearable={false}
+          id="addStudentSelect"
+          theme={selectThemeColors}
+          className="react-select"
+          classNamePrefix="select"
+          components={{
+            Option: OptionComponent
+          }}
+          onChange={handelSelectStudent}
+        />
+        <p className="fw-bolder pt-50 mt-2">
+          {students.allData?.length} Students
+        </p>
+        <ListGroup flush className="mb-2">
+          {students.allData.map((item) => {
+            return (
+              <ListGroupItem
+                key={item.ID}
+                className="d-flex align-items-start border-0 px-0"
+              >
+                <Avatar
+                  className="me-75"
+                  img={user.logo}
+                  imgHeight={38}
+                  imgWidth={38}
+                />
+                <div className="d-flex align-items-center justify-content-between w-100">
+                  <div className="me-1">
+                    <h5 className="mb-25">{item.name}</h5>
+                    <span>{item.email}</span>
+                  </div>
+                </div>
+              </ListGroupItem>
+            )
+          })}
+        </ListGroup>
+        <div className="d-flex align-content-center justify-content-between flex-wrap">
+          <div className="d-flex align-items-center me-2">
+            <Users className="font-medium-2 me-50" />
+            <p className="fw-bolder mb-0">
+              Public to {user.name} - {user.EN_Name}
+            </p>
+          </div>
+          <Button
+            className="fw-bolder"
+            onClick={handelAddStudent}
+            outline
+            color="primary"
+            type="button"
+          >
+            <Link className="font-medium-2 me-50" />
+            <span>Link </span>
           </Button>
         </div>
-      </Form>
-    </Sidebar>
+      </ModalBody>
+    </Modal>
   )
 }
 

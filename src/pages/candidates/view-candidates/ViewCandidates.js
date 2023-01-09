@@ -15,14 +15,12 @@ import {
 } from "reactstrap"
 import { useTranslation } from "react-i18next"
 import DataTable from "../../../components/custom/table/ReactTable"
-// import { selectAllUniversities } from "../../../redux/project/universities"
 import { useDispatch, useSelector } from "react-redux"
-// import DataTable from "react-data-table-component"
 import { ChevronDown } from "react-feather"
 import { useForm } from "react-hook-form"
 import CandidateForm from "../candidate-form/CandidateForm"
 import useCols from "./useCols"
-import { getAllData } from "../store"
+import { fetchCandidatesData } from "../store"
 import Spinner from "../../../components/custom/loader/Spinner"
 
 const ViewCandidates = () => {
@@ -34,7 +32,7 @@ const ViewCandidates = () => {
   const [formModal, setFormModal] = useState(false)
 
   useEffect(() => {
-    dispatch(getAllData())
+    dispatch(fetchCandidatesData())
   }, [dispatch, store.allData.length])
 
   const id = watch("id")
@@ -42,15 +40,15 @@ const ViewCandidates = () => {
   const email = watch("email")
 
   const dataToRender = () => {
-    if (store.allData.length === 0) return []
-    const { users } = store.allData
-    const data = users
+    if (store.allData.length === 0 || store.isLoading) return []
+    const students = store.allData
+    const data = students
       ?.filter((item) => item !== undefined)
       ?.filter(
         (item) =>
-          item?.ID.toString().includes(id) &&
-          item?.name.toLowerCase().includes(name.toLowerCase()) &&
-          item?.email.toLowerCase().includes(email.toLowerCase())
+          item?.ID?.toString().includes(id) &&
+          item?.name?.toLowerCase().includes(name?.toLowerCase()) &&
+          item?.email?.toLowerCase().includes(email?.toLowerCase())
       )
     if (data?.length > 0) {
       return data
@@ -58,7 +56,6 @@ const ViewCandidates = () => {
     return []
   }
   const clearData = () => {
-    setFilteredData(candidates)
     setValue("id", "")
     setValue("name", "")
     setValue("email", "")
@@ -131,7 +128,7 @@ const ViewCandidates = () => {
                 </Col>
               </Row>
             </CardBody>
-            {store.isLoading ? (
+            {store?.isLoading ? (
               <Spinner />
             ) : (
               <>

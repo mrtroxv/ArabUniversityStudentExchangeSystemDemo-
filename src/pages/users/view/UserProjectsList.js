@@ -22,7 +22,6 @@ const UserProjectsList = () => {
   return (
     <Card>
       <CardHeader tag="h4">{t("Offers List")}</CardHeader>
-
       <div className="react-dataTable user-view-account-projects">
         {store.isLoading ? (
           <Spinner />

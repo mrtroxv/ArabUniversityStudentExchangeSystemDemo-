@@ -31,6 +31,8 @@ import useCols from "./useCols"
 import Spinner from "../../../components/custom/loader/Spinner"
 import { getAllData } from "../store"
 import { useDispatch, useSelector } from "react-redux"
+import toast from "react-hot-toast"
+import { useParams } from "react-router-dom"
 
 const ViewUsers = () => {
   const { register, watch, setValue } = useForm()
@@ -39,11 +41,16 @@ const ViewUsers = () => {
   const { t } = useTranslation()
   const { cols } = useCols()
   const dispatch = useDispatch()
+  const { status } = useParams()
   // use selector to select universities
   //   const universities = useSelector(selectAllUniversities)
   useEffect(() => {
-    dispatch(getAllData())
-  }, [dispatch, store.allData.length])
+    toast.promise(dispatch(getAllData()), {
+      loading: "modal",
+      success: "success",
+      error: "error"
+    })
+  }, [dispatch, store.allData?.length])
 
   const name = watch("name")
   const email = watch("email")
@@ -60,34 +67,38 @@ const ViewUsers = () => {
   }
 
   const dataToRender = () => {
-    if (store.allData.length === 0) return []
-    const { users, relations, universities } = store.allData
-    const data = relations
-      ?.map((relation) => {
-        const user = users.find((user) => user.id === relation.user_id)
-        const university = universities.find(
-          (university) => university.ID === relation.university_id
-        )
-        if (university && user) {
-          return {
-            ...user,
-            ...university,
-            startDate: relation.startDate,
-            status: relation.status
-          }
-        }
-      })
-      ?.filter((item) => item !== undefined)
-      ?.filter(
-        (item) =>
-          item.EN_Name?.toLowerCase().includes(name.toLowerCase()) &&
-          item.AR_Name?.toLowerCase().includes(name.toLowerCase()) &&
-          item.email?.toLowerCase().includes(email.toLowerCase()) &&
-          item.phone?.includes(phone)
-      )
-    console.log(data)
-    if (data?.length > 0) {
-      return data
+    if (
+      (store.allData?.activeUsers?.length === 0 &&
+        store.allData?.suspendedUsers?.length === 0) ||
+      store.isLoading
+    ) {
+      return []
+    }
+    const active = store.allData.activeUsers
+    const suspended = store.allData.suspendedUsers
+    if (active?.length > 0 || suspended?.length > 0) {
+      switch (status) {
+        case "active":
+          return active
+            ?.filter((item) => item !== undefined)
+            ?.filter(
+              (item) =>
+                item?.EN_Name?.toLowerCase().includes(name?.toLowerCase()) &&
+                item?.AR_Name?.toLowerCase().includes(name?.toLowerCase()) &&
+                item?.email?.toLowerCase().includes(email?.toLowerCase()) &&
+                item?.phone?.includes(phone)
+            )
+        case "suspended":
+          return suspended
+            ?.filter((item) => item !== undefined)
+            ?.filter(
+              (item) =>
+                item?.EN_Name?.toLowerCase().includes(name?.toLowerCase()) &&
+                item?.AR_Name?.toLowerCase().includes(name?.toLowerCase()) &&
+                item?.email?.toLowerCase().includes(email?.toLowerCase()) &&
+                item?.phone?.includes(phone)
+            )
+      }
     }
     return []
   }

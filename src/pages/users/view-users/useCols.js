@@ -50,18 +50,10 @@ const useCols = () => {
               color="white"
               onClick={(e) => {
                 e.preventDefault()
-                navigate(`/universities/profile/${row.id}`)
+                navigate(`/universities/profile/${row.ID}`)
               }}
             >
               <FileText size={15} />
-            </Button>
-
-            <Button
-              type="button"
-              color="white"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Trash size={15} />
             </Button>
           </div>
         )

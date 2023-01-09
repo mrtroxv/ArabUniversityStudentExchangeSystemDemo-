@@ -44,6 +44,7 @@ const OfferPreview = () => {
               deletePopup={toggleDeletePopup}
             />
           </Card>
+          <Card></Card>
         </Col>
       </Row>
       <SidebarSendOffer

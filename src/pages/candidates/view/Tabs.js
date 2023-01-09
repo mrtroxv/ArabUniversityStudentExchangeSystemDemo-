@@ -5,7 +5,7 @@ import { Fragment } from "react"
 import { Nav, NavItem, NavLink, TabContent, TabPane } from "reactstrap"
 
 // ** Icons Imports
-import { User, Lock } from "react-feather"
+import { User, Lock, Bookmark } from "react-feather"
 
 // ** User Components
 import SecurityTab from "./SecurityTab"
@@ -19,13 +19,13 @@ const UserTabs = ({ active, toggleTab }) => {
         <NavItem>
           <NavLink active={active === "1"} onClick={() => toggleTab("1")}>
             <User className="font-medium-3 me-50" />
-            <span className="fw-bold">Account</span>
+            <span className="fw-bold">Details</span>
           </NavLink>
         </NavItem>
         <NavItem>
           <NavLink active={active === "2"} onClick={() => toggleTab("2")}>
-            <Lock className="font-medium-3 me-50" />
-            <span className="fw-bold">Security</span>
+            <Bookmark className="font-medium-3 me-50" />
+            <span className="fw-bold"></span>
           </NavLink>
         </NavItem>
       </Nav>

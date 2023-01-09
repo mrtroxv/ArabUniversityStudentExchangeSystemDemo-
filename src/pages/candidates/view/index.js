@@ -3,7 +3,7 @@ import { useEffect, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 
 // ** Store & Actions
-import { getUser } from "../store"
+import { getCandidate } from "../store"
 import { useSelector, useDispatch } from "react-redux"
 
 // ** Reactstrap Imports
@@ -19,7 +19,7 @@ import "@styles/react/apps/app-users.scss"
 
 const UserView = () => {
   // ** Store Vars
-  const store = useSelector((state) => state.users)
+  const store = useSelector((state) => state.candidates)
   const dispatch = useDispatch()
   // const universities = useSelector(selectAllUniversities)
   // ** Hooks
@@ -27,7 +27,7 @@ const UserView = () => {
 
   // ** Get suer on mount
   useEffect(() => {
-    dispatch(getUser(id))
+    dispatch(getCandidate(id))
   }, [dispatch])
   console.log(store)
   const [active, setActive] = useState("1")
@@ -38,11 +38,12 @@ const UserView = () => {
     }
   }
 
-  return store.selectedUser !== null && store.selectedUser !== undefined ? (
+  return store.selectedUser?.student !== null &&
+    store.selectedUser?.student !== undefined ? (
     <div className="app-user-view">
       <Row>
         <Col xl="4" lg="5" xs={{ order: 1 }} md={{ order: 0, size: 5 }}>
-          <UserInfoCard selectedUser={store.selectedUser} />
+          <UserInfoCard selectedUser={store.selectedUser?.student} />
         </Col>
         <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
           <UserTabs active={active} toggleTab={toggleTab} />
