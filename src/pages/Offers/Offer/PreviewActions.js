@@ -11,6 +11,7 @@ import {
   deleteOffer,
   rejectOffer
 } from "../../../redux/project/offers"
+import ShareProjectExample from "../../../views/pages/modal-examples/ShareProject"
 
 const PreviewActions = ({
   id,
@@ -46,6 +47,7 @@ const PreviewActions = ({
   return (
     <Card className="invoice-action-wrapper">
       <CardBody>
+        <ShareProjectExample />
         {status === 0 && (
           <Button
             color="primary"

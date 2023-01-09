@@ -1,13 +1,13 @@
 // ** React Imports
 import { useState, Fragment } from "react"
 import ReactCountryFlag from "react-country-flag"
+import * as Yup from "yup"
 
 // ** Reactstrap Imports
 import {
   Row,
   Col,
   Card,
-  Form,
   CardBody,
   Button,
   Badge,
@@ -15,25 +15,31 @@ import {
   Input,
   Label,
   ModalBody,
-  ModalHeader
+  ModalHeader,
+  CardText
 } from "reactstrap"
 
 // ** Third Party Components
 import Swal from "sweetalert2"
 import Select from "react-select"
 import { Check, Briefcase, X } from "react-feather"
-import { useForm, Controller } from "react-hook-form"
 import withReactContent from "sweetalert2-react-content"
+import { Formik, Form, Field, ErrorMessage } from "formik"
 
 // ** Custom Components
 import Avatar from "@components/avatar"
 
-// ** Utils
-import { selectThemeColors } from "@utils"
-
 // ** Styles
 import "@styles/react/libs/react-select/_react-select.scss"
 import { useTranslation } from "react-i18next"
+import FileUploadInput from "../../../views/forms/form-elements/file-uploader/FileUploadInput"
+import toast from "react-hot-toast"
+import { useSelector } from "react-redux"
+import { selectUser } from "../../../redux/authentication"
+// import { suspendUser } from "../store"
+import ReactivateAccount from "./ReactivateAccount"
+import store from "../store"
+import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner"
 
 const roleColors = {
   editor: "light-info",
@@ -55,46 +61,49 @@ const statusColors = {
 //   { value: "suspended", label: "Suspended" }
 // ]
 
-const countryOptions = [
-  { value: "uk", label: "UK" },
-  { value: "usa", label: "USA" },
-  { value: "france", label: "France" },
-  { value: "russia", label: "Russia" },
-  { value: "canada", label: "Canada" }
-]
-
-const languageOptions = [
-  { value: "english", label: "English" },
-  { value: "spanish", label: "Spanish" },
-  { value: "french", label: "French" },
-  { value: "german", label: "German" },
-  { value: "dutch", label: "Dutch" }
-]
-
 const MySwal = withReactContent(Swal)
 
-const UserInfoCard = ({ selectedUser }) => {
+const UserInfoCard = ({ selectedUser, refetchData }) => {
   // ** State
   const [show, setShow] = useState(false)
+  const [isOpen, setIsOpen] = useState(false)
   const { t } = useTranslation()
+  const user = useSelector(selectUser)
+  // const dispatch = useDispatch()
   // ** Hook
-  const {
-    reset,
-    control,
-    setError,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
-    defaultValues: {
-      username: selectedUser.name,
-      lastName: selectedUser.name.split(" ")[1],
-      firstName: selectedUser.name.split(" ")[0]
-    }
+  const defaultValues = {
+    username: selectedUser.username,
+    fax: selectedUser.fax,
+    name: selectedUser.name,
+    email: selectedUser.email,
+    avatar: undefined
+  }
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
+  const schema = Yup.object({
+    username: Yup.string().min(
+      5,
+      "Too Short - Usename must be at least 5 characters long"
+    ),
+    password: Yup.string()
+      .min(8, "Password is too short - should be 8 chars minimum.")
+      .matches(/[a-zA-Z]/, "Password can only contain Latin letters."),
+    name: Yup.string().min(
+      8,
+      "Too Short - Name must be at least 8 characters long"
+    ),
+    email: Yup.string().email("Please enter a valid email address"),
+    fax: Yup.string().matches(phoneRegExp, "Phone number is not valid")
   })
 
   // ** render user img
   const renderUserImg = () => {
-    if (selectedUser !== null && selectedUser.avatar?.length) {
+    if (
+      selectedUser !== null &&
+      selectedUser !== "0" &&
+      selectedUser.avatar?.length
+    ) {
       return (
         <img
           height="110"
@@ -127,62 +136,56 @@ const UserInfoCard = ({ selectedUser }) => {
   }
 
   const onSubmit = (data) => {
-    if (Object.values(data).every((field) => field.length > 0)) {
-      setShow(false)
+    if (Object.values(data).some((field) => field?.length > 0)) {
+      console.log(data)
     } else {
-      for (const key in data) {
-        if (data[key].length === 0) {
-          setError(key, {
-            type: "manual"
-          })
-        }
-      }
+      toast.error("No data provided, so nothing will be updated")
+      setShow(false)
     }
   }
 
-  const handleReset = () => {
-    reset({
-      username: selectedUser.name,
-      lastName: selectedUser.name.split(" ")[1],
-      firstName: selectedUser.name.split(" ")[0]
-    })
+  // const handleSuspendedClick = () => {
+  //   return MySwal.fire({
+  //     title: "Are you sure?",
+  //     text: "You won't be able to revert user!",
+  //     icon: "warning",
+  //     showCancelButton: true,
+  //     confirmButtonText: "Yes, Suspend user!",
+  //     customClass: {
+  //       confirmButton: "btn btn-primary",
+  //       cancelButton: "btn btn-outline-danger ms-1"
+  //     },
+  //     buttonsStyling: false
+  //   }).then(function (result) {
+  //     if (result.isConfirmed) {
+  //       toast.promise(dispatch(suspendUser(selectedUser.id)), {
+  //         loading: "Working...",
+  //         success: "User Suspended!",
+  //         error: "Something went wrong!"
+  //       })
+  //       MySwal.fire({
+  //         icon: "success",
+  //         title: "Suspended!",
+  //         text: "User has been suspended.",
+  //         customClass: {
+  //           confirmButton: "btn btn-success"
+  //         }
+  //       })
+  //     } else if (result.dismiss === MySwal.DismissReason.cancel) {
+  //       MySwal.fire({
+  //         title: "Cancelled",
+  //         text: "Cancelled Suspension :)",
+  //         icon: "error",
+  //         customClass: {
+  //           confirmButton: "btn btn-success"
+  //         }
+  //       })
+  //     }
+  //   })
+  // }
+  if (store.isLoading) {
+    return <SpinnerComponent />
   }
-
-  const handleSuspendedClick = () => {
-    return MySwal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert user!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, Suspend user!",
-      customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1"
-      },
-      buttonsStyling: false
-    }).then(function (result) {
-      if (result.value) {
-        MySwal.fire({
-          icon: "success",
-          title: "Suspended!",
-          text: "User has been suspended.",
-          customClass: {
-            confirmButton: "btn btn-success"
-          }
-        })
-      } else if (result.dismiss === MySwal.DismissReason.cancel) {
-        MySwal.fire({
-          title: "Cancelled",
-          text: "Cancelled Suspension :)",
-          icon: "error",
-          customClass: {
-            confirmButton: "btn btn-success"
-          }
-        })
-      }
-    })
-  }
-
   return (
     <Fragment>
       <Card>
@@ -217,7 +220,7 @@ const UserInfoCard = ({ selectedUser }) => {
                 width: "10%"
               }}
               className="country-flag flag-icon"
-              countryCode={selectedUser.city_id.toLowerCase()}
+              countryCode={selectedUser?.city_id?.toLowerCase()}
             />
           </div>
           <h4 className="fw-bolder border-bottom pb-50 mb-1">
@@ -253,10 +256,6 @@ const UserInfoCard = ({ selectedUser }) => {
                   <span className="fw-bolder me-25">{t("Phone Number")} :</span>
                   <span>{selectedUser.phone}</span>
                 </li>
-                <li className="mb-75 d-flex justify-content-between">
-                  <span className="fw-bolder me-25">{t("Country")} :</span>
-                  <span>England</span>
-                </li>
               </ul>
             ) : null}
           </div>
@@ -264,14 +263,17 @@ const UserInfoCard = ({ selectedUser }) => {
             <Button color="primary" onClick={() => setShow(true)}>
               Edit
             </Button>
-            <Button
-              className="ms-1"
-              color="danger"
-              outline
-              onClick={handleSuspendedClick}
-            >
-              Suspended
-            </Button>
+
+            {user.role !== "admin" && (
+              <Button
+                className="ms-1"
+                color="danger"
+                outline
+                onClick={() => setIsOpen(true)}
+              >
+                Suspend
+              </Button>
+            )}
           </div>
         </CardBody>
       </Card>
@@ -289,185 +291,139 @@ const UserInfoCard = ({ selectedUser }) => {
             <h1 className="mb-1">Edit User Information</h1>
             <p>Updating user details will receive a privacy audit.</p>
           </div>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <Row className="gy-1 pt-75">
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="firstName">
-                  First Name
-                </Label>
-                <Controller
-                  defaultValue=""
-                  control={control}
-                  id="firstName"
-                  name="firstName"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      id="firstName"
-                      placeholder="John"
-                      invalid={errors.firstName && true}
-                    />
-                  )}
-                />
-              </Col>
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="lastName">
-                  Last Name
-                </Label>
-                <Controller
-                  defaultValue=""
-                  control={control}
-                  id="lastName"
-                  name="lastName"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      id="lastName"
-                      placeholder="Doe"
-                      invalid={errors.lastName && true}
-                    />
-                  )}
-                />
-              </Col>
-              <Col xs={12}>
-                <Label className="form-label" for="username">
-                  Username
-                </Label>
-                <Controller
-                  defaultValue=""
-                  control={control}
-                  id="username"
-                  name="username"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      id="username"
-                      placeholder="john.doe.007"
-                      invalid={errors.username && true}
-                    />
-                  )}
-                />
-              </Col>
-
-              {/* <Col md={6} xs={12}>
-                <Label className="form-label" for="status">
-                  Status:
-                </Label>
-                <Select
-                  id="status"
-                  isClearable={false}
-                  className="react-select"
-                  classNamePrefix="select"
-                  options={statusOptions}
-                  theme={selectThemeColors}
-                  defaultValue={
-                    statusOptions[
-                      statusOptions.findIndex(
-                        (i) => i.value === selectedUser.status
-                      )
-                    ]
-                  }
-                />
-              </Col>
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="tax-id">
-                  Tax ID
-                </Label>
-                <Input
-                  id="tax-id"
-                  placeholder="Tax-1234"
-                  defaultValue={selectedUser.contact.substr(
-                    selectedUser.contact.length - 4
-                  )}
-                />
-              </Col>
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="contact">
-                  Contact
-                </Label>
-                <Input
-                  id="contact"
-                  defaultValue={selectedUser.contact}
-                  placeholder="+1 609 933 4422"
-                />
-              </Col> */}
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="language">
-                  language
-                </Label>
-                <Select
-                  id="language"
-                  isClearable={false}
-                  className="react-select"
-                  classNamePrefix="select"
-                  options={languageOptions}
-                  theme={selectThemeColors}
-                  defaultValue={languageOptions[0]}
-                />
-              </Col>
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="country">
-                  Country
-                </Label>
-                <Select
-                  id="country"
-                  isClearable={false}
-                  className="react-select"
-                  classNamePrefix="select"
-                  options={countryOptions}
-                  theme={selectThemeColors}
-                  defaultValue={countryOptions[0]}
-                />
-              </Col>
-              <Col xs={12}>
-                <div className="d-flex align-items-center mt-1">
-                  <div className="form-switch">
-                    <Input
-                      type="switch"
-                      defaultChecked
-                      id="billing-switch"
-                      name="billing-switch"
-                    />
-                    <Label
-                      className="form-check-label"
-                      htmlFor="billing-switch"
-                    >
-                      <span className="switch-icon-left">
-                        <Check size={14} />
-                      </span>
-                      <span className="switch-icon-right">
-                        <X size={14} />
-                      </span>
+          <Formik
+            initialValues={defaultValues}
+            validationSchema={schema}
+            onSubmit={async (values) => {
+              onSubmit(values)
+            }}
+          >
+            {({ errors, touched, setFieldValue }) => (
+              <Form>
+                <Row className="gy-1 pt-75">
+                  <Col md={6} xs={12}>
+                    <Label className="form-label" for={`name`}>
+                      Name
                     </Label>
-                  </div>
-                  <Label
-                    className="form-check-label fw-bolder"
-                    for="billing-switch"
-                  >
-                    Use as a billing address?
-                  </Label>
-                </div>
-              </Col>
-              <Col xs={12} className="text-center mt-2 pt-50">
-                <Button type="submit" className="me-1" color="primary">
-                  Submit
-                </Button>
-                <Button
-                  type="reset"
-                  color="secondary"
-                  outline
-                  onClick={() => {
-                    handleReset()
-                    setShow(false)
-                  }}
-                >
-                  Discard
-                </Button>
-              </Col>
-            </Row>
-          </Form>
+                    <Field
+                      type="text"
+                      name={`name`}
+                      id={`name`}
+                      placeholder="ex. Dr.Moutmad Al Khateeb"
+                      className={`form-control ${
+                        errors.name && touched.name ? "is-invalid" : ""
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="name"
+                      component="p"
+                      className="invalid-feedback"
+                    />
+                  </Col>
+                  <Col md={6} xs={12}>
+                    <Label className="form-label" for={`username`}>
+                      Username
+                    </Label>
+                    <Field
+                      type="text"
+                      name={`username`}
+                      id={`username`}
+                      placeholder="ex. Dr.Moutmad Al Khateeb"
+                      className={`form-control ${
+                        errors.username && touched.username ? "is-invalid" : ""
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="username"
+                      component="p"
+                      className="invalid-feedback"
+                    />
+                  </Col>
+                  <Col md={6} xs={12}>
+                    <Label className="form-label" for={`email`}>
+                      Email
+                    </Label>
+                    <Field
+                      type="text"
+                      name={`email`}
+                      id={`email`}
+                      placeholder="ex. example@example.com"
+                      className={`form-control ${
+                        errors.email && touched.email ? "is-invalid" : ""
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="email"
+                      component="p"
+                      className="invalid-feedback"
+                    />
+                  </Col>
+                  <Col md={6} xs={12}>
+                    <Label className="form-label" for={`fax`}>
+                      Fax
+                    </Label>
+                    <Field
+                      type="text"
+                      name={`fax`}
+                      id={`fax`}
+                      placeholder="ex. 02-932432"
+                      className={`form-control ${
+                        errors.fax && touched.fax ? "is-invalid" : ""
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="fax"
+                      component="p"
+                      className="invalid-feedback"
+                    />
+                  </Col>
+                  <Col md={6} xs={12}>
+                    <Label className="form-label" for="logo">
+                      {t("Profile Picture")}
+                    </Label>
+                    <Card className="pt-1">
+                      <FileUploadInput
+                        id="logo"
+                        uploadPhoto={(file) => {
+                          setFieldValue("logo", file)
+                        }}
+                      />
+                    </Card>
+                  </Col>
+
+                  <Col xs={12} className="text-center pt-50">
+                    <Button type="submit" className="me-1" color="primary">
+                      Submit
+                    </Button>
+                    <Button
+                      type="reset"
+                      color="secondary"
+                      outline
+                      onClick={() => {
+                        setFieldValue("name", "")
+                        setFieldValue("username", "")
+                        setFieldValue("email", "")
+                        setFieldValue("fax", "")
+                        setFieldValue("logo", undefined)
+                        setShow(false)
+                      }}
+                    >
+                      Discard
+                    </Button>
+                  </Col>
+                </Row>
+              </Form>
+            )}
+          </Formik>
         </ModalBody>
       </Modal>
+      <ReactivateAccount
+        open={isOpen}
+        toggleSidebar={() => setIsOpen(!isOpen)}
+        id={selectedUser.id}
+        university_id={selectedUser.ID}
+        refetchData={refetchData}
+      />
     </Fragment>
   )
 }

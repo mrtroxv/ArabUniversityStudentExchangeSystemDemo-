@@ -29,7 +29,6 @@ import withReactContent from "sweetalert2-react-content"
 import Avatar from "@components/avatar"
 
 // ** Utils
-import { selectThemeColors } from "@utils"
 
 // ** Styles
 import "@styles/react/libs/react-select/_react-select.scss"
@@ -54,22 +53,6 @@ const statusColors = {
 //   { value: "inactive", label: "Inactive" },
 //   { value: "suspended", label: "Suspended" }
 // ]
-
-const countryOptions = [
-  { value: "uk", label: "UK" },
-  { value: "usa", label: "USA" },
-  { value: "france", label: "France" },
-  { value: "russia", label: "Russia" },
-  { value: "canada", label: "Canada" }
-]
-
-const languageOptions = [
-  { value: "english", label: "English" },
-  { value: "spanish", label: "Spanish" },
-  { value: "french", label: "French" },
-  { value: "german", label: "German" },
-  { value: "dutch", label: "Dutch" }
-]
 
 const MySwal = withReactContent(Swal)
 
@@ -148,41 +131,6 @@ const UserInfoCard = ({ selectedUser }) => {
     })
   }
 
-  const handleSuspendedClick = () => {
-    return MySwal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert user!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "Yes, Suspend user!",
-      customClass: {
-        confirmButton: "btn btn-primary",
-        cancelButton: "btn btn-outline-danger ms-1"
-      },
-      buttonsStyling: false
-    }).then(function (result) {
-      if (result.value) {
-        MySwal.fire({
-          icon: "success",
-          title: "Suspended!",
-          text: "User has been suspended.",
-          customClass: {
-            confirmButton: "btn btn-success"
-          }
-        })
-      } else if (result.dismiss === MySwal.DismissReason.cancel) {
-        MySwal.fire({
-          title: "Cancelled",
-          text: "Cancelled Suspension :)",
-          icon: "error",
-          customClass: {
-            confirmButton: "btn btn-success"
-          }
-        })
-      }
-    })
-  }
-
   return (
     <Fragment>
       <Card>
@@ -217,7 +165,7 @@ const UserInfoCard = ({ selectedUser }) => {
                 width: "10%"
               }}
               className="country-flag flag-icon"
-              countryCode={selectedUser.city_id.toLowerCase()}
+              countryCode={selectedUser.nationality.toLowerCase()}
             />
           </div>
           <h4 className="fw-bolder border-bottom pb-50 mb-1">
@@ -253,24 +201,12 @@ const UserInfoCard = ({ selectedUser }) => {
                   <span className="fw-bolder me-25">{t("Phone Number")} :</span>
                   <span>{selectedUser.phone}</span>
                 </li>
-                <li className="mb-75 d-flex justify-content-between">
-                  <span className="fw-bolder me-25">{t("Country")} :</span>
-                  <span>England</span>
-                </li>
               </ul>
             ) : null}
           </div>
           <div className="d-flex justify-content-center pt-2">
             <Button color="primary" onClick={() => setShow(true)}>
               Edit
-            </Button>
-            <Button
-              className="ms-1"
-              color="danger"
-              outline
-              onClick={handleSuspendedClick}
-            >
-              Suspended
             </Button>
           </div>
         </CardBody>
@@ -347,106 +283,6 @@ const UserInfoCard = ({ selectedUser }) => {
                     />
                   )}
                 />
-              </Col>
-
-              {/* <Col md={6} xs={12}>
-                <Label className="form-label" for="status">
-                  Status:
-                </Label>
-                <Select
-                  id="status"
-                  isClearable={false}
-                  className="react-select"
-                  classNamePrefix="select"
-                  options={statusOptions}
-                  theme={selectThemeColors}
-                  defaultValue={
-                    statusOptions[
-                      statusOptions.findIndex(
-                        (i) => i.value === selectedUser.status
-                      )
-                    ]
-                  }
-                />
-              </Col>
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="tax-id">
-                  Tax ID
-                </Label>
-                <Input
-                  id="tax-id"
-                  placeholder="Tax-1234"
-                  defaultValue={selectedUser.contact.substr(
-                    selectedUser.contact.length - 4
-                  )}
-                />
-              </Col>
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="contact">
-                  Contact
-                </Label>
-                <Input
-                  id="contact"
-                  defaultValue={selectedUser.contact}
-                  placeholder="+1 609 933 4422"
-                />
-              </Col> */}
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="language">
-                  language
-                </Label>
-                <Select
-                  id="language"
-                  isClearable={false}
-                  className="react-select"
-                  classNamePrefix="select"
-                  options={languageOptions}
-                  theme={selectThemeColors}
-                  defaultValue={languageOptions[0]}
-                />
-              </Col>
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="country">
-                  Country
-                </Label>
-                <Select
-                  id="country"
-                  isClearable={false}
-                  className="react-select"
-                  classNamePrefix="select"
-                  options={countryOptions}
-                  theme={selectThemeColors}
-                  defaultValue={countryOptions[0]}
-                />
-              </Col>
-              <Col xs={12}>
-                <div className="d-flex align-items-center mt-1">
-                  <div className="form-switch">
-                    <Input
-                      type="switch"
-                      defaultChecked
-                      id="billing-switch"
-                      name="billing-switch"
-                    />
-                    <Label
-                      className="form-check-label"
-                      htmlFor="billing-switch"
-                    >
-                      <span className="switch-icon-left">
-                        <Check size={14} />
-                      </span>
-                      <span className="switch-icon-right">
-                        <X size={14} />
-                      </span>
-                    </Label>
-                  </div>
-                  <Label
-                    className="form-check-label fw-bolder"
-                    for="billing-switch"
-                  >
-                    Use as a billing address?
-                  </Label>
-                </div>
               </Col>
               <Col xs={12} className="text-center mt-2 pt-50">
                 <Button type="submit" className="me-1" color="primary">

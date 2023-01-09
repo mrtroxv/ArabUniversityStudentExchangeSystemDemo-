@@ -15,7 +15,10 @@ import { useDispatch } from "react-redux"
 import { addUser, fetchUniversities } from "../../../redux/project/universities"
 // import toast from "react-hot-toast"
 
-const NewUser = ({ type, onClose }) => {
+const NewUser = ({
+  type
+  //  ,onClose
+}) => {
   // ** Ref
   const ref = useRef(null)
   const dispatch = useDispatch()
@@ -32,8 +35,6 @@ const NewUser = ({ type, onClose }) => {
   }
 
   const handelSubmit = (values) => {
-    console.log(JSON.stringify({ ...values, ...data }))
-
     toast.promise(dispatch(addUser({ ...values, ...data })), {
       loading: "Loading",
       success: (res) => {
@@ -42,7 +43,7 @@ const NewUser = ({ type, onClose }) => {
           throw new Error(res.payload)
         } else {
           dispatch(fetchUniversities())
-          onClose()
+          // onClose()
           return "User Added Successfully"
         }
       },

@@ -10,6 +10,9 @@ import { fetchUniversities } from "./redux/project/universities"
 import Router from "./router/Router"
 import toast from "react-hot-toast"
 import { selectUserID } from "./redux/authentication"
+import { getAllData } from "./pages/users/store"
+import { getOffersData } from "./pages/Offers/store"
+import { fetchCandidatesData } from "./pages/candidates/store"
 
 const App = () => {
   const dispatch = useDispatch()
@@ -20,7 +23,10 @@ const App = () => {
       const promises = Promise.all([
         dispatch(fetchAllOffers()),
         dispatch(fetchUniversities()),
-        dispatch(fetchStudents())
+        dispatch(fetchStudents()),
+        dispatch(getAllData()),
+        dispatch(fetchCandidatesData()),
+        dispatch(getOffersData())
       ])
       toast.promise(promises, {
         loading: "Loading Data...",
@@ -28,7 +34,7 @@ const App = () => {
         error: "Error"
       })
     }
-  }, [])
+  }, [dispatch])
   return (
     <Suspense fallback={<SpinnerComponent />}>
       <Router />

@@ -91,7 +91,7 @@ function ViewOffers() {
   useEffect(() => {
     setFilteredData(offersList)
     console.log(offersList)
-  }, [offersList.length])
+  }, [offersList?.length])
 
   const viewTableHandler = (date) => {
     if (date === "all") {

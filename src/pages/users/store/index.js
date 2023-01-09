@@ -23,24 +23,103 @@ export const getData = createAsyncThunk("appUsers/getData", async (params) => {
   }
 })
 
+export const suspendUser = createAsyncThunk(
+  "appUsers/suspendUser",
+  async (data, { rejectWithValue }) => {
+    try {
+      await axios.post(`http://localhost:3500/admin/suspend-add-user`, data, {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken")),
+          "Content-Type": "multipart/form-data"
+        },
+        file: data.avatar
+      })
+      const response = await axios.get(`http://localhost:3500/admin/get-user`, {
+        params: {
+          universityId: data.university_id
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      })
+      return response.data
+    } catch (error) {
+      // console.log(error)
+      return rejectWithValue(error.message)
+    }
+  }
+)
+export const reactivateAccount = createAsyncThunk(
+  "appUsers/reactivateAccount",
+  async (data, { rejectWithValue }) => {
+    try {
+      await axios.post(
+        `http://localhost:3500/admin/reactivate-user`,
+        {
+          userId: data.account_id,
+          id: data.id,
+          university_id: data.university_id
+        },
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      const response = await axios.get(`http://localhost:3500/admin/get-user`, {
+        params: {
+          universityId: data.university_id
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      })
+      return response.data
+    } catch (error) {
+      // console.log(error)
+      return rejectWithValue(error.message)
+    }
+  }
+)
+
 export const getUser = createAsyncThunk("appUsers/getUser", async (id) => {
   try {
-    console.log(id)
     const response = await axios.get(`http://localhost:3500/admin/get-user`, {
       params: {
-        userId: id
+        universityId: id
       },
       headers: {
         authorization: JSON.parse(localStorage.getItem("accessToken"))
       }
     })
-    console.log(response)
-
     return response.data
   } catch (error) {
     console.log(error)
   }
 })
+
+export const getUsersForUniversity = createAsyncThunk(
+  "appUsers/getUsersForUniversity",
+  async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3500/admin/get-university-users`,
+        {
+          params: {
+            universityId: id
+          },
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      console.log(response.data)
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
 
 export const addUser = createAsyncThunk(
   "appUsers/addUser",
@@ -66,7 +145,6 @@ export const appUsersSlice = createSlice({
   name: "appUsers",
   initialState: {
     data: [],
-    total: 1,
     params: {},
     allData: [],
     selectedUser: null,
@@ -89,6 +167,28 @@ export const appUsersSlice = createSlice({
       })
       .addCase(getUser.fulfilled, (state, action) => {
         state.selectedUser = action.payload
+        state.isLoading = false
+      })
+      .addCase(getUser.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getUsersForUniversity.fulfilled, (state, action) => {
+        state.data = action.payload
+        state.isLoading = false
+      })
+      .addCase(getUsersForUniversity.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(
+        reactivateAccount.fulfilled,
+        suspendUser.fulfilled,
+        (state, action) => {
+          state.isLoading = false
+          state.selectedUser = action.payload
+        }
+      )
+      .addCase(reactivateAccount.pending, (state) => {
+        state.isLoading = true
       })
   }
 })

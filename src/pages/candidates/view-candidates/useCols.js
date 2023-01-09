@@ -61,14 +61,6 @@ const useCols = () => {
             >
               <FileText size={15} />
             </Button>
-            <Button
-              type="button"
-              color="white"
-              // className="table-button_edit"
-              onClick={(e) => e.preventDefault()}
-            >
-              <Trash size={15} />
-            </Button>
           </div>
         )
       }

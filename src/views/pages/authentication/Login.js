@@ -89,6 +89,7 @@ const Login = () => {
         Username: data.Username,
         password: data.password
       })
+      console.log(data)
       const handleLoginData = logInData.then((res) => {
         const data = { ...res.data, accessToken: res.data.accessToken }
         dispatch(handleLogin(data))
