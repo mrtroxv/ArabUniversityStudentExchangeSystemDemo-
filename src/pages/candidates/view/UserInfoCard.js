@@ -22,7 +22,6 @@ import {
 import Swal from "sweetalert2"
 import Select from "react-select"
 import { Check, Briefcase, X } from "react-feather"
-import { useForm, Controller } from "react-hook-form"
 import withReactContent from "sweetalert2-react-content"
 
 // ** Custom Components
@@ -33,6 +32,10 @@ import Avatar from "@components/avatar"
 // ** Styles
 import "@styles/react/libs/react-select/_react-select.scss"
 import { useTranslation } from "react-i18next"
+import CandidateForm from "../candidate-form/CandidateForm"
+import toast from "react-hot-toast"
+import { useDispatch } from "react-redux"
+import { updateCandidate } from "../store"
 
 const roleColors = {
   editor: "light-info",
@@ -43,7 +46,7 @@ const roleColors = {
 }
 
 const statusColors = {
-  active: "light-success",
+  enrolled: "light-success",
   pending: "light-warning",
   inactive: "light-secondary"
 }
@@ -56,34 +59,34 @@ const statusColors = {
 
 const MySwal = withReactContent(Swal)
 
-const UserInfoCard = ({ selectedUser }) => {
+const UserInfoCard = ({ selectedUser, university, offer }) => {
   // ** State
   const [show, setShow] = useState(false)
   const { t } = useTranslation()
+  const dispatch = useDispatch()
   // ** Hook
-  const {
-    reset,
-    control,
-    setError,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
-    defaultValues: {
-      username: selectedUser.name,
-      lastName: selectedUser.name.split(" ")[1],
-      firstName: selectedUser.name.split(" ")[0]
-    }
-  })
-
+  const handleEditCandidate = (data) => {
+    toast.promise(dispatch(updateCandidate(data)), {
+      loading: t("common:loading"),
+      success: () => {
+        setShow(false)
+        return t("common:success")
+      },
+      error: (err) => {
+        console.log(err)
+        return t("common:error")
+      }
+    })
+  }
   // ** render user img
   const renderUserImg = () => {
-    if (selectedUser !== null && selectedUser.avatar?.length) {
+    if (university && university?.logo?.length) {
       return (
         <img
           height="110"
           width="110"
           alt="user-avatar"
-          src={selectedUser.avatar}
+          src={university?.logo}
           className="img-fluid rounded mt-3 mb-2"
         />
       )
@@ -109,27 +112,7 @@ const UserInfoCard = ({ selectedUser }) => {
     }
   }
 
-  const onSubmit = (data) => {
-    if (Object.values(data).every((field) => field.length > 0)) {
-      setShow(false)
-    } else {
-      for (const key in data) {
-        if (data[key].length === 0) {
-          setError(key, {
-            type: "manual"
-          })
-        }
-      }
-    }
-  }
-
-  const handleReset = () => {
-    reset({
-      username: selectedUser.name,
-      lastName: selectedUser.name.split(" ")[1],
-      firstName: selectedUser.name.split(" ")[0]
-    })
-  }
+  const enrolled = offer && offer.id ? "enrolled" : "pending"
 
   return (
     <Fragment>
@@ -165,7 +148,7 @@ const UserInfoCard = ({ selectedUser }) => {
                 width: "10%"
               }}
               className="country-flag flag-icon"
-              countryCode={selectedUser.nationality.toLowerCase()}
+              countryCode={selectedUser.city_id.toLowerCase()}
             />
           </div>
           <h4 className="fw-bolder border-bottom pb-50 mb-1">
@@ -188,14 +171,10 @@ const UserInfoCard = ({ selectedUser }) => {
                   <span className="fw-bolder me-25">{t("Status")} :</span>
                   <Badge
                     className="text-capitalize"
-                    color={statusColors[selectedUser.status]}
+                    color={statusColors[enrolled]}
                   >
-                    {selectedUser.status}
+                    {enrolled}
                   </Badge>
-                </li>
-                <li className="mb-75 d-flex justify-content-between">
-                  <span className="fw-bolder me-25">{t("Role")} :</span>
-                  <span className="text-capitalize">{selectedUser.type}</span>
                 </li>
                 <li className="mb-75 d-flex justify-content-between">
                   <span className="fw-bolder me-25">{t("Phone Number")} :</span>
@@ -220,88 +199,11 @@ const UserInfoCard = ({ selectedUser }) => {
           className="bg-transparent"
           toggle={() => setShow(!show)}
         ></ModalHeader>
-        <ModalBody className="px-sm-5 pt-50 pb-5">
-          <div className="text-center mb-2">
-            <h1 className="mb-1">Edit User Information</h1>
-            <p>Updating user details will receive a privacy audit.</p>
-          </div>
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <Row className="gy-1 pt-75">
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="firstName">
-                  First Name
-                </Label>
-                <Controller
-                  defaultValue=""
-                  control={control}
-                  id="firstName"
-                  name="firstName"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      id="firstName"
-                      placeholder="John"
-                      invalid={errors.firstName && true}
-                    />
-                  )}
-                />
-              </Col>
-              <Col md={6} xs={12}>
-                <Label className="form-label" for="lastName">
-                  Last Name
-                </Label>
-                <Controller
-                  defaultValue=""
-                  control={control}
-                  id="lastName"
-                  name="lastName"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      id="lastName"
-                      placeholder="Doe"
-                      invalid={errors.lastName && true}
-                    />
-                  )}
-                />
-              </Col>
-              <Col xs={12}>
-                <Label className="form-label" for="username">
-                  Username
-                </Label>
-                <Controller
-                  defaultValue=""
-                  control={control}
-                  id="username"
-                  name="username"
-                  render={({ field }) => (
-                    <Input
-                      {...field}
-                      id="username"
-                      placeholder="john.doe.007"
-                      invalid={errors.username && true}
-                    />
-                  )}
-                />
-              </Col>
-              <Col xs={12} className="text-center mt-2 pt-50">
-                <Button type="submit" className="me-1" color="primary">
-                  Submit
-                </Button>
-                <Button
-                  type="reset"
-                  color="secondary"
-                  outline
-                  onClick={() => {
-                    handleReset()
-                    setShow(false)
-                  }}
-                >
-                  Discard
-                </Button>
-              </Col>
-            </Row>
-          </Form>
+        <ModalBody>
+          <CandidateForm
+            outerSubmit={handleEditCandidate}
+            initialData={selectedUser}
+          />
         </ModalBody>
       </Modal>
     </Fragment>

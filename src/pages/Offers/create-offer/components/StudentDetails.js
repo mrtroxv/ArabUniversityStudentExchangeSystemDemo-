@@ -11,7 +11,7 @@ import * as Yup from "yup"
 import Select from "react-select"
 import { useTranslation } from "react-i18next"
 
-const StudentDetails = ({ stepper, onStoreData, initialState }) => {
+const StudentDetails = ({ stepper, onStoreData, data }) => {
   const studentGenderTypes = [
     { value: "Male", label: "Male" },
     { value: "Female", label: "Female" },
@@ -23,13 +23,13 @@ const StudentDetails = ({ stepper, onStoreData, initialState }) => {
     { value: "Graduate", label: "Graduate" }
   ]
 
-  const defaultValues = initialState || {
-    college_name: "",
-    branch_name: "",
-    major_name: "",
-    stu_level: "",
-    stu_sex: "",
-    other_requirments: ""
+  const defaultValues = {
+    college_name: data?.college_name || "",
+    branch_name: data?.branch_name || "",
+    major_name: data?.major_name || "",
+    stu_level: data?.stu_level || "",
+    stu_sex: data?.stu_sex || "",
+    other_requirments: data?.other_requirments || ""
   }
 
   const Schema = Yup.object().shape({
@@ -72,7 +72,7 @@ const StudentDetails = ({ stepper, onStoreData, initialState }) => {
           stepper.next()
         }}
       >
-        {({ errors, touched, values }) => (
+        {({ errors, touched, setFieldValue }) => (
           <Form>
             <Row>
               <Col md="6" className="mb-1">
@@ -84,10 +84,11 @@ const StudentDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`college_name`}
                   id={`college_name`}
                   placeholder="ex. Engineering and Technology"
-                  className={`form-control ${errors.college_name && touched.college_name
+                  className={`form-control ${
+                    errors.college_name && touched.college_name
                       ? "is-invalid"
                       : ""
-                    }`}
+                  }`}
                 />
                 <ErrorMessage
                   name="college_name"
@@ -104,10 +105,11 @@ const StudentDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`branch_name`}
                   id={`branch_name`}
                   placeholder="ex. Computer Systems"
-                  className={`form-control ${errors.branch_name && touched.branch_name
+                  className={`form-control ${
+                    errors.branch_name && touched.branch_name
                       ? "is-invalid"
                       : ""
-                    }`}
+                  }`}
                 />
                 <ErrorMessage
                   name="branch_name"
@@ -126,8 +128,9 @@ const StudentDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`major_name`}
                   id={`major_name`}
                   placeholder="ex. Software Engineering"
-                  className={`form-control ${errors.major_name && touched.major_name ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    errors.major_name && touched.major_name ? "is-invalid" : ""
+                  }`}
                 />
                 <ErrorMessage
                   name="major_name"
@@ -144,11 +147,15 @@ const StudentDetails = ({ stepper, onStoreData, initialState }) => {
                   theme={selectThemeColors}
                   id="stu_level"
                   options={studentLevelTypes}
-                  className={`react-select ${errors.stu_level && touched.stu_level ? "is-invalid" : ""
-                    }`}
+                  className={`react-select ${
+                    errors.stu_level && touched.stu_level ? "is-invalid" : ""
+                  }`}
+                  defaultValue={studentLevelTypes.find(
+                    (item) => item.value === defaultValues.stu_level
+                  )}
                   classNamePrefix="select"
                   onChange={(value) => {
-                    values.stu_level = value.value
+                    setFieldValue("stu_level", value.value)
                   }}
                 />
                 <ErrorMessage
@@ -168,12 +175,16 @@ const StudentDetails = ({ stepper, onStoreData, initialState }) => {
                   theme={selectThemeColors}
                   id="stu_sex"
                   options={studentGenderTypes}
-                  className={`react-select ${errors.stu_sex && touched.stu_sex ? "is-invalid" : ""
-                    }`}
+                  className={`react-select ${
+                    errors.stu_sex && touched.stu_sex ? "is-invalid" : ""
+                  }`}
                   classNamePrefix="select"
                   onChange={(value) => {
-                    values.stu_sex = value.value
+                    setFieldValue("stu_sex", value.value)
                   }}
+                  defaultValue={studentGenderTypes.find(
+                    (item) => item.value === defaultValues.stu_sex
+                  )}
                 />
                 <ErrorMessage
                   name="stu_sex"
@@ -190,10 +201,11 @@ const StudentDetails = ({ stepper, onStoreData, initialState }) => {
                   name={`other_requirments`}
                   id={`other_requirments`}
                   placeholder="ex. GPA > 85 | 3.0"
-                  className={`form-control ${errors.other_requirments && touched.other_requirments
+                  className={`form-control ${
+                    errors.other_requirments && touched.other_requirments
                       ? "is-invalid"
                       : ""
-                    }`}
+                  }`}
                 />
                 <ErrorMessage
                   name="other_requirments"

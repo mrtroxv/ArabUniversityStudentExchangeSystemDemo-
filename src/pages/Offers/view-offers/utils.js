@@ -1,13 +1,15 @@
-export const findDestinationUniversity = (row, universities) => {
+import { getUniversityName } from "../../../utility/Utils"
+
+export const findDestinationUniversity = (row, universities, lang) => {
   const university = universities.find(
-    (university) => university.id === row.university_id_des
+    (university) => university.ID === row.University_id_des
   )
-  return university
+  return getUniversityName(university, lang)
 }
 
-export const findSourceUniversity = (row, universities) => {
+export const findSourceUniversity = (row, universities, lang) => {
   const university = universities.find(
-    (university) => university.id === row.university_id_src
+    (university) => university.ID === row.university_id_src
   )
-  return university
+  return getUniversityName(university, lang)
 }

@@ -26,7 +26,7 @@ const useCols = () => {
             <ReactCountryFlag
               svg
               className="country-flag flag-icon"
-              countryCode={row.nationality.toLowerCase()}
+              countryCode={row.city_id.toLowerCase()}
             />
             {row.name}
           </div>

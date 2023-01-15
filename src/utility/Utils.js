@@ -67,8 +67,8 @@ export const getUserData = () => JSON.parse(localStorage.getItem("userData"))
  * @param {String} userRole Role of user
  */
 export const getHomeRouteForLoggedInUser = (userRole) => {
-  console.log("userRole", userRole)
-  if (userRole === "admin") return "/access-control"
+  // console.log("userRole", userRole)
+  if (userRole === "admin") return "/universities/list/active"
   if (userRole === "user") return "/home"
   return "/login"
 }
@@ -85,3 +85,57 @@ export const selectThemeColors = (theme) => ({
     neutral30: "#ededed" // for input hover border-color
   }
 })
+
+export const getUniversityName = (university, lang) => {
+  switch (lang) {
+    case "en":
+      return university?.EN_Name
+    case "ar":
+      return university?.AR_Name
+  }
+  return university?.EN_Name ? university?.EN_Name : university?.name
+}
+
+// ** Converts table to CSV
+function convertArrayOfObjectsToCSV(array, store) {
+  let result
+
+  const columnDelimiter = ","
+  const lineDelimiter = "\n"
+  const keys = Object.keys(store.data[0])
+
+  result = ""
+  result += keys.join(columnDelimiter)
+  result += lineDelimiter
+
+  array.forEach((item) => {
+    let ctr = 0
+    keys.forEach((key) => {
+      if (ctr > 0) result += columnDelimiter
+
+      result += item[key]
+
+      ctr++
+    })
+    result += lineDelimiter
+  })
+
+  return result
+}
+
+// ** Downloads CSV
+export function downloadCSV(array, store) {
+  const link = document.createElement("a")
+  let csv = convertArrayOfObjectsToCSV(array, store)
+  if (csv === null) return
+
+  const filename = "export.csv"
+
+  if (!csv.match(/^data:text\/csv/i)) {
+    csv = `data:text/csv;charset=utf-8,${csv}`
+  }
+
+  link.setAttribute("href", encodeURI(csv))
+  link.setAttribute("download", filename)
+  link.click()
+}

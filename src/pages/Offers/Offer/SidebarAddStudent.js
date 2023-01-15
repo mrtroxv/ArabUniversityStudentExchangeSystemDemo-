@@ -77,7 +77,7 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
   }
 
   const handelSelectStudent = (e) => {
-    setStudent_id(e?.ID)
+    setStudent_id(e?.value)
   }
 
   const data = [
@@ -93,7 +93,7 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
     ...data.map((item) => ({
       label: item.name,
       value: item.id,
-      avatar: user.logo
+      avatar: item.logo
     }))
   ]
 

@@ -59,12 +59,9 @@ const Routes = [
     path: "/home",
     element: <Home />,
     meta: {
-      publicRoute: true
+      action: "read",
+      resource: "ACL"
     }
-  },
-  {
-    path: "/second-page",
-    element: <SecondPage />
   },
   {
     path: "/login",
@@ -84,66 +81,100 @@ const Routes = [
     path: "/forgot-password",
     element: <ForgotPassword />,
     meta: {
-      layout: "blank"
+      layout: "blank",
+      action: "read",
+      resource: "user"
     }
   },
   {
     path: "/error",
     element: <Error />,
     meta: {
-      layout: "blank"
+      layout: "blank",
+      action: "read",
+      resource: "user"
     }
   },
   {
-    path: "/new-offer",
-    element: <OfferWizard />
-  },
-  {
     path: "/view-offers/:id",
-    element: <OfferPreview />
+    element: <OfferPreview />,
+    meta: {
+      action: "read",
+      resource: "ACL"
+    }
   },
   {
     path: "/offers/:status",
-    element: <ViewOffers />
+    element: <ViewOffers />,
+    meta: {
+      action: "read",
+      resource: "ACL"
+    }
   },
   {
     path: "/candidates/new-candidate",
-    element: <CandidateForm />
+    element: <CandidateForm />,
+    meta: {
+      action: "read",
+      resource: "ACL"
+    }
   },
   {
     path: "/candidates/view-candidates",
-    element: <Candidates />
+    element: <Candidates />,
+    meta: {
+      action: "read",
+      resource: "ACL"
+    }
   },
   {
     path: "/candidates/profile/:id",
-    element: <CandidateView />
+    element: <CandidateView />,
+    meta: {
+      action: "read",
+      resource: "ACL"
+    }
   },
   {
     path: "/pages/account-settings",
-    element: <AccountSettings />
-  },
-  {
-    path: "/pages/account-page",
-    element: <CandidateForm />
+    element: <AccountSettings />,
+    meta: {
+      action: "read",
+      resource: "user"
+    }
   },
   {
     path: "/universities/list/:status",
-    element: <ViewUsers />
+    element: <ViewUsers />,
+    meta: {
+      action: "manage",
+      resource: "admin"
+    }
   },
   {
     path: "/universities/profile/:id",
-    element: <UserView />
+    element: <UserView />,
+    meta: {
+      action: "manage",
+      resource: "admin"
+    }
   },
   {
     path: "/pages/profile",
-    element: <UserView />
+    element: <UserView />,
+    meta: {
+      action: "read",
+      resource: "user"
+    }
   },
   {
     element: <Email />,
     path: "/apps/email",
     meta: {
       appLayout: true,
-      className: "email-application"
+      className: "email-application",
+      action: "read",
+      resource: "user"
     }
   },
   {
@@ -151,7 +182,9 @@ const Routes = [
     path: "/apps/email/:folder",
     meta: {
       appLayout: true,
-      className: "email-application"
+      className: "email-application",
+      action: "read",
+      resource: "user"
     }
   },
   {
@@ -159,12 +192,24 @@ const Routes = [
     path: "/apps/email/label/:label",
     meta: {
       appLayout: true,
-      className: "email-application"
+      className: "email-application",
+      action: "read",
+      resource: "user"
     }
   },
   {
     element: <Email />,
-    path: "/apps/email/:filter"
+    path: "/apps/email/:filter",
+    action: "read",
+    resource: "user"
+  },
+  {
+    element: <Email />,
+    path: "/view-reports",
+    meta: {
+      action: "read",
+      resource: "user"
+    }
   }
 ]
 

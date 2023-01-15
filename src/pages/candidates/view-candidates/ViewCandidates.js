@@ -20,8 +20,9 @@ import { ChevronDown } from "react-feather"
 import { useForm } from "react-hook-form"
 import CandidateForm from "../candidate-form/CandidateForm"
 import useCols from "./useCols"
-import { fetchCandidatesData } from "../store"
+import { addCandidate, fetchCandidatesData } from "../store"
 import Spinner from "../../../components/custom/loader/Spinner"
+import toast from "react-hot-toast"
 
 const ViewCandidates = () => {
   const { register, setValue, watch } = useForm()
@@ -64,6 +65,17 @@ const ViewCandidates = () => {
   const isBlank = () => {
     return id === "" && name === "" && email === ""
   }
+  const handleSubmit = (data) => {
+    toast.promise(dispatch(addCandidate(data)), {
+      loading: t("Adding Candidate"),
+      success: () => {
+        setFormModal(!formModal)
+        dispatch(fetchCandidatesData())
+        return t("Candidate Added Successfully")
+      },
+      error: "Error"
+    })
+  }
   return (
     <>
       <Breadcrumbs
@@ -78,36 +90,32 @@ const ViewCandidates = () => {
             </CardHeader>
             <CardBody>
               <Row>
-                <Col lg="8" md="8">
-                  <Row>
-                    <Col lg="4" md="6">
-                      <Label key="id">{t("id")} :</Label>
-                      <input
-                        {...register("id")}
-                        placeholder="ID"
-                        type="text"
-                        className="form-control"
-                      />
-                    </Col>
-                    <Col lg="4" md="6">
-                      <Label key="name">{t("university")} :</Label>
-                      <input
-                        {...register("name")}
-                        placeholder="University Name"
-                        type="text"
-                        className="form-control"
-                      />
-                    </Col>
-                    <Col lg="4" md="6">
-                      <Label key="email">{t("email")}:</Label>
-                      <input
-                        {...register("email")}
-                        placeholder="Email Address"
-                        type="text"
-                        className="form-control"
-                      />
-                    </Col>
-                  </Row>
+                <Col lg="3" sm="6">
+                  <Label key="id">{t("id")} :</Label>
+                  <input
+                    {...register("id")}
+                    placeholder="ID"
+                    type="text"
+                    className="form-control"
+                  />
+                </Col>
+                <Col lg="3" sm="6">
+                  <Label key="name">{t("university")} :</Label>
+                  <input
+                    {...register("name")}
+                    placeholder="University Name"
+                    type="text"
+                    className="form-control"
+                  />
+                </Col>
+                <Col lg="3" sm="6">
+                  <Label key="email">{t("email")}:</Label>
+                  <input
+                    {...register("email")}
+                    placeholder="Email Address"
+                    type="text"
+                    className="form-control"
+                  />
                 </Col>
                 <Col
                   lg="3"
@@ -160,7 +168,7 @@ const ViewCandidates = () => {
           </ModalHeader>
           <ModalBody>
             <CandidateForm
-              // outerSubmit={handleOfferPopUp}
+              outerSubmit={handleSubmit}
               type="modern-vertical"
               onClose={() => setFormModal(!formModal)}
             />

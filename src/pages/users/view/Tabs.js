@@ -11,8 +11,12 @@ import { User, Lock } from "react-feather"
 import SecurityTab from "./SecurityTab"
 // import UserTimeline from "./UserTimeline"
 import UserProjectsList from "./UserProjectsList"
+import UserTimeline from "./UserTimeline"
+import { selectUser } from "../../../redux/authentication"
+import { useSelector } from "react-redux"
 
 const UserTabs = ({ active, toggleTab }) => {
+  const user = useSelector(selectUser)
   return (
     <Fragment>
       <Nav pills className="mb-2">
@@ -31,7 +35,7 @@ const UserTabs = ({ active, toggleTab }) => {
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId="1">
-          <UserProjectsList />
+          {user.role !== "admin" && <UserProjectsList />}
           {/* <UserTimeline /> */}
         </TabPane>
         <TabPane tabId="2">

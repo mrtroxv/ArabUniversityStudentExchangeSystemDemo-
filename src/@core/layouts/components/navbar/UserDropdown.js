@@ -1,15 +1,11 @@
 // ** React Imports
 import { Link } from "react-router-dom"
-import { useEffect, useState } from "react"
 
 // ** Custom Components
 import Avatar from "@components/avatar"
 
-// ** Utils
-import { isUserLoggedIn } from "@utils"
-
 // ** Store & Actions
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { handleLogout } from "@store/authentication"
 
 // ** Third Party Components
@@ -37,23 +33,17 @@ import {
 
 // ** Translations
 import { useTranslation } from "react-i18next"
+import { selectUser } from "../../../../redux/authentication"
 
 const UserDropdown = () => {
   // ** Store Vars
   const dispatch = useDispatch()
 
   // ** State
-  const [userData, setUserData] = useState(null)
-
-  //** ComponentDidMount
-  useEffect(() => {
-    if (isUserLoggedIn() !== null) {
-      setUserData(JSON.parse(localStorage.getItem("userData")))
-    }
-  }, [])
+  const userData = useSelector(selectUser)
 
   //** Vars
-  const userAvatar = userData?.avatar
+  const userAvatar = userData?.logo || userData?.avatar || undefined
 
   //** Translations
   const { t } = useTranslation()
@@ -67,7 +57,7 @@ const UserDropdown = () => {
       >
         <div className="user-nav d-sm-flex d-none">
           <span className="user-name fw-bold">
-            {(userData && userData["username"]) || "User Profile"}
+            {(userData && userData.name) || "User Profile"}
           </span>
           <span className="user-status">
             {(userData && userData.role) || "Role"}
