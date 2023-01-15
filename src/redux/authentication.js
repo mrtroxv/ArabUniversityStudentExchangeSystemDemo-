@@ -1,5 +1,6 @@
 // ** Redux Imports
-import { createSlice } from "@reduxjs/toolkit"
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
+import axios from "axios"
 
 // ** UseJWT import to get config
 import useJwt from "@src/auth/jwt/useJwt"
@@ -12,6 +13,30 @@ const initialUser = () => {
   return item ? JSON.parse(item) : {}
 }
 
+export const fetchUserData = createAsyncThunk(
+  "userData/fetchUserData",
+  async () => {
+    const user = JSON.parse(localStorage.getItem("userData"))
+    const response = await axios.get(
+      "http://localhost:3500/login/get-user-data",
+      {
+        params: {
+          id: user.id
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      }
+    )
+    if (response.data) {
+      return {
+        ...response.data,
+        accessToken: user.accessToken
+      }
+    } else {
+    }
+  }
+)
 export const authSlice = createSlice({
   name: "authentication",
   initialState: {
@@ -44,6 +69,17 @@ export const authSlice = createSlice({
       localStorage.removeItem(config.storageTokenKeyName)
       localStorage.removeItem(config.storageRefreshTokenKeyName)
     }
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchUserData.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(fetchUserData.fulfilled, (state, action) => {
+        state.isLoading = false
+        localStorage.setItem("userData", JSON.stringify(action.payload))
+        state.userData = action.payload
+      })
   }
 })
 

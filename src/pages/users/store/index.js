@@ -98,6 +98,27 @@ export const getUser = createAsyncThunk("appUsers/getUser", async (id) => {
   }
 })
 
+export const editUser = createAsyncThunk("appUsers/editUser", async (data) => {
+  try {
+    await axios.post(`http://localhost:3500/account/edit-user`, data, {
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("accessToken")),
+        "Content-Type": "multipart/form-data"
+      },
+      file: data.avatar
+    })
+    const response = await axios.get(`http://localhost:3500/admin/get-user`, {
+      params: {
+        universityId: data.ID
+      },
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("accessToken"))
+      }
+    })
+    return response.data
+  } catch (error) {}
+})
+
 export const getUsersForUniversity = createAsyncThunk(
   "appUsers/getUsersForUniversity",
   async (id) => {
@@ -146,7 +167,10 @@ export const appUsersSlice = createSlice({
   initialState: {
     data: [],
     params: {},
-    allData: [],
+    allData: {
+      activeUsers: [],
+      suspendedUsers: []
+    },
     selectedUser: null,
     isLoading: false
   },
@@ -189,6 +213,13 @@ export const appUsersSlice = createSlice({
       )
       .addCase(reactivateAccount.pending, (state) => {
         state.isLoading = true
+      })
+      .addCase(editUser.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(editUser.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.selectedUser = action.payload
       })
   }
 })

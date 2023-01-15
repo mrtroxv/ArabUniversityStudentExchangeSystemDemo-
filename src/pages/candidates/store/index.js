@@ -29,7 +29,7 @@ export const getData = createAsyncThunk("appUsers/getData", async (params) => {
 })
 
 export const getCandidate = createAsyncThunk(
-  "students/getStudent",
+  "candidates/getCandidate",
   async (id) => {
     try {
       const response = await axios.get(
@@ -43,8 +43,6 @@ export const getCandidate = createAsyncThunk(
           }
         }
       )
-      console.log(response)
-
       return response.data
     } catch (error) {
       console.log(error)
@@ -52,6 +50,73 @@ export const getCandidate = createAsyncThunk(
   }
 )
 
+export const addCandidate = createAsyncThunk(
+  "candidates/addCandidate",
+  async (data) => {
+    await axios.post(
+      "http://localhost:3500/student/insert_student",
+      {
+        ...data
+      },
+      {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      }
+    )
+  }
+)
+
+export const updateCandidate = createAsyncThunk(
+  "candidates/editCandidate",
+  async (data) => {
+    try {
+      await axios.patch(`http://localhost:3500/student/update_student`, data, {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      })
+      const response = await axios.get(
+        `http://localhost:3500/student/get-student`,
+        {
+          params: {
+            studentId: data.ID
+          },
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
+
+export const editCandidate = createAsyncThunk(
+  "students/editCandidate",
+  async (data) => {
+    await axios.post(`http://localhost:3500/student/edit-student`, data, {
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("accessToken")),
+        "Content-Type": "multipart/form-data"
+      }
+    })
+    const response = await axios.get(
+      `http://localhost:3500/student/get-students`,
+      {
+        params: {
+          universityId: data.ID
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      }
+    )
+    return response.data
+  }
+)
 export const addUser = createAsyncThunk(
   "appUsers/addUser",
   async (user, { dispatch, getState }) => {
@@ -101,6 +166,16 @@ export const appUsersSlice = createSlice({
       .addCase(getCandidate.fulfilled, (state, action) => {
         state.selectedUser = action.payload
         state.isLoading = false
+      })
+      .addCase(updateCandidate.fulfilled, (state, action) => {
+        state.selectedUser = action.payload
+        state.isLoading = false
+      })
+      .addCase(addCandidate.fulfilled, (state) => {
+        state.isLoading = false
+      })
+      .addCase(updateCandidate.pending, (state) => {
+        state.isLoading = true
       })
   }
 })

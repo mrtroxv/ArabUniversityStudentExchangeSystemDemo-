@@ -9,10 +9,19 @@ import { deleteOffer } from "../../../redux/project/offers"
 import { useDispatch } from "react-redux"
 import toast from "react-hot-toast"
 import DuplicateDialog from "./DuplicateDialog"
+import withReactContent from "sweetalert2-react-content"
+import Swal from "sweetalert2"
+// ** Utils
+
+// ** Styles
+import "@styles/react/libs/react-select/_react-select.scss"
+import { useLang } from "../../../utility/hooks/custom/useLang"
+const MySwal = withReactContent(Swal)
 
 const useCols = () => {
   const { t } = useTranslation()
   const { universities } = useUniversityApi()
+  const [lang] = useLang()
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const [duplicateDialogData, setDuplicateDialogData] = useState({
@@ -43,6 +52,7 @@ const useCols = () => {
       selector: (row) => row.major_name
     }
   ]
+
   const status = {
     0: { title: t("Creating Offer"), color: "light-primary" },
     1: { title: t("Pending Request"), color: "light-warning" },
@@ -56,15 +66,13 @@ const useCols = () => {
     name: t("Destination University"),
     sortable: true,
     minWidth: "100px",
-    selector: (row) => row.university_id_des,
-    cell: (row) => findDestinationUniversity(row, universities)?.EN_Name
+    cell: (row) => findDestinationUniversity(row, universities, lang)
   }
   const srcUniversityCol = {
     name: t("Source University"),
     sortable: true,
     minWidth: "100px",
-    selector: (row) => row.university_id_src,
-    cell: (row) => findSourceUniversity(row, universities)?.EN_Name
+    cell: (row) => findSourceUniversity(row, universities, lang)
   }
   const statusCol = {
     name: t("offerStatus"),
@@ -108,12 +116,46 @@ const useCols = () => {
                 type="button"
                 color="white"
                 // className="table-button_edit"
-                onClick={(e) => {
-                  e.preventDefault()
-                  toast.promise(dispatch(deleteOffer(row.id)), {
-                    loading: t("Deleting"),
-                    success: t("Deleted"),
-                    error: t("Error")
+                onClick={() => {
+                  return MySwal.fire({
+                    title: "Are you sure?",
+                    text: "You won't be able to revert user!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Yes, Delete Offer!",
+                    customClass: {
+                      confirmButton: "btn btn-primary",
+                      cancelButton: "btn btn-outline-danger ms-1"
+                    },
+                    buttonsStyling: false
+                  }).then(function (result) {
+                    if (result.value) {
+                      MySwal.fire({
+                        icon: "success",
+                        title: "Deleted!",
+                        text: "Offer has been deleted.",
+                        customClass: {
+                          confirmButton: "btn btn-success"
+                        }
+                      })
+                        .then(() =>
+                          toast.promise(dispatch(deleteOffer(row.id)), {
+                            loading: t("Deleting"),
+                            success: t("Deleted"),
+                            error: t("Error")
+                          })
+                        )
+                        .then(() => navigate(-1))
+                    } else if (result.dismiss === MySwal.DismissReason.cancel) {
+                      MySwal.fire({
+                        title: "Cancelled",
+                        text: "Cancelled Deletion :)",
+                        icon: "error",
+                        customClass: {
+                          confirmButton: "btn btn-success"
+                        }
+                      })
+                    }
                   })
                 }}
               >
@@ -144,6 +186,13 @@ const useCols = () => {
     "obtained-offers": [
       ...cols,
       srcUniversityCol,
+      statusCol,
+      dateCol,
+      actionsCol
+    ],
+    "finished-offers": [
+      ...cols,
+      desUniversityCol,
       statusCol,
       dateCol,
       actionsCol

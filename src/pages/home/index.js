@@ -21,35 +21,27 @@ import { useTranslation } from "react-i18next"
 // import axios from "axios"
 import DataTableWithButtons from "../../components/custom/table/ReactTable"
 import OfferWizard from "../Offers/create-offer/OfferWizard"
-import {
-  dupliateOffer,
-  selectAllOffers,
-  selectIsLoadingOffers
-} from "../../redux/project/offers"
+import { dupliateOffer } from "../../redux/project/offers"
 import { useForm } from "react-hook-form"
 import Spinner from "../../components/custom/loader/Spinner"
-import { selectIsLoadingStudents } from "../../redux/project/students"
-import { selectIsLoadingUniversities } from "../../redux/project/universities"
 import useCols from "./useCols"
 import SimpleFormDialog from "../../components/custom/SimpleFormDialog"
 import toast from "react-hot-toast"
+import { getOffersData } from "../Offers/store"
+import { selectUser } from "../../redux/authentication"
 
 function Home() {
   const { register, watch, setValue, getValues } = useForm()
-  const offersList = useSelector(selectAllOffers)
   const { cols, duplicateDialogData, toggleDuplicateDialog } = useCols()
-  const [filteredData, setFilteredData] = useState([])
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
-  const isLoadingOffers = useSelector(selectIsLoadingOffers)
-  const isLoadingStudents = useSelector(selectIsLoadingStudents)
-  const isLoadingUniversities = useSelector(selectIsLoadingUniversities)
-  const isLoading =
-    isLoadingOffers || isLoadingStudents || isLoadingUniversities
+  const store = useSelector((state) => state.appOffers)
+  const isLoading = store.isLoading
   const dispatch = useDispatch()
+  const user = useSelector(selectUser)
   useEffect(() => {
-    setFilteredData(offersList)
-  }, [offersList])
+    dispatch(getOffersData())
+  }, [dispatch, store.allData?.offers?.length])
 
   const handleOfferPopUp = () => {
     setFormModal(!formModal)
@@ -74,16 +66,19 @@ function Home() {
     handleCloseDuplicate()
   }
 
-  const id = watch("id")
-  const college = watch("college")
-  const major = watch("major")
-  const offers = filteredData?.filter((offer) => {
-    return (
-      offer?.id.toString().includes(id) &&
-      offer?.college_name.toLowerCase().includes(college.toLowerCase()) &&
-      offer?.major_name.toLowerCase().includes(major.toLowerCase())
-    )
-  })
+  const dataToRender = () => {
+    const id = watch("id")
+    const college = watch("college")
+    const major = watch("major")
+    console.log(store.allData)
+    return store.allData?.offers?.filter((offer) => {
+      return (
+        offer?.id.toString().includes(id) &&
+        offer?.college_name.toLowerCase().includes(college.toLowerCase()) &&
+        offer?.major_name.toLowerCase().includes(major.toLowerCase())
+      )
+    })
+  }
   return (
     <Fragment>
       <Breadcrumbs
@@ -125,19 +120,23 @@ function Home() {
                 </Col>
               </Row>
             </Col>
-            <Col lg="2" md="4">
-              <Button
-                color="primary"
-                className="m-2"
-                onClick={handleOfferPopUp}
-              >
-                {t("createOffer")}
-              </Button>
-            </Col>
+            {user.role !== "admin" && (
+              <Col lg="2" md="4">
+                <Button
+                  color="primary"
+                  className="m-2"
+                  onClick={handleOfferPopUp}
+                >
+                  {t("createOffer")}
+                </Button>
+              </Col>
+            )}
           </Row>
         </CardBody>
         {isLoading && <Spinner />}
-        {!isLoading && <DataTableWithButtons data={offers} columns={cols} />}
+        {!isLoading && (
+          <DataTableWithButtons data={dataToRender()} columns={cols} />
+        )}
       </Card>
       {formModal && (
         <Modal

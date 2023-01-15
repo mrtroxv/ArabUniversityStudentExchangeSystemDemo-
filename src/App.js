@@ -1,7 +1,7 @@
 import React, { Suspense, useEffect } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import SpinnerComponent from "./@core/components/spinner/Fallback-spinner"
-import { fetchAllOffers } from "./redux/project/offers"
+// import { fetchAllOffers } from "./redux/project/offers"
 import { fetchStudents } from "./redux/project/students"
 import { fetchUniversities } from "./redux/project/universities"
 // import { Toast } from "react-hot-toast"
@@ -9,10 +9,11 @@ import { fetchUniversities } from "./redux/project/universities"
 // ** Router Import
 import Router from "./router/Router"
 import toast from "react-hot-toast"
-import { selectUserID } from "./redux/authentication"
+import { fetchUserData, selectUserID } from "./redux/authentication"
 import { getAllData } from "./pages/users/store"
-import { getOffersData } from "./pages/Offers/store"
+// import { getOffersData } from "./pages/Offers/store"
 import { fetchCandidatesData } from "./pages/candidates/store"
+import { getOffersData } from "./pages/Offers/store"
 
 const App = () => {
   const dispatch = useDispatch()
@@ -21,12 +22,13 @@ const App = () => {
     // load data when app is mounted
     if (userId) {
       const promises = Promise.all([
-        dispatch(fetchAllOffers()),
+        // dispatch(fetchAllOffers()),
         dispatch(fetchUniversities()),
         dispatch(fetchStudents()),
         dispatch(getAllData()),
         dispatch(fetchCandidatesData()),
-        dispatch(getOffersData())
+        dispatch(getOffersData()),
+        dispatch(fetchUserData())
       ])
       toast.promise(promises, {
         loading: "Loading Data...",

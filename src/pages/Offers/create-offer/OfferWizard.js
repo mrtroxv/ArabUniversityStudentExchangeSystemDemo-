@@ -11,40 +11,87 @@ import StudentDetails from "./components/StudentDetails"
 
 import { useTranslation } from "react-i18next"
 import {
-  createOffer,
   fetchAllOffers,
   resetCreateOfferState,
   selectCreateOfferState
 } from "../../../redux/project/offers"
 import { useDispatch, useSelector } from "react-redux"
 import toast from "react-hot-toast"
+import moment, { isDate } from "moment"
 
-const OfferWizard = ({ type, onClose }) => {
+const OfferWizard = ({ type, onClose, outerSubmit, initialData = {} }) => {
   // ** Ref
   const ref = useRef(null)
   const dispatch = useDispatch()
   // eslint-disable-next-line
   const createOfferState = useSelector(selectCreateOfferState)
-  console.log(createOfferState)
 
   // ** State
   const [stepper, setStepper] = useState(null)
 
-  const [data, setData] = useState({})
+  const [data, setData] = useState(initialData)
   const { t } = useTranslation()
-  const storeData = (data) => {
-    setData((prevData) => {
-      return { ...prevData, ...data }
+
+  const dateKeys = ["train_start_date", "train_end_date"]
+  const newObject = { ...data }
+  dateKeys.forEach((key) => {
+    if (isDate(new Date(data[key])) && data[key] !== undefined) {
+      const date = moment(data[key]).format("YYYY-MM-DD")
+      newObject[key] = date
+    }
+  })
+
+  const storeData = (newData) => {
+    const newDataKeys = Object.keys(newData)
+    newDataKeys.forEach((key) => {
+      if (
+        newData[key] === null ||
+        newData[key] === "" ||
+        newData[key] === "null" ||
+        newData[key] === "undefined" ||
+        newData[key] === undefined ||
+        newData[key] === "NaN" ||
+        newData[key] === "[]" ||
+        newData[key] === "0" ||
+        newData[key] === 0
+      ) {
+        delete newData[key]
+      }
     })
-    console.log(data)
+    setData((prevData) => {
+      return {
+        ...prevData,
+        ...newData
+      }
+    })
   }
 
-  const handelSubmit = (values) => {
-    dispatch(createOffer({ ...values, ...data }))
+  const handleSubmit = (newData) => {
+    const newDataKeys = Object.keys(newData)
+    newDataKeys.forEach((key) => {
+      if (
+        newData[key] === null ||
+        newData[key] === "" ||
+        newData[key] === "null" ||
+        newData[key] === "undefined" ||
+        newData[key] === undefined ||
+        newData[key] === "NaN" ||
+        newData[key] === "[]" ||
+        newData[key] === "0" ||
+        newData[key] === 0
+      ) {
+        delete newData[key]
+      }
+    })
+    const submitData = {
+      ...data,
+      ...newData
+    }
+    outerSubmit(submitData)
   }
 
   useEffect(() => {
-    console.log("1", createOfferState)
+    // console.log("1", createOfferState)
     if (createOfferState.status) {
       toast.success(t("Offer Created Successfully"))
       setTimeout(() => {
@@ -63,19 +110,37 @@ const OfferWizard = ({ type, onClose }) => {
       id: "company-details",
       title: t("instituteTab"),
       subtitle: t("instituteTabSubTitle"),
-      content: <CompanyDetails stepper={stepper} onStoreData={storeData} />
+      content: (
+        <CompanyDetails
+          stepper={stepper}
+          onStoreData={storeData}
+          data={newObject}
+        />
+      )
     },
     {
       id: "candidate-qualifications",
       title: t("qualificationTab"),
       subtitle: t("qualificationTabSubTitle"),
-      content: <StudentDetails stepper={stepper} onStoreData={storeData} />
+      content: (
+        <StudentDetails
+          stepper={stepper}
+          onStoreData={storeData}
+          data={newObject}
+        />
+      )
     },
     {
       id: "training-details",
       title: t("trainingTab"),
       subtitle: t("trainingTabSubTitle"),
-      content: <TrainingDetails stepper={stepper} onSubmit={handelSubmit} />
+      content: (
+        <TrainingDetails
+          stepper={stepper}
+          onSubmit={handleSubmit}
+          data={newObject}
+        />
+      )
     }
   ]
 

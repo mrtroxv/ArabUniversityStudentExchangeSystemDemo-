@@ -15,7 +15,7 @@ import { selectThemeColors } from "@utils"
 
 import { useTranslation } from "react-i18next"
 
-const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
+const CompanyDetails = ({ stepper, onStoreData, data }) => {
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
   const faxRegExp = /^\+?[0-9]{6,}$/
@@ -35,17 +35,17 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
     { value: "On-Site", label: "On-Site" }
   ]
 
-  const defaultValues = initialState || {
-    inst_name: "",
-    inst_address: "",
-    place_of_work: "",
-    train_aria: "",
-    trainer_name: "",
-    days_of_work: [],
-    inst_phone: "",
-    inst_fax: "",
-    weekly_hours: "",
-    daily_hours: ""
+  const defaultValues = {
+    inst_name: data?.inst_name || "",
+    inst_address: data?.inst_address || "",
+    place_of_work: data?.place_of_work || "",
+    train_aria: data?.train_aria || "",
+    trainer_name: data?.trainer_name || "",
+    days_of_work: `${data?.days_of_work}`.split(",") || [],
+    inst_phone: data?.inst_phone || "",
+    inst_fax: data?.inst_fax || "",
+    weekly_hours: data?.weekly_hours || "",
+    daily_hours: data?.daily_hours || ""
   }
 
   const Schema = Yup.object().shape({
@@ -93,12 +93,13 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
         initialValues={defaultValues}
         validationSchema={Schema}
         onSubmit={async (values) => {
+          console.log(values)
           onStoreData(values)
           stepper.next()
         }}
         validateOnChange="true"
       >
-        {({ errors, touched, values, setFieldValue }) => (
+        {({ errors, touched, setFieldValue }) => (
           <Form>
             <Row>
               <Col className="mb-1">
@@ -158,9 +159,12 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                       ? "is-invalid"
                       : ""
                   }`}
+                  defaultValue={placeOfWorkOptions.find(
+                    (option) => option.value === defaultValues.place_of_work
+                  )}
                   classNamePrefix="select"
                   onChange={(value) => {
-                    values.place_of_work = value.value
+                    setFieldValue("place_of_work", value.value)
                   }}
                 />
                 <ErrorMessage
@@ -226,9 +230,15 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                       ? "is-invalid"
                       : ""
                   }`}
+                  defaultValue={daysOfWorkOptions.filter((option) => {
+                    return defaultValues.days_of_work.includes(option.value)
+                  })}
                   classNamePrefix="select"
                   onChange={(value) => {
-                    values.days_of_work = value.map((item) => item.value)
+                    setFieldValue(
+                      "days_of_work",
+                      value.map((v) => v.value)
+                    )
                   }}
                 />
                 <ErrorMessage
@@ -269,7 +279,7 @@ const CompanyDetails = ({ stepper, onStoreData, initialState }) => {
                   {t("instituteFax")}
                 </Label>
                 <Field
-                  type="number"
+                  type="text"
                   name={`inst_fax`}
                   id={`inst_fax`}
                   placeholder="09-2945415"

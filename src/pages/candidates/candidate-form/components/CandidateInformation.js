@@ -17,7 +17,7 @@ import { useTranslation } from "react-i18next"
 import useCountries from "../../../../utility/hooks/custom/useCountries"
 import makeAnimated from "react-select/animated"
 
-const CandidateInformation = ({ stepper, onSubmit }) => {
+const CandidateInformation = ({ stepper, onStoreData, initialData }) => {
   const { t } = useTranslation()
   const { selectCountries } = useCountries()
   const genderOptions = [
@@ -26,13 +26,14 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
   ]
 
   const defaultValues = {
-    name: "",
-    gender: "",
-    nationality: "",
-    birthDate: "",
-    birthPlace: "",
-    healthStatus: ""
+    name: initialData ? initialData.name : "",
+    gender: initialData ? initialData.gender : "",
+    city_id: initialData ? initialData.city_id : "",
+    birthDate: initialData ? initialData.birthDate : "",
+    birthPlace: initialData ? initialData.birthPlace : "",
+    healthStatus: initialData ? initialData.healthStatus : ""
   }
+
   const schema = Yup.object({
     name: Yup.string()
       .required("No name provided")
@@ -55,12 +56,13 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
         initialValues={defaultValues}
         validationSchema={schema}
         onSubmit={async (values) => {
-          onSubmit(values)
+          onStoreData(values)
           stepper.next()
         }}
       >
-        {({ errors, touched, values }) => (
+        {({ errors, touched, setFieldValue }) => (
           <Form>
+            {/* {console.log(errors)} */}
             <Row>
               <Col md="6" className="mb-1">
                 <label htmlFor="name" className="form-label form-label">
@@ -80,27 +82,32 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                 />
               </Col>
               <Col md="6" className="mb-1">
-                <Label className="form-label" for={`nationality`}>
+                <Label className="form-label" for={`city_id`}>
                   {t("Country")}
                 </Label>
                 <Select
+                  defaultValue={selectCountries.find((country) => {
+                    if (
+                      country.value === defaultValues.city_id?.toUpperCase()
+                    ) {
+                      return country
+                    }
+                  })}
                   theme={selectThemeColors}
                   components={makeAnimated()}
-                  id="nationality"
+                  id="city_id"
                   options={selectCountries}
                   getOptionLabel={(value) => value.lable}
                   className={`react-select ${
-                    errors.nationality && touched.nationality
-                      ? "is-invalid"
-                      : ""
+                    errors.city_id && touched.city_id ? "is-invalid" : ""
                   }`}
                   classNamePrefix="select"
                   onChange={(value) => {
-                    values.city_id = value.value
+                    setFieldValue("city_id", value.value)
                   }}
                 />
                 <ErrorMessage
-                  name="nationality"
+                  name="city_id"
                   component="p"
                   className="invalid-feedback"
                 />
@@ -115,13 +122,16 @@ const CandidateInformation = ({ stepper, onSubmit }) => {
                   isClearable={false}
                   theme={selectThemeColors}
                   id="gender"
+                  defaultValue={genderOptions.find(
+                    (gender) => gender.value === defaultValues.gender
+                  )}
                   options={genderOptions}
                   className={`react-select ${
                     errors.gender && touched.gender ? "is-invalid" : ""
                   }`}
                   classNamePrefix="select"
                   onChange={(value) => {
-                    values.gender = value.value
+                    setFieldValue("gender", value.value)
                   }}
                 />
                 <ErrorMessage

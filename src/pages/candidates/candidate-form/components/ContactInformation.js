@@ -6,8 +6,6 @@ import { Fragment } from "react"
 // ** Third Party Components
 import * as Yup from "yup"
 import { ArrowLeft } from "react-feather"
-// import axios
-import axios from "axios"
 
 // ** Reactstrap Imports
 import { Row, Col, Button } from "reactstrap"
@@ -15,16 +13,17 @@ import { Formik, Form, Field, ErrorMessage } from "formik"
 import FormHeader from "./FormHeader"
 import { useTranslation } from "react-i18next"
 
-const ContactInformation = ({ stepper, data }) => {
+const ContactInformation = ({ stepper, initialData, onStoreData }) => {
   const { t } = useTranslation()
 
   const defaultValues = {
-    email: "",
-    phone: "",
-    address: "",
-    passportNumber: "",
-    passportExpiryDate: ""
+    email: initialData ? initialData.email : "",
+    phone: initialData ? initialData.phone : "",
+    address: initialData ? initialData.address : "",
+    passportNumber: initialData ? initialData.passportNumber : "",
+    passportExpiryDate: initialData ? initialData.passportExpiryDate : ""
   }
+
   const validationSchema = Yup.object().shape({
     email: Yup.string()
       .required("No email provided")
@@ -47,26 +46,7 @@ const ContactInformation = ({ stepper, data }) => {
         initialValues={defaultValues}
         validationSchema={validationSchema}
         onSubmit={(values) => {
-          axios
-            .post(
-              "http://localhost:3500/student/insert_student",
-              {
-                ...data,
-                ...values
-              },
-              {
-                headers: {
-                  authorization: JSON.parse(localStorage.getItem("accessToken"))
-                }
-              }
-            )
-            .then((res) => {
-              console.log(res.data)
-            })
-            .catch((err) => {
-              console.log(err)
-              console.log(1)
-            })
+          onStoreData(values)
         }}
       >
         {/* eslint-disable */}

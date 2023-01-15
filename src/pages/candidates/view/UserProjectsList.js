@@ -38,7 +38,7 @@ const UserProjectsList = () => {
   const offer = store.selectedUser?.offer ? [store.selectedUser.offer] : []
   return (
     <Card>
-      <CardHeader tag="h4">{t("Offers List")}</CardHeader>
+      <CardHeader tag="h4">{t("Assigned Offer")}</CardHeader>
 
       <div className="react-dataTable user-view-account-projects">
         {store.isLoading ? (
@@ -46,7 +46,6 @@ const UserProjectsList = () => {
         ) : (
           <DataTable
             noHeader
-            pagination
             expandableRows
             columns={cols}
             data={offer}

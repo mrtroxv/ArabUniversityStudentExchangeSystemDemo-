@@ -27,11 +27,11 @@ const UserView = () => {
   // const universities = useSelector(selectAllUniversities)
   // ** Hooks
   let { id } = useParams()
-  if (user?.role === "user" && !id) {
-    id = user.id
+  if (!id) {
+    id = user.university_id
   }
-
-  // ** Get suer on mount
+  console.log(user)
+  // ** Get user on mount
   useEffect(() => {
     dispatch(getUser(id))
   }, [dispatch, store?.data?.length])

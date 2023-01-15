@@ -25,34 +25,39 @@ const PreviewCard = ({ data }) => {
   const creator = useSelector((state) =>
     selectUniversityById(state, data.university_id_src)
   )
-  const basicData = [
-    data.status >= 0 && {
-      title: "تم انشاء العرض",
-      content: "العرض الان جاهز للإرسال, اضغط على زر إرسال لإظهار الجامعات",
-      meta: new Date(data.offer_date).toLocaleDateString()
-      // customContent: data.status === 1 && (
-      //   <div className="d-flex align-items-center">
-      //     <img className="me-1" src={appLogo} alt="pdf" height="23" />
+  const firstState = {
+    title: "تم انشاء العرض",
+    content: "العرض الان جاهز للإرسال, اضغط على زر إرسال لإظهار الجامعات",
+    meta: new Date(data.offer_date).toLocaleDateString(),
+    customContent: data.status === 1 && (
+      <div className="d-flex align-items-center">
+        <img className="me-1" src={appLogo} alt="pdf" height="23" />
+        <span>invoice.pdf</span>
+      </div>
+    )
+  }
+  const secondState = {
+    title: "تم استقبال العرض",
+    content: "العرض الان جاهز لإرفاق طالب, اضغط على زر إضافة طالب للإستمرار",
+    meta: new Date(data.offer_date).toLocaleDateString(),
+    icon: <User size={14} />,
+    color: "success"
+    // customContent: (
+    //   <div className="d-flex align-items-center">
+    //     <img className="me-1" src={appLogo} alt="pdf" height="23" />
+    //     <span>invoice.pdf</span>
+    //   </div>
+    // )
+  }
 
-      //     <span>invoice.pdf</span>
-      //   </div>
-      // )
-    },
-    data.status >= 1 && {
-      title: "تم استقبال العرض",
-      content: "العرض الان جاهز لإرفاق طالب, اضغط على زر إضافة طالب للإستمرار",
-      meta: new Date(data.offer_date).toLocaleDateString(),
-      icon: <User size={14} />,
-      color: "success"
-      // customContent: (
-      //   <div className="d-flex align-items-center">
-      //     <img className="me-1" src={appLogo} alt="pdf" height="23" />
-      //     <span>invoice.pdf</span>
-      //   </div>
-      // )
-    }
-  ]
+  let basicData = []
 
+  if (data.status === 0) {
+    basicData = [firstState]
+  }
+  if (data.status === 1 || data.status === 2) {
+    basicData = [firstState, secondState]
+  }
   return data !== null ? (
     <Card className="invoice-preview-card">
       <CardBody className="invoice-padding pb-0">
@@ -66,10 +71,10 @@ const PreviewCard = ({ data }) => {
               </h4>
             </div>
             <CardText className="mb-25">
-              {lang === "en" ? creator.EN_Name : creator.AR_Name}
+              {lang === "en" ? creator?.EN_Name : creator?.AR_Name}
             </CardText>
-            <CardText className="mb-25">{creator.Location_O}</CardText>
-            <CardText className="mb-0">{creator.email}</CardText>
+            <CardText className="mb-25">{creator?.Location_O}</CardText>
+            <CardText className="mb-0">{creator?.email}</CardText>
           </div>
           <div className="mt-md-0 mt-2">
             <h4 className="invoice-title">
@@ -198,17 +203,22 @@ const PreviewCard = ({ data }) => {
 
       {/* Total & Sales Person */}
       <CardBody className="invoice-padding pb-0">
-        <Row className="invoice-sales-total-wrapper">
+        <Row className="">
           <Col className="mt-md-0 mt-3" md="6" order={{ md: 1, lg: 2 }}>
             <Timeline data={basicData} />
           </Col>
 
           <Col
             className="d-flex justify-content-end"
-            md="4"
+            md="6"
             order={{ md: 2, lg: 1 }}
           >
-            <div className="invoice-total-wrapper">
+            <div
+              className="invoice-total-wrapper"
+              style={{
+                maxWidth: "20rem"
+              }}
+            >
               <div className="invoice-total-item">
                 <p className="invoice-total-amount">{t("offerType")}:</p>
                 <p className="invoice-total-title">{data.train_type}</p>
@@ -223,7 +233,7 @@ const PreviewCard = ({ data }) => {
                 <p className="invoice-total-amount">
                   {t("trainingSupportFood")}:
                 </p>
-                <p className="invoice-total-title">{data.food_text}</p>
+                <p className="invoice-total-title">{data.meals_text}</p>
               </div>
               <div className="invoice-total-item">
                 <p className="invoice-total-amount">

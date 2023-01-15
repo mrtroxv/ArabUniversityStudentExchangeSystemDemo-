@@ -24,13 +24,7 @@ import activeOffers from "@src/assets/images/svg/clock.svg"
 import expiredOffers from "@src/assets/images/svg/expired.svg"
 import DataTableWithButtons from "../../../components/custom/table/ReactTable"
 import OfferWizard from "../create-offer/OfferWizard"
-import {
-  dupliateOffer,
-  selectCreatedOffers,
-  selectIsLoadingOffers,
-  selectObtainedOffers,
-  selectSentOffers
-} from "../../../redux/project/offers"
+import { createOffer } from "../../../redux/project/offers"
 import { useForm } from "react-hook-form"
 import { selectUserID } from "../../../redux/authentication"
 import Spinner from "../../../components/custom/loader/Spinner"
@@ -38,17 +32,25 @@ import useCols from "./useCols"
 import SimpleFormDialog from "../../../components/custom/SimpleFormDialog"
 import toast from "react-hot-toast"
 import Error from "../../../views/pages/misc/Error"
+import {
+  duplicateOffer,
+  getFinishedOffers,
+  getOffersData,
+  selectCreatedOffers,
+  selectObtainedOffers,
+  selectSentOffers
+} from "../store"
 // import { selectIsLoadingStudents } from "../../../redux/project/students"
 
 function ViewOffers() {
   const { register, watch, getValues, setValue } = useForm()
+  const store = useSelector((state) => state.appOffers)
   const userId = useSelector(selectUserID)
-  const isLoading = useSelector(selectIsLoadingOffers)
   const { status: data } = useParams()
   const { t } = useTranslation()
   const { cols, toggleDuplicateDialog, duplicateDialogData } = useCols()
   const [formModal, setFormModal] = useState(false)
-  const [filteredData, setFilteredData] = useState([])
+  const [filter, setFilter] = useState("all")
   const dispatch = useDispatch()
   const breadcrumbs = {
     "created-offers": {
@@ -84,27 +86,33 @@ function ViewOffers() {
         "university_id_src",
         "actions"
       ]
+    },
+    "finished-offers": {
+      title: "Finished Offers",
+      link: "/offers/finished-offers",
+      query: (state) => state.appOffers?.allData?.finishedOffers
     }
   }
+
   const offersList = useSelector(breadcrumbs[data]?.query)
 
   useEffect(() => {
-    setFilteredData(offersList)
-    console.log(offersList)
-  }, [offersList?.length])
+    if (data === "finished-offers") {
+      toast.promise(dispatch(getFinishedOffers()), {
+        loading: "Loading...",
+        success: "Finished offers"
+      })
+    } else {
+      toast.promise(dispatch(getOffersData()), {
+        loading: "Loading...",
+        success: "Finished offers",
+        error: "Error"
+      })
+    }
+  }, [data, offersList?.length])
 
   const viewTableHandler = (date) => {
-    if (date === "all") {
-      setFilteredData(offersList)
-    } else if (date === "active") {
-      setFilteredData(
-        offersList.filter((offer) => offer.status === 0 || offer.status === 1)
-      )
-    } else if (date === "expired") {
-      setFilteredData(
-        offersList.filter((offer) => offer.status === 2 || offer.status === 3)
-      )
-    }
+    setFilter(date)
   }
 
   const handleOfferPopUp = () => {
@@ -123,35 +131,59 @@ function ViewOffers() {
       offer_id: id,
       number
     }
-    toast.promise(dispatch(dupliateOffer(uploadData)), {
+    toast.promise(dispatch(duplicateOffer(uploadData)), {
       loading: "Dupliating...",
       success: "Duplicate offer"
     })
     handleCloseDuplicate()
   }
 
-  const id = watch("id")
-  const college = watch("college")
-  const major = watch("major")
-  const universityID = watch("university_id") || ""
-  const offers = filteredData?.filter((offer) => {
-    return (
-      offer?.id.toString().includes(id) &&
-      offer?.college_name.toLowerCase().includes(college.toLowerCase()) &&
-      offer?.major_name.toLowerCase().includes(major.toLowerCase()) &&
-      (offer?.university_id_des?.toString().includes(String(universityID)) ||
-        offer?.university_id_src?.toString().includes(String(universityID)))
-    )
-  })
+  const handleAddOffer = (data) => {
+    toast.promise(dispatch(createOffer(data)), {
+      loading: "Creating...",
+      success: () => {
+        setFormModal(!formModal)
+        return "Created Offer Successfully"
+      },
+      error: "Error"
+    })
+  }
 
   const clearData = () => {
-    setFilteredData(offersList)
+    setFilter(offersList)
     setValue("id", "")
     setValue("college", "")
     setValue("major", "")
     setValue("university_id", "")
   }
 
+  const id = watch("id")
+  const college = watch("college")
+  const major = watch("major")
+  const universityID = watch("university_id") || ""
+  const dataToRender = () => {
+    const filtered = offersList?.filter((offer) => {
+      switch (filter) {
+        case "all":
+          return true
+        case "active":
+          return offer.status === 0 || offer.status === 1
+        case "expired":
+          return offer.status === 2 || offer.status === 3
+        default:
+          return true
+      }
+    })
+    return filtered?.filter((offer) => {
+      return (
+        offer?.id.toString().includes(id) &&
+        offer?.college_name.toLowerCase().includes(college.toLowerCase()) &&
+        offer?.major_name.toLowerCase().includes(major.toLowerCase()) &&
+        (offer?.university_id_des?.toString().includes(String(universityID)) ||
+          offer?.university_id_src?.toString().includes(String(universityID)))
+      )
+    })
+  }
   const isBlank = () => {
     return id === "" && college === "" && major === "" && universityID === ""
   }
@@ -261,9 +293,9 @@ function ViewOffers() {
             </Col>
           </Row>
         </CardBody>
-        {isLoading && <Spinner />}
-        {!isLoading && (
-          <DataTableWithButtons data={offers} columns={cols[data]} />
+        {store.isLoading && <Spinner />}
+        {!store.isLoading && (
+          <DataTableWithButtons data={dataToRender()} columns={cols[data]} />
         )}
       </Card>
       {formModal && (
@@ -280,7 +312,7 @@ function ViewOffers() {
           </ModalHeader>
           <ModalBody>
             <OfferWizard
-              outerSubmit={handleOfferPopUp}
+              outerSubmit={handleAddOffer}
               type="modern-vertical"
               onClose={() => setFormModal(!formModal)}
             />

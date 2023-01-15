@@ -15,7 +15,7 @@ import Select from "react-select"
 import FormHeader from "./FormHeader"
 import { useTranslation } from "react-i18next"
 
-const StudyInformation = ({ stepper, onSubmit }) => {
+const StudyInformation = ({ stepper, onStoreData, initialData }) => {
   const { t } = useTranslation()
   const fluencyInEnglishOptions = [
     { value: "Good", label: t("good") },
@@ -24,13 +24,14 @@ const StudyInformation = ({ stepper, onSubmit }) => {
   ]
 
   const defaultValues = {
-    college: "",
-    universityMajor: "",
-    totalCreditHours: "",
-    fluencyInEnglish: "",
-    studyYears: "",
-    studyYearFinished: ""
+    college: initialData ? initialData.college : "",
+    universityMajor: initialData ? initialData.universityMajor : "",
+    totalCreditHours: initialData ? initialData.totalCreditHours : "",
+    fluencyInEnglish: initialData ? initialData.fluencyInEnglish : "",
+    studyYears: initialData ? initialData.studyYears : "",
+    studyYearFinished: initialData ? initialData.studyYearFinished : ""
   }
+
   const validationSchema = Yup.object({
     totalCreditHours: Yup.number().required("No total credit hours provided"),
     college: Yup.string().required("No college provided"),
@@ -49,7 +50,7 @@ const StudyInformation = ({ stepper, onSubmit }) => {
         initialValues={defaultValues}
         validationSchema={validationSchema}
         onSubmit={async (values) => {
-          onSubmit(values)
+          onStoreData(values)
           stepper.next()
         }}
       >
@@ -138,6 +139,9 @@ const StudyInformation = ({ stepper, onSubmit }) => {
                   theme={selectThemeColors}
                   id="fluencyInEnglish"
                   options={fluencyInEnglishOptions}
+                  defaultValue={fluencyInEnglishOptions.find(
+                    (option) => option.value === values.fluencyInEnglish
+                  )}
                   className={`react-select ${
                     errors.fluencyInEnglish && touched.fluencyInEnglish
                       ? "is-invalid"

@@ -331,7 +331,7 @@ const offersSlice = createSlice({
         state.offers = action.payload
       })
       .addCase(deleteOffer.pending, (state) => {
-        state.isLoading = false
+        state.isLoading = true
       })
       .addCase(rejectOffer.fulfilled, (state, action) => {
         state.status = "succeeded"

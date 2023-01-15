@@ -20,10 +20,8 @@ import {
 } from "reactstrap"
 
 // ** Third Party Components
-import Swal from "sweetalert2"
 import Select from "react-select"
 import { Check, Briefcase, X } from "react-feather"
-import withReactContent from "sweetalert2-react-content"
 import { Formik, Form, Field, ErrorMessage } from "formik"
 
 // ** Custom Components
@@ -34,18 +32,20 @@ import "@styles/react/libs/react-select/_react-select.scss"
 import { useTranslation } from "react-i18next"
 import FileUploadInput from "../../../views/forms/form-elements/file-uploader/FileUploadInput"
 import toast from "react-hot-toast"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { selectUser } from "../../../redux/authentication"
 // import { suspendUser } from "../store"
 import ReactivateAccount from "./ReactivateAccount"
-import store from "../store"
+import store, { editUser } from "../store"
 import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner"
+import FormHeader from "../create-user/new-user-form/FormHeader"
+import { getUserData } from "../../../utility/Utils"
 
 const roleColors = {
   editor: "light-info",
   admin: "light-danger",
   author: "light-warning",
-  maintainer: "light-success",
+  user: "light-success",
   subscriber: "light-primary"
 }
 
@@ -55,28 +55,22 @@ const statusColors = {
   inactive: "light-secondary"
 }
 
-// const statusOptions = [
-//   { value: "active", label: "Active" },
-//   { value: "inactive", label: "Inactive" },
-//   { value: "suspended", label: "Suspended" }
-// ]
-
-const MySwal = withReactContent(Swal)
-
 const UserInfoCard = ({ selectedUser, refetchData }) => {
   // ** State
   const [show, setShow] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { t } = useTranslation()
   const user = useSelector(selectUser)
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
   // ** Hook
   const defaultValues = {
-    username: selectedUser.username,
-    fax: selectedUser.fax,
-    name: selectedUser.name,
-    email: selectedUser.email,
-    avatar: undefined
+    username: "",
+    name: "",
+    avatar: undefined,
+    fax: "",
+    email: "",
+    phone: "",
+    logo: undefined
   }
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
@@ -94,7 +88,8 @@ const UserInfoCard = ({ selectedUser, refetchData }) => {
       "Too Short - Name must be at least 8 characters long"
     ),
     email: Yup.string().email("Please enter a valid email address"),
-    fax: Yup.string().matches(phoneRegExp, "Phone number is not valid")
+    fax: Yup.string().matches(phoneRegExp, "Fax number is not valid"),
+    phone: Yup.string().matches(phoneRegExp, "Phone number is not valid")
   })
 
   // ** render user img
@@ -136,53 +131,33 @@ const UserInfoCard = ({ selectedUser, refetchData }) => {
   }
 
   const onSubmit = (data) => {
-    if (Object.values(data).some((field) => field?.length > 0)) {
-      console.log(data)
+    if (
+      Object.values(data).some((field) => field?.length > 0) ||
+      data.avatar ||
+      data.logo
+    ) {
+      toast
+        .promise(
+          dispatch(
+            editUser({
+              id: selectedUser.id,
+              ID: selectedUser.ID,
+              ...data
+            })
+          ),
+          {
+            loading: "Loading Data...",
+            success: "Data Loaded",
+            error: "Error"
+          }
+        )
+        .then(dispatch(getUserData()))
     } else {
       toast.error("No data provided, so nothing will be updated")
       setShow(false)
     }
   }
 
-  // const handleSuspendedClick = () => {
-  //   return MySwal.fire({
-  //     title: "Are you sure?",
-  //     text: "You won't be able to revert user!",
-  //     icon: "warning",
-  //     showCancelButton: true,
-  //     confirmButtonText: "Yes, Suspend user!",
-  //     customClass: {
-  //       confirmButton: "btn btn-primary",
-  //       cancelButton: "btn btn-outline-danger ms-1"
-  //     },
-  //     buttonsStyling: false
-  //   }).then(function (result) {
-  //     if (result.isConfirmed) {
-  //       toast.promise(dispatch(suspendUser(selectedUser.id)), {
-  //         loading: "Working...",
-  //         success: "User Suspended!",
-  //         error: "Something went wrong!"
-  //       })
-  //       MySwal.fire({
-  //         icon: "success",
-  //         title: "Suspended!",
-  //         text: "User has been suspended.",
-  //         customClass: {
-  //           confirmButton: "btn btn-success"
-  //         }
-  //       })
-  //     } else if (result.dismiss === MySwal.DismissReason.cancel) {
-  //       MySwal.fire({
-  //         title: "Cancelled",
-  //         text: "Cancelled Suspension :)",
-  //         icon: "error",
-  //         customClass: {
-  //           confirmButton: "btn btn-success"
-  //         }
-  //       })
-  //     }
-  //   })
-  // }
   if (store.isLoading) {
     return <SpinnerComponent />
   }
@@ -190,7 +165,7 @@ const UserInfoCard = ({ selectedUser, refetchData }) => {
     <Fragment>
       <Card>
         <CardBody>
-          <div className="user-avatar-section">
+          <div className="user-avatar-section mb-1">
             <div className="d-flex align-items-center flex-column">
               {renderUserImg()}
               <div className="d-flex flex-column align-items-center text-center">
@@ -200,14 +175,13 @@ const UserInfoCard = ({ selectedUser, refetchData }) => {
                       ? selectedUser.name
                       : "Eleanor Aguilar"}
                   </h4>
-                  {selectedUser !== null ? (
-                    <Badge
-                      color={roleColors[selectedUser.role]}
-                      className="text-capitalize"
-                    >
-                      {selectedUser.role}
-                    </Badge>
-                  ) : null}
+
+                  <Badge
+                    color={roleColors[selectedUser.role]}
+                    className="text-capitalize "
+                  >
+                    {selectedUser.role}
+                  </Badge>
                 </div>
               </div>
             </div>
@@ -264,7 +238,7 @@ const UserInfoCard = ({ selectedUser, refetchData }) => {
               Edit
             </Button>
 
-            {user.role !== "admin" && (
+            {user.role === "admin" && (
               <Button
                 className="ms-1"
                 color="danger"
@@ -294,13 +268,12 @@ const UserInfoCard = ({ selectedUser, refetchData }) => {
           <Formik
             initialValues={defaultValues}
             validationSchema={schema}
-            onSubmit={async (values) => {
-              onSubmit(values)
-            }}
+            onSubmit={async (values) => onSubmit(values)}
           >
             {({ errors, touched, setFieldValue }) => (
               <Form>
                 <Row className="gy-1 pt-75">
+                  <FormHeader title="User Information" />
                   <Col md={6} xs={12}>
                     <Label className="form-label" for={`name`}>
                       Name
@@ -340,6 +313,20 @@ const UserInfoCard = ({ selectedUser, refetchData }) => {
                     />
                   </Col>
                   <Col md={6} xs={12}>
+                    <Label className="form-label" for="avatar">
+                      {t("Profile Picture")}
+                    </Label>
+                    <Card className="pt-1">
+                      <FileUploadInput
+                        id="avatar"
+                        uploadPhoto={(file) => {
+                          setFieldValue("avatar", file)
+                        }}
+                      />
+                    </Card>
+                  </Col>
+                  <FormHeader title="University Information" />
+                  <Col md={6} xs={12}>
                     <Label className="form-label" for={`email`}>
                       Email
                     </Label>
@@ -378,8 +365,27 @@ const UserInfoCard = ({ selectedUser, refetchData }) => {
                     />
                   </Col>
                   <Col md={6} xs={12}>
+                    <Label className="form-label" for={`phone`}>
+                      Phone
+                    </Label>
+                    <Field
+                      type="text"
+                      name={`phone`}
+                      id={`phone`}
+                      placeholder="ex. 0598456789"
+                      className={`form-control ${
+                        errors.phone && touched.phone ? "is-invalid" : ""
+                      }`}
+                    />
+                    <ErrorMessage
+                      name="phone"
+                      component="p"
+                      className="invalid-feedback"
+                    />
+                  </Col>
+                  <Col md={6} xs={12}>
                     <Label className="form-label" for="logo">
-                      {t("Profile Picture")}
+                      {t("University Logo")}
                     </Label>
                     <Card className="pt-1">
                       <FileUploadInput
@@ -390,7 +396,6 @@ const UserInfoCard = ({ selectedUser, refetchData }) => {
                       />
                     </Card>
                   </Col>
-
                   <Col xs={12} className="text-center pt-50">
                     <Button type="submit" className="me-1" color="primary">
                       Submit

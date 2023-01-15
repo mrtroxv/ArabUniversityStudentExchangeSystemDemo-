@@ -8,10 +8,15 @@ import {
   CardBody,
   CardHeader,
   Label,
+  Input,
   Button,
   Modal,
   ModalHeader,
-  ModalBody
+  ModalBody,
+  DropdownMenu,
+  DropdownItem,
+  DropdownToggle,
+  UncontrolledDropdown
 } from "reactstrap"
 import "../../../components/custom/table/react-dataTable-component.scss"
 
@@ -25,7 +30,15 @@ import DataTable from "react-data-table-component"
 
 // import { selectAllUniversities } from "../../../redux/project/universities"
 import { useForm } from "react-hook-form"
-import { ChevronDown } from "react-feather"
+import {
+  ChevronDown,
+  Share,
+  Printer,
+  FileText,
+  File,
+  Grid,
+  Copy
+} from "react-feather"
 import NewUser from "../create-user/index"
 import useCols from "./useCols"
 import Spinner from "../../../components/custom/loader/Spinner"
@@ -34,8 +47,13 @@ import { useDispatch, useSelector } from "react-redux"
 import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 
+// ** Styles
+import "@styles/react/libs/react-select/_react-select.scss"
+import "@styles/react/libs/tables/react-dataTable-component.scss"
+import { downloadCSV } from "../../../utility/Utils"
+
 const ViewUsers = () => {
-  const { register, watch, setValue } = useForm()
+  const { register, watch } = useForm()
   const store = useSelector((state) => state.users)
   const [formModal, setFormModal] = useState(false)
   const { t } = useTranslation()
@@ -44,6 +62,9 @@ const ViewUsers = () => {
   const { status } = useParams()
   // use selector to select universities
   //   const universities = useSelector(selectAllUniversities)
+
+  const toggleModal = () => setFormModal(!formModal)
+
   useEffect(() => {
     toast.promise(dispatch(getAllData()), {
       loading: "modal",
@@ -56,15 +77,15 @@ const ViewUsers = () => {
   const email = watch("email")
   const phone = watch("phone")
 
-  const clearData = () => {
-    setValue("name", "")
-    setValue("email", "")
-    setValue("phone", "")
-  }
+  // const clearData = () => {
+  //   setValue("name", "")
+  //   setValue("email", "")
+  //   setValue("phone", "")
+  // }
 
-  const isBlank = () => {
-    return name === "" && email === "" && phone === ""
-  }
+  // const isBlank = () => {
+  //   return name === "" && email === "" && phone === ""
+  // }
 
   const dataToRender = () => {
     if (
@@ -74,8 +95,9 @@ const ViewUsers = () => {
     ) {
       return []
     }
-    const active = store.allData.activeUsers
-    const suspended = store.allData.suspendedUsers
+    const active = store?.allData?.activeUsers
+    const suspended = store?.allData?.suspendedUsers
+
     if (active?.length > 0 || suspended?.length > 0) {
       switch (status) {
         case "active":
@@ -115,72 +137,102 @@ const ViewUsers = () => {
               <CardTitle>Filters</CardTitle>
             </CardHeader>
             <CardBody>
-              <Row className="match-height">
-                <Col>
-                  <Row className="d-flex justify-content-end">
-                    <Col lg="3" sm="6">
-                      <Label key="name">{t("University Name")} :</Label>
-                      <input
-                        {...register("name")}
-                        placeholder="University Name"
-                        type="text"
-                        className="form-control"
-                      />
-                    </Col>
-                    <Col lg="3" sm="6">
-                      <Label key="email">{t("Email Address")} :</Label>
-                      <input
-                        {...register("email")}
-                        placeholder="Email Address"
-                        type="email"
-                        className="form-control"
-                      />
-                    </Col>
-                    <Col lg="3" sm="6">
-                      <Label key="phone">{t("Phone Number")} :</Label>
-                      <input
-                        {...register("phone")}
-                        placeholder="Phone Number"
-                        type="number"
-                        className="form-control"
-                      />
-                    </Col>
-                    <Col
-                      lg="3"
-                      sm="6"
-                      className="d-flex justify-content-end align-items-end gap-2"
+              <Row>
+                <Col md="3">
+                  <Label key="name">{t("University Name")} :</Label>
+                  <input
+                    {...register("name")}
+                    placeholder="University Name"
+                    type="text"
+                    className="form-control"
+                  />
+                </Col>
+                <Col md="3">
+                  <Label key="email">{t("Email Address")} :</Label>
+                  <input
+                    {...register("email")}
+                    placeholder="Email Address"
+                    type="email"
+                    className="form-control"
+                  />
+                </Col>
+                <Col md="3">
+                  <Label key="phone">{t("Phone Number")} :</Label>
+                  <input
+                    {...register("phone")}
+                    placeholder="Phone Number"
+                    type="number"
+                    className="form-control"
+                  />
+                </Col>
+                <Col
+                  md="3"
+                  className="d-flex align-items-end justify-content-xl-end justify-content-start flex-xl-nowrap flex-wrap flex-sm-row flex-column pe-xl-1 p-0 mt-xl-0 mt-1"
+                >
+                  <div className="d-flex align-items-center table-header-actions">
+                    <UncontrolledDropdown className="me-1">
+                      <DropdownToggle color="secondary" caret outline>
+                        <Share className="font-small-4 me-50" />
+                        <span className="align-middle">Export</span>
+                      </DropdownToggle>
+                      <DropdownMenu>
+                        <DropdownItem className="w-100">
+                          <Printer className="font-small-4 me-50" />
+                          <span className="align-middle">Print</span>
+                        </DropdownItem>
+                        <DropdownItem
+                          className="w-100"
+                          onClick={() => downloadCSV(store.data, store)}
+                        >
+                          <FileText className="font-small-4 me-50" />
+                          <span className="align-middle">CSV</span>
+                        </DropdownItem>
+                        <DropdownItem className="w-100">
+                          <Grid className="font-small-4 me-50" />
+                          <span className="align-middle">Excel</span>
+                        </DropdownItem>
+                        <DropdownItem className="w-100">
+                          <File className="font-small-4 me-50" />
+                          <span className="align-middle">PDF</span>
+                        </DropdownItem>
+                        <DropdownItem className="w-100">
+                          <Copy className="font-small-4 me-50" />
+                          <span className="align-middle">Copy</span>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </UncontrolledDropdown>
+
+                    <Button
+                      className="add-new-user"
+                      color="primary"
+                      onClick={toggleModal}
                     >
-                      <Button outline onClick={clearData}>
-                        {isBlank() ? t("Filter") : t("Reset")}
-                      </Button>
-                      <Button
-                        color="primary"
-                        onClick={() => {
-                          setFormModal(!formModal)
-                        }}
-                      >
-                        {t("Add")}
-                      </Button>
-                    </Col>
-                  </Row>
+                      Add
+                    </Button>
+                    {/* <Button outline onClick={clearData}>
+                      {isBlank() ? t("Filter") : t("Reset")}
+                    </Button> */}
+                  </div>
                 </Col>
               </Row>
             </CardBody>
-            {store.isLoading ? (
-              <Spinner />
-            ) : (
-              <>
-                <DataTable
-                  noHeader
-                  pagination
-                  responsive
-                  columns={cols}
-                  sortIcon={<ChevronDown />}
-                  className="react-dataTable"
-                  data={dataToRender()}
-                />
-              </>
-            )}
+            <Card className="overflow-hidden">
+              <div className="react-dataTable">
+                {store.isLoading ? (
+                  <Spinner />
+                ) : (
+                  <DataTable
+                    noHeader
+                    pagination
+                    responsive
+                    columns={cols}
+                    sortIcon={<ChevronDown />}
+                    className="react-dataTable"
+                    data={dataToRender()}
+                  />
+                )}
+              </div>
+            </Card>
           </Card>
         </Col>
       </Row>
@@ -199,7 +251,7 @@ const ViewUsers = () => {
           <ModalBody>
             <NewUser
               outerSubmit={() => {}}
-              type="modern-horizontal"
+              type="vertical"
               onClose={() => setFormModal(!formModal)}
             />
           </ModalBody>
