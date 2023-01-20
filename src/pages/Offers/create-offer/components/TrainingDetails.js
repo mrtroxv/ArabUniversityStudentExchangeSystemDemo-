@@ -23,6 +23,7 @@ import { selectThemeColors } from "@utils"
 import { useTranslation } from "react-i18next"
 
 const TrainingDetails = ({ stepper, onSubmit, data }) => {
+  const { t } = useTranslation()
   const defaultValues = {
     train_description: data?.train_description || "",
     train_type: data?.train_type || "",
@@ -33,17 +34,20 @@ const TrainingDetails = ({ stepper, onSubmit, data }) => {
     // support_types: [],
     meals_text: data?.meals_text || "",
     residence_text: data?.residence_text || "",
-    transfer_text: data?.transfer_text || ""
+    transfer_text: data?.transfer_text || "",
+    meals: data.meals_text !== "" && data.meals_text !== "null",
+    residence: data.residence_text !== "" && data.residence_text !== "null",
+    transfer: data.transfer_text !== "" && data.transfer_text !== "null"
   }
   const supportTypeOptions = [
-    { value: "Residence", label: "Residence" },
-    { value: "Food", label: "Food" },
-    { value: "Transfer", label: "Transfer" }
+    { value: "Residence", label: t("Residence") },
+    { value: "Food", label: t("Food") },
+    { value: "Transfer", label: t("Transfer") }
   ]
   const trainingTypeOptions = [
-    { value: "Remote", label: "Remote" },
-    { value: "On-Site", label: "On-Site" },
-    { value: "On-Field", label: "On-Field" }
+    { value: "Remote", label: t("Remote") },
+    { value: "On-Site", label: t("On-Site") },
+    { value: "On-Field", label: t("On-Field") }
   ]
   const Schema = Yup.object().shape({
     train_description: Yup.string()
@@ -65,7 +69,6 @@ const TrainingDetails = ({ stepper, onSubmit, data }) => {
     )
   })
 
-  const { t } = useTranslation()
   return (
     <Fragment>
       <div className="content-header">
@@ -134,7 +137,7 @@ const TrainingDetails = ({ stepper, onSubmit, data }) => {
             <Row>
               <Col md="6" className="mb-2">
                 <Label className="form-label" for={`train_length`}>
-                  {t("trainingLength")}
+                  {`${t("trainingLength")} (${t("Weeks")})`}
                 </Label>
                 <Field
                   type="number"
@@ -234,9 +237,6 @@ const TrainingDetails = ({ stepper, onSubmit, data }) => {
                         id="meals"
                         type="checkbox"
                         className="form-check-input"
-                        checked={
-                          data.meals_text !== "" && data.meals_text !== null
-                        }
                       />
                     </InputGroupText>
                     <Field
@@ -262,9 +262,9 @@ const TrainingDetails = ({ stepper, onSubmit, data }) => {
                         id="residence"
                         type="checkbox"
                         className="form-check-input"
-                        checked={
+                        defaultValue={
                           data.residence_text !== "" &&
-                          data.residence_text !== null
+                          data.residence_text !== "null"
                         }
                       />
                     </InputGroupText>
@@ -289,9 +289,9 @@ const TrainingDetails = ({ stepper, onSubmit, data }) => {
                         id="transfer"
                         type="checkbox"
                         className="form-check-input"
-                        checked={
+                        defaultValue={
                           data.transfer_text !== "" &&
-                          data.transfer_text !== null
+                          data.transfer_text !== "null"
                         }
                       />
                     </InputGroupText>

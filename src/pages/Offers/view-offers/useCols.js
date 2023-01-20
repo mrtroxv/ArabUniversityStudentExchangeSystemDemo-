@@ -1,12 +1,10 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
 import { useNavigate } from "react-router-dom"
-import useUniversityApi from "../../../utility/hooks/custom/useUniversityApi"
-import { findDestinationUniversity, findSourceUniversity } from "./utils"
 import { FileText, Trash, Copy } from "react-feather"
 import { Badge, Button } from "reactstrap"
 import { deleteOffer } from "../../../redux/project/offers"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import toast from "react-hot-toast"
 import DuplicateDialog from "./DuplicateDialog"
 import withReactContent from "sweetalert2-react-content"
@@ -16,11 +14,14 @@ import Swal from "sweetalert2"
 // ** Styles
 import "@styles/react/libs/react-select/_react-select.scss"
 import { useLang } from "../../../utility/hooks/custom/useLang"
+import { getUniversityName } from "../../../utility/Utils"
+import useStatusBadge from "../../../utility/hooks/custom/useStatusBadge"
+import Avatar from "../../../@core/components/avatar"
+import moment from "moment"
 const MySwal = withReactContent(Swal)
 
 const useCols = () => {
   const { t } = useTranslation()
-  const { universities } = useUniversityApi()
   const [lang] = useLang()
   const navigate = useNavigate()
   const dispatch = useDispatch()
@@ -28,6 +29,7 @@ const useCols = () => {
     id: undefined,
     isOpen: false
   })
+  const universities = useSelector((state) => state.users.allData.activeUsers)
 
   const handleToggleDuplicateDialog = (data) => setDuplicateDialogData(data)
   const toggleDuplicateDialog = () =>
@@ -53,31 +55,61 @@ const useCols = () => {
     }
   ]
 
-  const status = {
-    0: { title: t("Creating Offer"), color: "light-primary" },
-    1: { title: t("Pending Request"), color: "light-warning" },
-    2: { title: t("Accepted"), color: "light-info" },
-    3: { title: t("Ready to Start"), color: "light-success" },
-    4: { title: t("Offer Report"), color: "light-primary" },
-    5: { title: t("Finished"), color: "light-danger" }
-  }
+  const { statusBadge: status } = useStatusBadge()
 
   const desUniversityCol = {
     name: t("Destination University"),
     sortable: true,
-    minWidth: "100px",
-    cell: (row) => findDestinationUniversity(row, universities, lang)
+    minWidth: "275px",
+    cell: (row) => {
+      const university = universities.find(
+        (uni) => uni.ID === row.University_id_des
+      )
+      return (
+        <div className="d-flex align-items-center" md={10}>
+          <Avatar img={university?.logo} />
+          <div className="d-flex flex-column mx-1">
+            <span className="fw-bolder">
+              {getUniversityName(university, lang)}
+            </span>
+            <span className="text-muted fw-bold">{university?.email}</span>
+          </div>
+        </div>
+      )
+    }
   }
   const srcUniversityCol = {
     name: t("Source University"),
     sortable: true,
-    minWidth: "100px",
-    cell: (row) => findSourceUniversity(row, universities, lang)
+    minWidth: "275px",
+    selector: (row) => {
+      const university = universities.find(
+        (uni) => uni.ID === row.university_id_src
+      )
+      return getUniversityName(university, lang)
+    },
+    cell: (row) => {
+      const university = universities.find(
+        (uni) => uni.ID === row.university_id_src
+      )
+      return (
+        <div className="d-flex align-items-center" md={10}>
+          <Avatar img={university?.logo} />
+          <div className="d-flex flex-column mx-1">
+            <span className="fw-bolder">
+              {getUniversityName(university, lang)}
+            </span>
+            <span className="text-muted fw-bold">{university?.email}</span>
+          </div>
+        </div>
+      )
+    }
   }
   const statusCol = {
     name: t("offerStatus"),
     minWidth: "40px",
-    sortable: (row) => row.status,
+    sortable: true,
+    selector: (row) => row.status,
     cell: (row) => {
       return (
         <Badge color={status[row.status].color} pill>
@@ -90,7 +122,7 @@ const useCols = () => {
     name: t("date"),
     sortable: true,
     minWidth: "50px",
-    selector: (row) => new Date(row.offer_date).toLocaleDateString()
+    selector: (row) => moment(row.receive_date).format("MM/DD/YYYY")
   }
   const actionsCol = {
     name: t("actions"),
@@ -102,7 +134,6 @@ const useCols = () => {
           <Button
             type="button"
             color="white"
-            // className="table-button_edit"
             onClick={(e) => {
               e.preventDefault()
               navigate(`/view-offers/${row.id}`)
@@ -115,7 +146,6 @@ const useCols = () => {
               <Button
                 type="button"
                 color="white"
-                // className="table-button_edit"
                 onClick={() => {
                   return MySwal.fire({
                     title: "Are you sure?",

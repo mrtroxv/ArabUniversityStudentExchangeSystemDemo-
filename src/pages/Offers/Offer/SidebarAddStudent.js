@@ -27,12 +27,13 @@ import {
   DropdownToggle,
   UncontrolledDropdown,
   Form,
-  Input
+  Input,
+  Badge
 } from "reactstrap"
 
 // ** Third Party Components
 import Select, { components } from "react-select"
-import { FileText, Users, Link } from "react-feather"
+import { FileText, Users, X, Check } from "react-feather"
 
 // ** Utils
 import { selectThemeColors } from "@utils"
@@ -40,10 +41,14 @@ import { selectThemeColors } from "@utils"
 import "@styles/react/libs/flatpickr/flatpickr.scss"
 import "@styles/base/pages/app-invoice.scss"
 import { useTranslation } from "react-i18next"
-import { addStudent } from "../../../redux/project/offers"
+// import { addStudent } from "../../../redux/project/offers"
 import toast from "react-hot-toast"
 import { selectUser } from "../../../redux/authentication"
 import Avatar from "../../../@core/components/avatar"
+import { getUniversityName } from "../../../utility/Utils"
+import { useLang } from "../../../utility/hooks/custom/useLang"
+import { addStudent } from "../store"
+import { Link } from "react-router-dom"
 
 const OptionComponent = ({ data, ...props }) => {
   return (
@@ -56,12 +61,14 @@ const OptionComponent = ({ data, ...props }) => {
   )
 }
 
-const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
+const SidebarAddStudent = ({ creator, open, toggleSidebar, id }) => {
   // ** States
   const { t } = useTranslation()
   const students = useSelector((state) => state.candidates)
+  const requests = useSelector((state) => state.candidates.requestsData)
   const [student_id, setStudent_id] = useState(-1)
   const dispatch = useDispatch()
+  const [lang] = useLang()
   const user = useSelector(selectUser)
   const handelAddStudent = () => {
     if (student_id === -1) {
@@ -81,20 +88,24 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
   }
 
   const data = [
-    ...students.allData.map((student) => ({
+    ...students.allData?.map((student) => ({
       id: student.ID,
       type: "Student",
       name: student.name,
-      username: student.email
+      username: student.email,
+      logo: creator.logo
     }))
   ]
 
+  const requestsIds = requests?.map((request) => request.student_id)
   const options = [
-    ...data.map((item) => ({
-      label: item.name,
-      value: item.id,
-      avatar: item.logo
-    }))
+    ...data
+      .map((item) => ({
+        label: item.name,
+        value: item.id,
+        avatar: item.logo
+      }))
+      .filter((item) => !requestsIds.includes(item.value))
   ]
 
   return (
@@ -108,8 +119,10 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
         toggle={toggleSidebar}
       ></ModalHeader>
       <ModalBody className="px-sm-5 mx-50 pb-4">
-        <h1 className="text-center mb-1">Share Offer #{id}</h1>
-        <p className="text-center">Share offer with another Student</p>
+        <h1 className="text-center mb-1">
+          {t("Share Offer")} #{id}
+        </h1>
+        <p className="text-center">{t("Share offer with another Student")}</p>
         <Label
           for="addStudentSelect"
           className="form-label fw-bolder font-size font-small-4 mb-50"
@@ -129,7 +142,7 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
           onChange={handelSelectStudent}
         />
         <p className="fw-bolder pt-50 mt-2">
-          {students.allData?.length} Students
+          {students.allData?.length} {t("Students")}
         </p>
         <ListGroup flush className="mb-2">
           {students.allData.map((item) => {
@@ -149,6 +162,36 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
                     <h5 className="mb-25">{item.name}</h5>
                     <span>{item.email}</span>
                   </div>
+                  <div className="d-flex align-items-center">
+                    {requestsIds.includes(item.ID) && (
+                      <Link
+                        to={`/view-offers/${
+                          requests.find((r) => r.student_id === item.ID)
+                            .offer_id
+                        }`}
+                        target="_blank"
+                      >
+                        <Button.Ripple
+                          className="btn-icon"
+                          color="danger"
+                          outline
+                        >
+                          <X size={14} className="mx-2" />
+                          {t("Requested")}
+                        </Button.Ripple>
+                      </Link>
+                    )}
+                    {!requestsIds.includes(item.ID) && (
+                      <Button.Ripple
+                        className="btn-icon"
+                        color="success"
+                        outline
+                      >
+                        <Check size={14} className="mx-2" />
+                        {t("Available")}
+                      </Button.Ripple>
+                    )}
+                  </div>
                 </div>
               </ListGroupItem>
             )
@@ -158,7 +201,7 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
           <div className="d-flex align-items-center me-2">
             <Users className="font-medium-2 me-50" />
             <p className="fw-bolder mb-0">
-              Public to {user.name} - {user.EN_Name}
+              {t("Public to")} {user.name} - {getUniversityName(user, lang)}
             </p>
           </div>
           <Button
@@ -169,7 +212,7 @@ const SidebarAddStudent = ({ open, toggleSidebar, id }) => {
             type="button"
           >
             <Link className="font-medium-2 me-50" />
-            <span>Link </span>
+            <span>{t("Add")} </span>
           </Button>
         </div>
       </ModalBody>

@@ -50,6 +50,79 @@ export const getUniversityById = createAsyncThunk(
     return response.data
   }
 )
+export const getStudentByOfferId = createAsyncThunk(
+  "appOffers/getStudentById",
+  async (id) => {
+    const response = await axios.get(
+      "http://localhost:3500/offer/get-student-data",
+      {
+        params: {
+          offerId: id
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      }
+    )
+    return response.data
+  }
+)
+export const getUniversityReport = createAsyncThunk(
+  "appOffers/getUniversityReport",
+  async (id) => {
+    const response = await axios.get(
+      "http://localhost:3500/offer/get-university-report",
+      {
+        params: {
+          requestId: id
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      }
+    )
+    return response.data
+  }
+)
+export const getStudentReport = createAsyncThunk(
+  "appOffers/getStudentReport",
+  async (id) => {
+    const response = await axios.get(
+      "http://localhost:3500/offer/get-student-report",
+      {
+        params: {
+          requestId: id
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      }
+    )
+    return response.data
+  }
+)
+export const getRequestData = createAsyncThunk(
+  "appOffers/getRequestData",
+  async (data, { dispatch }) => {
+    const response = await axios.get(
+      "http://localhost:3500/offer/get-request-data",
+      {
+        params: {
+          offerId: data.id
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
+        }
+      }
+    )
+    if (response.data?.id && data.status >= 7) {
+      await dispatch(getUniversityReport(response.data?.id))
+      await dispatch(getStudentReport(response.data?.id))
+    }
+    return response.data
+  }
+)
+
 export const getOffer = createAsyncThunk(
   "appOffers/getOffer",
   async (id, { dispatch }) => {
@@ -66,7 +139,16 @@ export const getOffer = createAsyncThunk(
         }
       )
       if (response.data.University_id_des) {
+        await dispatch(
+          getRequestData({
+            id,
+            status: response.data.status
+          })
+        )
         await dispatch(getUniversityById(response.data.University_id_des))
+      }
+      if (response.data.status > 2) {
+        await dispatch(getStudentByOfferId(id))
       }
       return response.data
     } catch (error) {
@@ -178,6 +260,23 @@ export const rejectOffer = createAsyncThunk(
     } catch (error) {}
   }
 )
+export const rejectSubmission = createAsyncThunk(
+  "offers/rejectSubmission",
+  async (offer_id, { dispatch }) => {
+    try {
+      await axios.post(
+        `http://localhost:3500/offer/reject-submission`,
+        { offer_id },
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      await dispatch(getOffer(offer_id))
+    } catch (error) {}
+  }
+)
 export const acceptOffer = createAsyncThunk(
   "offers/acceptOffer",
   async (offer_id, { dispatch }) => {
@@ -196,6 +295,103 @@ export const acceptOffer = createAsyncThunk(
   }
 )
 
+export const removeStudent = createAsyncThunk(
+  "offers/removeStudent",
+  async (offerIdAndStudentId, { dispatch }) => {
+    try {
+      await axios.post(
+        "http://localhost:3500/offer/remove-student",
+        offerIdAndStudentId,
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      await dispatch(getOffer(offerIdAndStudentId.offer_id))
+    } catch (error) {}
+  }
+)
+
+export const addStudent = createAsyncThunk(
+  "offers/addStudent",
+  async (offerIdAndStudentId, { dispatch }) => {
+    try {
+      await axios.post(
+        "http://localhost:3500/offer/add-student",
+        offerIdAndStudentId,
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      await dispatch(getOffer(offerIdAndStudentId.offer_id))
+    } catch (error) {}
+  }
+)
+
+export const submitRequest = createAsyncThunk(
+  "appOffers/submitRequest",
+  async (requestData, { dispatch }) => {
+    try {
+      await axios.put(
+        "http://localhost:3500/offer/submit-request",
+        requestData,
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      await dispatch(getOffer(requestData.offer_id))
+      // you can dispatch any action here based on the response of the update request.
+    } catch (error) {
+      // handle the error
+    }
+  }
+)
+export const acceptRequest = createAsyncThunk(
+  "appOffers/acceptRequest",
+  async (requestData, { dispatch }) => {
+    try {
+      await axios.put(
+        "http://localhost:3500/offer/accept-request",
+        requestData,
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      await dispatch(getOffer(requestData.offer_id))
+      // you can dispatch any action here based on the response of the update request.
+    } catch (error) {
+      // handle the error
+    }
+  }
+)
+export const updateRequest = createAsyncThunk(
+  "appOffers/updateRequest",
+  async (requestData, { dispatch }) => {
+    try {
+      await axios.put(
+        "http://localhost:3500/offer/update-request",
+        requestData,
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      await dispatch(getOffer(requestData.offer_id))
+      // you can dispatch any action here based on the response of the update request.
+    } catch (error) {
+      // handle the error
+    }
+  }
+)
+
 export const appOffersSlice = createSlice({
   name: "appOffers",
   initialState: {
@@ -206,17 +402,26 @@ export const appOffersSlice = createSlice({
     selectedOffer: {
       offer: null,
       university: null,
-      student: null
+      student: null,
+      request: null,
+      universityReport: null,
+      studentReport: null
     },
+
     isLoading: false
   },
-  reducers: {},
+  reducers: {
+    flushSelectedOffer: (state, action) => {
+      state.selectedOffer.offer = action.payload
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(getOffersData.fulfilled, (state, action) => {
         state.allData.offers = action.payload
         state.selectedOffer.offer = null
         state.selectedOffer.university = null
+        state.selectedOffer.student = null
         state.isLoading = false
       })
       .addCase(getOffersData.pending, (state) => {
@@ -224,7 +429,6 @@ export const appOffersSlice = createSlice({
       })
       .addCase(getOffer.fulfilled, (state, action) => {
         state.selectedOffer.offer = action.payload
-        // state.selectedOffer.university = null
         state.isLoading = false
       })
       .addCase(getOffer.pending, (state) => {
@@ -236,6 +440,13 @@ export const appOffersSlice = createSlice({
       .addCase(getUniversityById.fulfilled, (state, action) => {
         state.isLoading = false
         state.selectedOffer.university = action.payload
+      })
+      .addCase(getStudentByOfferId.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getStudentByOfferId.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.selectedOffer.student = action.payload
       })
       .addCase(getFinishedOffers.pending, (state) => {
         state.isLoading = true
@@ -266,6 +477,27 @@ export const appOffersSlice = createSlice({
         state.isLoading = false
         state.selectedOffer.university = null
       })
+      .addCase(getRequestData.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getRequestData.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.selectedOffer.request = action.payload
+      })
+      .addCase(getUniversityReport.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getUniversityReport.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.selectedOffer.universityReport = action.payload || null
+      })
+      .addCase(getStudentReport.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getStudentReport.fulfilled, (state, action) => {
+        state.isLoading = false
+        state.selectedOffer.studentReport = action.payload || null
+      })
   }
 })
 
@@ -283,4 +515,5 @@ export const selectObtainedOffers = (state, userId) => {
   })
 }
 
+export const { flushSelectedOffer } = appOffersSlice.actions
 export default appOffersSlice.reducer

@@ -10,14 +10,14 @@ import {
   Row
 } from "reactstrap"
 import { selectUser } from "../../../../redux/authentication"
-import { selectUniversityById } from "../../../../redux/project/universities"
+import { selectUniversity } from "../../../users/store"
 // import { useTranslation } from "react-i18next"
 
 function UserDetails() {
   //   const { t } = useTranslation()
   const user = useSelector(selectUser)
   const userDetails = useSelector((state) =>
-    selectUniversityById(state, user.university_id)
+    selectUniversity(state, user.university_id)
   )
   // console.log({
   //   user,

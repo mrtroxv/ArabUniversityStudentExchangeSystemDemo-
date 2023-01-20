@@ -223,5 +223,11 @@ export const appUsersSlice = createSlice({
       })
   }
 })
+export const selectUniversity = (state, id) => {
+  return (
+    state.users.allData?.activeUsers?.find((user) => user?.ID === id) ||
+    state.users.allData?.suspendedUsers?.find((user) => user?.ID === id)
+  )
+}
 
 export default appUsersSlice.reducer

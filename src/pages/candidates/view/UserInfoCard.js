@@ -34,36 +34,28 @@ import "@styles/react/libs/react-select/_react-select.scss"
 import { useTranslation } from "react-i18next"
 import CandidateForm from "../candidate-form/CandidateForm"
 import toast from "react-hot-toast"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { updateCandidate } from "../store"
-
-const roleColors = {
-  editor: "light-info",
-  admin: "light-danger",
-  author: "light-warning",
-  maintainer: "light-success",
-  subscriber: "light-primary"
-}
+import { selectUser } from "../../../redux/authentication"
+import { selectUniversity } from "../../users/store"
 
 const statusColors = {
-  enrolled: "light-success",
-  pending: "light-warning",
-  inactive: "light-secondary"
+  enrolled: "success",
+  pending: "warning",
+  inactive: "info"
 }
-
-// const statusOptions = [
-//   { value: "active", label: "Active" },
-//   { value: "inactive", label: "Inactive" },
-//   { value: "suspended", label: "Suspended" }
-// ]
 
 const MySwal = withReactContent(Swal)
 
-const UserInfoCard = ({ selectedUser, university, offer }) => {
+const UserInfoCard = ({ selectedUser, offer }) => {
   // ** State
   const [show, setShow] = useState(false)
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const user = useSelector(selectUser)
+  const studentUniversity = useSelector((state) =>
+    selectUniversity(state, selectedUser.university_id)
+  )
   // ** Hook
   const handleEditCandidate = (data) => {
     toast.promise(dispatch(updateCandidate(data)), {
@@ -78,15 +70,16 @@ const UserInfoCard = ({ selectedUser, university, offer }) => {
       }
     })
   }
+
   // ** render user img
   const renderUserImg = () => {
-    if (university && university?.logo?.length) {
+    if (studentUniversity && studentUniversity?.logo?.length) {
       return (
         <img
           height="110"
           width="110"
           alt="user-avatar"
-          src={university?.logo}
+          src={studentUniversity?.logo}
           className="img-fluid rounded mt-3 mb-2"
         />
       )
@@ -112,13 +105,13 @@ const UserInfoCard = ({ selectedUser, university, offer }) => {
     }
   }
 
-  const enrolled = offer && offer.id ? "enrolled" : "pending"
+  const status = offer && offer.id ? "enrolled" : "pending"
 
   return (
     <Fragment>
       <Card>
         <CardBody>
-          <div className="user-avatar-section">
+          <div className="user-avatar-section mb-1">
             <div className="d-flex align-items-center flex-column">
               {renderUserImg()}
               <div className="d-flex flex-column align-items-center text-center">
@@ -128,19 +121,19 @@ const UserInfoCard = ({ selectedUser, university, offer }) => {
                       ? selectedUser.name
                       : "Eleanor Aguilar"}
                   </h4>
-                  {selectedUser !== null ? (
+                  {selectedUser && (
                     <Badge
-                      color={roleColors[selectedUser.role]}
+                      color={statusColors[status]}
                       className="text-capitalize"
                     >
-                      {selectedUser.role}
+                      {status}
                     </Badge>
-                  ) : null}
+                  )}
                 </div>
               </div>
             </div>
           </div>
-          <div className="d-flex justify-content-center mb-4">
+          <div className="d-flex justify-content-center mb-3">
             <ReactCountryFlag
               svg
               style={{
@@ -148,7 +141,7 @@ const UserInfoCard = ({ selectedUser, university, offer }) => {
                 width: "10%"
               }}
               className="country-flag flag-icon"
-              countryCode={selectedUser.city_id.toLowerCase()}
+              countryCode={selectedUser?.city_id?.toLowerCase()}
             />
           </div>
           <h4 className="fw-bolder border-bottom pb-50 mb-1">
@@ -158,36 +151,60 @@ const UserInfoCard = ({ selectedUser, university, offer }) => {
             {selectedUser !== null ? (
               <ul className="list-unstyled">
                 <li className="mb-75 d-flex justify-content-between">
-                  <span className="fw-bolder me-25">{t("Username")} :</span>
-                  <span>{selectedUser.username}</span>
+                  <span className="fw-bolder me-25">{t("gender")} :</span>
+                  <span>{selectedUser.gender}</span>
                 </li>
                 <li className="mb-75 d-flex justify-content-between">
-                  <span className="fw-bolder me-25">
-                    {t("Email Address")} :
-                  </span>
+                  <span className="fw-bolder me-25">{t("email")} :</span>
                   <span>{selectedUser.email}</span>
-                </li>
-                <li className="mb-75 d-flex justify-content-between">
-                  <span className="fw-bolder me-25">{t("Status")} :</span>
-                  <Badge
-                    className="text-capitalize"
-                    color={statusColors[enrolled]}
-                  >
-                    {enrolled}
-                  </Badge>
                 </li>
                 <li className="mb-75 d-flex justify-content-between">
                   <span className="fw-bolder me-25">{t("Phone Number")} :</span>
                   <span>{selectedUser.phone}</span>
                 </li>
+                <li className="mb-75 d-flex justify-content-between">
+                  <span className="fw-bolder me-25">{t("address")} :</span>
+                  <span>{selectedUser.address}</span>
+                </li>
+                <li className="mb-75 d-flex justify-content-between">
+                  <span className="fw-bolder me-25">{t("college")} :</span>
+                  <span>{selectedUser.college}</span>
+                </li>
+                <li className="mb-75 d-flex justify-content-between">
+                  <span className="fw-bolder me-25">{t("major")} :</span>
+                  <span>{selectedUser.universityMajor}</span>
+                </li>
+                <li className="mb-75 d-flex justify-content-between">
+                  <span className="fw-bolder me-25">
+                    {t("Acadimic State")} :
+                  </span>
+                  <span>
+                    Completed {selectedUser.studyYearFinished} of{" "}
+                    {selectedUser.studyYears} Years
+                  </span>
+                </li>
+                <li className="mb-75 d-flex justify-content-between">
+                  <span className="fw-bolder me-25">
+                    {t("totalCreditHours")} :
+                  </span>
+                  <span>{selectedUser.totalCreditHours} Hours</span>
+                </li>
+                <li className="mb-75 d-flex justify-content-between">
+                  <span className="fw-bolder me-25">
+                    {t("fluencyInEnglish")} :
+                  </span>
+                  <span>{selectedUser.fluencyInEnglish}</span>
+                </li>
               </ul>
             ) : null}
           </div>
-          <div className="d-flex justify-content-center pt-2">
-            <Button color="primary" onClick={() => setShow(true)}>
-              Edit
-            </Button>
-          </div>
+          {user.university_id === selectedUser.university_id && (
+            <div className="d-flex justify-content-center pt-2">
+              <Button color="primary" onClick={() => setShow(true)}>
+                {t("Edit")}
+              </Button>
+            </div>
+          )}
         </CardBody>
       </Card>
       <Modal

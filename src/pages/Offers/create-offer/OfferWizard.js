@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useEffect, useRef, useState } from "react"
+import { Fragment, useRef, useState } from "react"
 
 // ** Custom Components
 import Wizard from "@components/wizard"
@@ -10,21 +10,12 @@ import TrainingDetails from "./components/TrainingDetails"
 import StudentDetails from "./components/StudentDetails"
 
 import { useTranslation } from "react-i18next"
-import {
-  fetchAllOffers,
-  resetCreateOfferState,
-  selectCreateOfferState
-} from "../../../redux/project/offers"
-import { useDispatch, useSelector } from "react-redux"
-import toast from "react-hot-toast"
 import moment, { isDate } from "moment"
 
-const OfferWizard = ({ type, onClose, outerSubmit, initialData = {} }) => {
+const OfferWizard = ({ type, outerSubmit, initialData = {} }) => {
   // ** Ref
   const ref = useRef(null)
-  const dispatch = useDispatch()
   // eslint-disable-next-line
-  const createOfferState = useSelector(selectCreateOfferState)
 
   // ** State
   const [stepper, setStepper] = useState(null)
@@ -89,21 +80,6 @@ const OfferWizard = ({ type, onClose, outerSubmit, initialData = {} }) => {
     }
     outerSubmit(submitData)
   }
-
-  useEffect(() => {
-    // console.log("1", createOfferState)
-    if (createOfferState.status) {
-      toast.success(t("Offer Created Successfully"))
-      setTimeout(() => {
-        onClose()
-        dispatch(fetchAllOffers())
-      }, 300)
-    }
-    if (createOfferState.error) {
-      toast.error(createOfferState.error)
-    }
-    dispatch(resetCreateOfferState())
-  }, [createOfferState.status, createOfferState.error])
 
   const steps = [
     {

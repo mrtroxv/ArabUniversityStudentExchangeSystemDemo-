@@ -21,10 +21,14 @@ import SidebarAddStudent from "./SidebarAddStudent"
 import SidebarSendOffer from "./SidebarSendOffer"
 import { useEffect, useState } from "react"
 import RecieverPreview from "./RecieverPreview"
-import { editOffer, getOffer, getUniversityById } from "../store"
+import { editOffer, getOffer } from "../store"
 import OfferWizard from "../create-offer/OfferWizard"
 import { useTranslation } from "react-i18next"
 import toast from "react-hot-toast"
+import { selectUser } from "../../../redux/authentication"
+import EditRequest from "./EditRequest"
+import Spinner from "../../../components/custom/loader/Spinner"
+import { selectUniversity } from "../../users/store"
 
 const OfferPreview = () => {
   // ** HooksVars
@@ -35,38 +39,23 @@ const OfferPreview = () => {
   const [addStudent, setAddStudent] = useState(false)
   const [deletePopup, setDeletePopup] = useState(false)
   const [editForm, setEditForm] = useState(false)
+  const [editRequest, setEditRequest] = useState(false)
   const dispatch = useDispatch()
-
+  const user = useSelector(selectUser)
   const defaultData = store.selectedOffer.offer || {}
-  const newDataKeys = Object.keys(defaultData)
-  newDataKeys.forEach((key) => {
-    if (
-      defaultData[key] === null ||
-      defaultData[key] === "" ||
-      defaultData[key] === "null" ||
-      defaultData[key] === "undefined" ||
-      defaultData[key] === undefined ||
-      defaultData[key] === "NaN" ||
-      defaultData[key] === "[]" ||
-      defaultData[key] === "0"
-    ) {
-      try {
-        delete defaultData[key]
-      } catch (error) {}
-    }
-  })
 
+  const recepient = useSelector((state) =>
+    selectUniversity(state, user.university_id)
+  )
   // ** Functions to toggle add & send sidebar
   const toggleSendSidebar = () => setSendSidebarOpen(!sendSidebarOpen)
   const toggleAddSidebar = () => setAddStudent(!addStudent)
   const toggleDeletePopup = () => setDeletePopup(!deletePopup)
   const toggleEditForm = () => setEditForm(!editForm)
+  const toggleEditRequest = () => setEditRequest(!editRequest)
 
   useEffect(() => {
     dispatch(getOffer(id))
-    if (store.selectedOffer?.offer?.University_id_des) {
-      dispatch(getUniversityById(store.selectedOffer?.offer?.University_id_des))
-    }
   }, [
     dispatch,
     id,
@@ -96,7 +85,12 @@ const OfferPreview = () => {
       <Row className="invoice-preview">
         <Col xl={9} md={8} sm={12}>
           <Card>
-            <PreviewCard data={store.selectedOffer.offer} />
+            <PreviewCard
+              data={store.selectedOffer.offer}
+              toggleSidebar={toggleSendSidebar}
+              toggleAddStudent={toggleAddSidebar}
+              toggleEditForm={toggleEditRequest}
+            />
           </Card>
         </Col>
         <Col xl={3} md={4} sm={12}>
@@ -108,6 +102,7 @@ const OfferPreview = () => {
               setSendSidebarOpen={toggleSendSidebar}
               setEditOfferOpen={toggleEditForm}
               deletePopup={toggleDeletePopup}
+              toggleEditForm={toggleEditRequest}
             />
           </Card>
           {university && (
@@ -128,6 +123,7 @@ const OfferPreview = () => {
       />
       <SidebarAddStudent
         toggleSidebar={toggleAddSidebar}
+        creator={recepient}
         open={addStudent}
         id={id}
       />
@@ -150,7 +146,26 @@ const OfferPreview = () => {
           </ModalBody>
         </Modal>
       )}
+      {editRequest && (
+        <Modal
+          isOpen={editRequest}
+          toggle={toggleEditRequest}
+          className="modal-dialog-centered modal-md"
+        >
+          <ModalHeader toggle={toggleEditRequest} className="modal-md">
+            {t("Edit Request")}
+          </ModalHeader>
+          <ModalBody>
+            <EditRequest
+              request={store.selectedOffer?.student}
+              toggle={toggleEditRequest}
+            />
+          </ModalBody>
+        </Modal>
+      )}
     </div>
+  ) : store.isLoading ? (
+    <Spinner />
   ) : (
     <Alert color="danger">
       <h4 className="alert-heading">Offer not found</h4>

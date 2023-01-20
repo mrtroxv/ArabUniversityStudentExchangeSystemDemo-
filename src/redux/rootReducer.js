@@ -2,9 +2,6 @@
 import navbar from "./navbar"
 import layout from "./layout"
 import auth from "./authentication"
-import offers from "./project/offers"
-import universities from "./project/universities"
-import students from "./project/students"
 import users from "../pages/users/store"
 import candidates from "../pages/candidates/store"
 import appOffers from "../pages/Offers/store"
@@ -22,8 +19,6 @@ const rootReducer = {
   auth,
   // todo,
   chat,
-  email,
-  users,
   // kanban,
   navbar,
   layout,
@@ -32,9 +27,8 @@ const rootReducer = {
   // ecommerce,
   // dataTables,
   // permissions,
-  offers,
-  students,
-  universities,
+  email,
+  users,
   candidates,
   appOffers
 }

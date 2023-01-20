@@ -228,19 +228,14 @@ export const acceptOffer = createAsyncThunk(
 
 export const addStudent = createAsyncThunk(
   "offers/addStudent",
-  async (offerIdAndStudentId) => {
+  async (offerIdAndStudentId, { dispatch }) => {
     try {
       await axios.post(ADD_STUDENT_URL, offerIdAndStudentId, {
         headers: {
           authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
       })
-      const response = await axios.get(OFFERS_URL, {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
-      })
-      return response.data
+      await dispatch(getOffer)
     } catch (error) {}
   }
 )

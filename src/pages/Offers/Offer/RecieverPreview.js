@@ -16,29 +16,25 @@ import {
 import Avatar from "../../../@core/components/avatar"
 import { useLang } from "../../../utility/hooks/custom/useLang"
 import FormHeader from "../../users/create-user/new-user-form/FormHeader"
-import { Search, Inbox, Camera } from "react-feather"
+import { Inbox } from "react-feather"
+import { getUniversityName } from "../../../utility/Utils"
+import useStatusBadge from "../../../utility/hooks/custom/useStatusBadge"
+
 const RecieverPreview = ({ data, status }) => {
   const { t } = useTranslation()
   const [lang] = useLang()
+  const { statusBadge } = useStatusBadge()
 
-  const statusBadge = {
-    0: { title: t("Creating Offer"), color: "light-primary" },
-    1: { title: t("Pending Request"), color: "light-warning" },
-    2: { title: t("Accepted"), color: "light-info" },
-    3: { title: t("Ready to Start"), color: "light-success" },
-    4: { title: t("Offer Report"), color: "light-primary" },
-    5: { title: t("Finished"), color: "light-danger" }
-  }
   const name = lang === "ar" ? data.AR_Name : data.EN_Name
 
   return (
     <Card className="overflow-hidden">
-      <CardHeader>
-        <CardTitle className="mb-1">{t("University")}</CardTitle>
+      <CardHeader className="d-flex flex-column align-items-start border-bottom mb-1">
+        <CardTitle className="mb-1 fw-bold">{t("University")}</CardTitle>
         <CardSubtitle>{t("Data of The Recipent University")}</CardSubtitle>
       </CardHeader>
       <CardBody>
-        <div className="d-flex align-items-start border-0 px-0 mb-1">
+        <div className="d-flex align-items-start border-0 px-0 mb-2 mt-1">
           <Avatar
             img={data.logo}
             imgHeight={38}
@@ -55,7 +51,12 @@ const RecieverPreview = ({ data, status }) => {
           </div>
         </div>
         <div className="d-flex align-items-center justify-content-between w-100">
-          <div></div>
+          <div className="d-flex flex-column">
+            <span>{data.phone}</span>
+            <a href={data.url} className="text-muted mb-1">
+              {getUniversityName(data, lang)}
+            </a>
+          </div>
           <Button.Ripple className="btn-icon" outline color="primary">
             <Inbox size={16} />
           </Button.Ripple>

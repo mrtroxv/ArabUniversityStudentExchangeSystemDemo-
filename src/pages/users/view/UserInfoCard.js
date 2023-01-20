@@ -39,7 +39,6 @@ import ReactivateAccount from "./ReactivateAccount"
 import store, { editUser } from "../store"
 import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner"
 import FormHeader from "../create-user/new-user-form/FormHeader"
-import { getUserData } from "../../../utility/Utils"
 
 const roleColors = {
   editor: "light-info",
@@ -136,22 +135,20 @@ const UserInfoCard = ({ selectedUser, refetchData }) => {
       data.avatar ||
       data.logo
     ) {
-      toast
-        .promise(
-          dispatch(
-            editUser({
-              id: selectedUser.id,
-              ID: selectedUser.ID,
-              ...data
-            })
-          ),
-          {
-            loading: "Loading Data...",
-            success: "Data Loaded",
-            error: "Error"
-          }
-        )
-        .then(dispatch(getUserData()))
+      toast.promise(
+        dispatch(
+          editUser({
+            id: selectedUser.id,
+            ID: selectedUser.ID,
+            ...data
+          })
+        ),
+        {
+          loading: "Loading Data...",
+          success: "Data Loaded",
+          error: "Error"
+        }
+      )
     } else {
       toast.error("No data provided, so nothing will be updated")
       setShow(false)

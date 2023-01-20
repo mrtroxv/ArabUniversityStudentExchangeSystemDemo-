@@ -8,39 +8,50 @@ import Avatar from "@components/avatar"
 // ** Reactstrap Imports
 import { Badge, UncontrolledTooltip } from "reactstrap"
 
-// ** Third Party Components
-import {
-  Eye,
-  Send,
-  Edit,
-  Save,
-  Info,
-  PieChart,
-  Download,
-  TrendingUp,
-  CheckCircle,
-  ArrowDownCircle
-} from "react-feather"
 import { useTranslation } from "react-i18next"
+import useStatusBadge from "../../../utility/hooks/custom/useStatusBadge"
+import { useSelector } from "react-redux"
+import { selectUniversity } from "../../users/store"
+import { useLang } from "../../../utility/hooks/custom/useLang"
+import { getUniversityName } from "../../../utility/Utils"
 
 export const useColumns = () => {
   const { t } = useTranslation()
-
-  // ** Table columns
-  const status = {
-    0: { title: t("Creating Offer"), color: "light-primary" },
-    1: { title: t("Pending Request"), color: "light-warning" },
-    2: { title: t("Accepted"), color: "light-info" },
-    3: { title: t("Ready to Start"), color: "light-success" },
-    4: { title: t("Offer Report"), color: "light-primary" },
-    5: { title: t("Finished"), color: "light-danger" }
-  }
+  const { statusBadge: status } = useStatusBadge()
+  const store = useSelector((state) => state.candidates.selectedUser?.offer)
+  const offerUniversity = useSelector((state) =>
+    selectUniversity(state, store.university_id_src)
+  )
+  const [lang] = useLang()
   const cols = [
     {
-      name: t("college"),
+      name: t("ID"),
       sortable: true,
-      minWidth: "150px",
-      selector: (row) => row.college_name
+      maxWidth: "25px",
+      selector: (row) => row.id,
+      cell: (row) => (
+        <Link to={`/view-offers/${row.id}`} className="d-flex">
+          <span className="fw-bolder">#</span>
+          <span className="fw-bolder">{row.id}</span>
+        </Link>
+      )
+    },
+    {
+      name: t("University"),
+      sortable: true,
+      minWidth: "325px",
+      selector: (row) => row.college_name,
+      cell: () => (
+        <div className="d-flex align-items-center" md={10}>
+          <Avatar img={offerUniversity?.logo} />
+          <div className="d-flex flex-column mx-1">
+            <span className="fw-bolder">
+              {getUniversityName(offerUniversity, lang)}
+            </span>
+            <span className="text-muted fw-bold">{offerUniversity?.email}</span>
+          </div>
+        </div>
+      )
     },
     {
       name: t("major"),
@@ -53,16 +64,10 @@ export const useColumns = () => {
       minWidth: "50px",
       sortable: (row) => row.status,
       cell: (row) => (
-        <Badge color={status[row.status].color} pill>
-          {status[row.status].title}
+        <Badge color={status[row.status]?.color} pill>
+          {status[row.status]?.title}
         </Badge>
       )
-    },
-    {
-      name: t("date"),
-      sortable: true,
-      minWidth: "175px",
-      selector: (row) => new Date(row.offer_date).toLocaleDateString()
     }
   ]
 
