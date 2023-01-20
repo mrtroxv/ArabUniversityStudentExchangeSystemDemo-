@@ -4,18 +4,72 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 // ** Axios Imports
 import axios from "axios"
 
-export const fetchCandidatesData = createAsyncThunk(
-  "students/getAllData",
-  async () => {
-    const response = await axios.get(
-      "http://localhost:3500/student/get-all-data",
-      {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
+// export const getRequestsData = createAsyncThunk(
+//   "students/getRequestsData",
+//   async (id) => {
+//     const response = await axios.get(
+//       "http://localhost:3500/student/get-requests",
+//       {
+//         universityId: id
+//       },
+//       {
+//         headers: {
+//           authorization: JSON.parse(localStorage.getItem("accessToken"))
+//         }
+//       }
+//     )
+//     return response.data
+//   }
+// )
+
+// export const fetchCandidatesData = createAsyncThunk(
+//   "appOffers/getAllData",
+//   async () => {
+//     const response = await axios.get("http://localhost:3500/offer/show_offer", {
+//       headers: {
+//         authorization: JSON.parse(localStorage.getItem("accessToken"))
+//       }
+//     })
+//     return response.data
+//   }
+// )
+
+export const getRequestsData = createAsyncThunk(
+  "candidates/request",
+  async (id) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3500/student/request-data`,
+        {
+          params: {
+            universityId: id
+          },
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
         }
-      }
-    )
-    return response.data
+      )
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
+export const fetchCandidatesData = createAsyncThunk(
+  "students/getCandidates",
+  async (id, { dispatch }) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:3500/student/get-all-data",
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      await dispatch(getRequestsData(id))
+      return response.data
+    } catch (error) {}
   }
 )
 
@@ -144,14 +198,18 @@ export const appUsersSlice = createSlice({
     total: 1,
     params: {},
     allData: [],
-    selectedUser: null,
+    selectedUser: {
+      offer: {},
+      student: {}
+    },
+    requestsData: [],
     isLoading: false
   },
   reducers: {},
   extraReducers: (builder) => {
     builder
       .addCase(fetchCandidatesData.fulfilled, (state, action) => {
-        state.allData = action.payload
+        state.allData = action.payload || []
         state.isLoading = false
       })
       .addCase(fetchCandidatesData.pending, (state) => {
@@ -176,6 +234,13 @@ export const appUsersSlice = createSlice({
       })
       .addCase(updateCandidate.pending, (state) => {
         state.isLoading = true
+      })
+      .addCase(getRequestsData.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(getRequestsData.fulfilled, (state, action) => {
+        state.requestsData = action.payload
+        state.isLoading = false
       })
   }
 })

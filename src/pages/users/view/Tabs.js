@@ -12,11 +12,11 @@ import SecurityTab from "./SecurityTab"
 // import UserTimeline from "./UserTimeline"
 import UserProjectsList from "./UserProjectsList"
 import UserTimeline from "./UserTimeline"
-import { selectUser } from "../../../redux/authentication"
+// import { selectUser } from "../../../redux/authentication"
 import { useSelector } from "react-redux"
 
 const UserTabs = ({ active, toggleTab }) => {
-  const user = useSelector(selectUser)
+  const store = useSelector((state) => state.users?.selectedUser?.activeUser)
   return (
     <Fragment>
       <Nav pills className="mb-2">
@@ -35,7 +35,7 @@ const UserTabs = ({ active, toggleTab }) => {
       </Nav>
       <TabContent activeTab={active}>
         <TabPane tabId="1">
-          {user.role !== "admin" && <UserProjectsList />}
+          {store.type !== "admin" && <UserProjectsList />}
           {/* <UserTimeline /> */}
         </TabPane>
         <TabPane tabId="2">

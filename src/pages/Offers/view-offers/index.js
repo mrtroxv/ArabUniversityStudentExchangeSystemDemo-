@@ -40,11 +40,11 @@ import {
   selectObtainedOffers,
   selectSentOffers
 } from "../store"
-// import { selectIsLoadingStudents } from "../../../redux/project/students"
 
 function ViewOffers() {
   const { register, watch, getValues, setValue } = useForm()
   const store = useSelector((state) => state.appOffers)
+  const universities = useSelector((state) => state.users.allData.activeUsers)
   const userId = useSelector(selectUserID)
   const { status: data } = useParams()
   const { t } = useTranslation()
@@ -105,7 +105,7 @@ function ViewOffers() {
     } else {
       toast.promise(dispatch(getOffersData()), {
         loading: "Loading...",
-        success: "Finished offers",
+        success: "Fetched offers",
         error: "Error"
       })
     }
@@ -154,38 +154,67 @@ function ViewOffers() {
     setValue("id", "")
     setValue("college", "")
     setValue("major", "")
-    setValue("university_id", "")
+    setValue("university", "")
   }
 
   const id = watch("id")
   const college = watch("college")
   const major = watch("major")
-  const universityID = watch("university_id") || ""
+  const university = watch("university") || ""
   const dataToRender = () => {
     const filtered = offersList?.filter((offer) => {
       switch (filter) {
         case "all":
           return true
+        case "pending":
+          return offer.status > 0 && offer.status < 4
         case "active":
-          return offer.status === 0 || offer.status === 1
-        case "expired":
-          return offer.status === 2 || offer.status === 3
+          return offer.status >= 4 && offer.status < 6
         default:
           return true
       }
     })
     return filtered?.filter((offer) => {
-      return (
+      const srcUniversity = universities?.find(
+        (university) => university.ID === offer.university_id_src
+      )
+      const dstUniversity = universities?.find(
+        (university) => university.ID === offer.University_id_des
+      )
+
+      const result =
         offer?.id.toString().includes(id) &&
         offer?.college_name.toLowerCase().includes(college.toLowerCase()) &&
-        offer?.major_name.toLowerCase().includes(major.toLowerCase()) &&
-        (offer?.university_id_des?.toString().includes(String(universityID)) ||
-          offer?.university_id_src?.toString().includes(String(universityID)))
-      )
+        offer?.major_name.toLowerCase().includes(major.toLowerCase())
+
+      if (data === "obtained-offers") {
+        return (
+          result &&
+          (srcUniversity?.EN_Name.toLowerCase().includes(
+            university.toLowerCase()
+          ) ||
+            srcUniversity?.AR_Name.toLowerCase().includes(
+              university.toLowerCase()
+            ))
+        )
+      }
+      if (data === "sent-offers") {
+        return (
+          result &&
+          (dstUniversity?.EN_Name.toLowerCase().includes(
+            university.toLowerCase()
+          ) ||
+            dstUniversity?.AR_Name.toLowerCase().includes(
+              university.toLowerCase()
+            ))
+        )
+      }
+
+      return result
     })
   }
   const isBlank = () => {
-    return id === "" && college === "" && major === "" && universityID === ""
+    return id === "" && college === "" && major === "" && university === ""
   }
   return (
     <Fragment>
@@ -210,17 +239,17 @@ function ViewOffers() {
             <Col lg="4" md="4" xs="4">
               <OffersFilter
                 onView={viewTableHandler}
-                filter="active"
-                title="Active Offers"
-                src={activeOffers}
+                filter="pending"
+                title="Pending Offers"
+                src={expiredOffers}
               />
             </Col>
             <Col lg="4" md="4" xs="4">
               <OffersFilter
                 onView={viewTableHandler}
-                filter="expired"
-                title="Expired Offers"
-                src={expiredOffers}
+                filter="active"
+                title="Active Offers"
+                src={activeOffers}
               />
             </Col>
           </Row>
@@ -232,7 +261,7 @@ function ViewOffers() {
       <Card>
         <CardBody>
           <Row>
-            <Col lg="12" md="8">
+            <Col md="12">
               <Row className="d-flex">
                 <Col lg="2" md="6">
                   <Label key="id">{t("ID")} :</Label>
@@ -263,14 +292,14 @@ function ViewOffers() {
                 </Col>
                 {data !== "created-offers" && (
                   <Col lg="2" md="6">
-                    <Label key="university_id">
+                    <Label key="university">
                       {data === "sent-offers"
                         ? t("Destination University")
                         : t("Source University")}{" "}
                       :
                     </Label>
                     <input
-                      {...register("university_id")}
+                      {...register("university")}
                       placeholder="University"
                       type="text"
                       className="form-control"
@@ -278,7 +307,7 @@ function ViewOffers() {
                   </Col>
                 )}
                 <Col
-                  lg="4"
+                  lg="3"
                   md="3"
                   className="p-2 d-flex justify-content-end align-items-end gap-2"
                 >

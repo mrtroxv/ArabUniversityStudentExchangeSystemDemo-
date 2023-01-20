@@ -12,15 +12,17 @@ import Select from "react-select"
 import { useTranslation } from "react-i18next"
 
 const StudentDetails = ({ stepper, onStoreData, data }) => {
+  const { t } = useTranslation()
+
   const studentGenderTypes = [
-    { value: "Male", label: "Male" },
-    { value: "Female", label: "Female" },
-    { value: "Either", label: "Either" }
+    { value: "male", label: t("male") },
+    { value: "female", label: t("female") },
+    { value: "either", label: t("either") }
   ]
   const studentLevelTypes = [
-    { value: "Starter", label: "Starter" },
-    { value: "Undergraduate", label: "Undergraduate" },
-    { value: "Graduate", label: "Graduate" }
+    { value: "starter", label: t("starter") },
+    { value: "undergraduate", label: t("undergraduate") },
+    { value: "graduate", label: t("graduate") }
   ]
 
   const defaultValues = {
@@ -56,7 +58,6 @@ const StudentDetails = ({ stepper, onStoreData, data }) => {
       .required("You should pick one"),
     other_requirments: Yup.string()
   })
-  const { t } = useTranslation()
 
   return (
     <Fragment>

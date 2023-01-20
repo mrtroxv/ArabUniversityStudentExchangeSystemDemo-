@@ -23,25 +23,27 @@ import useCols from "./useCols"
 import { addCandidate, fetchCandidatesData } from "../store"
 import Spinner from "../../../components/custom/loader/Spinner"
 import toast from "react-hot-toast"
+import { selectUser } from "../../../redux/authentication"
 
 const ViewCandidates = () => {
   const { register, setValue, watch } = useForm()
   const { cols } = useCols()
   const dispatch = useDispatch()
   const store = useSelector((state) => state.candidates)
+  const user = useSelector(selectUser)
   const { t } = useTranslation()
   const [formModal, setFormModal] = useState(false)
-
+  console.log({ store })
   useEffect(() => {
-    dispatch(fetchCandidatesData())
-  }, [dispatch, store.allData.length])
+    dispatch(fetchCandidatesData(user.university_id))
+  }, [dispatch, store.allData?.length])
 
   const id = watch("id")
   const name = watch("name")
   const email = watch("email")
 
   const dataToRender = () => {
-    if (store.allData.length === 0 || store.isLoading) return []
+    if (store.allData?.length === 0 || store.isLoading) return []
     const students = store.allData
     const data = students
       ?.filter((item) => item !== undefined)

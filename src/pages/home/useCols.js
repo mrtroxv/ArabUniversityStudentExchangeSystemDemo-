@@ -1,3 +1,4 @@
+import moment from "moment"
 import React, { useState } from "react"
 import { Copy, FileText, Trash } from "react-feather"
 import toast from "react-hot-toast"
@@ -6,6 +7,7 @@ import { useDispatch } from "react-redux"
 import { useNavigate } from "react-router"
 import { Badge, Button } from "reactstrap"
 import { deleteOffer } from "../../redux/project/offers"
+import useStatusBadge from "../../utility/hooks/custom/useStatusBadge"
 
 const useCols = () => {
   const navigate = useNavigate()
@@ -19,15 +21,7 @@ const useCols = () => {
   const handleToggleDuplicateDialog = (data) => setDuplicateDialogData(data)
   const toggleDuplicateDialog = () =>
     setDuplicateDialogData((prev) => ({ ...prev, isOpen: !prev.isOpen }))
-
-  const status = {
-    0: { title: t("Creating Offer"), color: "light-primary" },
-    1: { title: t("Pending Request"), color: "light-warning" },
-    2: { title: t("Accepted"), color: "light-info" },
-    3: { title: t("Ready to Start"), color: "light-success" },
-    4: { title: t("Offer Report"), color: "light-primary" },
-    5: { title: t("Finished"), color: "light-danger" }
-  }
+  const { statusBadge: status } = useStatusBadge()
 
   const cols = [
     {
@@ -52,6 +46,7 @@ const useCols = () => {
       name: t("offerStatus"),
       minWidth: "50px",
       sortable: (row) => row.status,
+      selector: (row) => row.status,
       cell: (row) => {
         return (
           <Badge color={status[row.status].color} pill>
@@ -64,7 +59,7 @@ const useCols = () => {
       name: t("date"),
       sortable: true,
       minWidth: "175px",
-      selector: (row) => new Date(row.offer_date).toLocaleDateString()
+      selector: (row) => moment(row.offer_date).format("MM/DD/YYYY")
     },
     {
       name: t("actions"),

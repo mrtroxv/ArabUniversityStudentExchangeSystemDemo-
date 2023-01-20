@@ -115,6 +115,7 @@ const menuItems = (t) => {
       navLink: "/view-reports",
       action: "read",
       resource: "user"
+      // newTab: true
     },
     {
       header: "Apps & Pages",

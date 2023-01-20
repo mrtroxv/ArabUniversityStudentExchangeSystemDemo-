@@ -70,7 +70,6 @@ function Home() {
     const id = watch("id")
     const college = watch("college")
     const major = watch("major")
-    console.log(store.allData)
     return store.allData?.offers?.filter((offer) => {
       return (
         offer?.id.toString().includes(id) &&

@@ -7,11 +7,20 @@ import withReactContent from "sweetalert2-react-content"
 import Swal from "sweetalert2"
 
 // ** Reactstrap Imports
-import { Card, CardBody, Button, Toast } from "reactstrap"
+import { Card, CardBody, Button, Toast, UncontrolledTooltip } from "reactstrap"
 import { deleteOffer } from "../../../redux/project/offers"
 import ShareProjectExample from "../../../views/pages/modal-examples/ShareProject"
-import { acceptOffer, rejectOffer } from "../store"
+import {
+  acceptOffer,
+  acceptRequest,
+  flushSelectedOffer,
+  rejectOffer,
+  rejectSubmission,
+  removeStudent,
+  submitRequest
+} from "../store"
 import { selectUser } from "../../../redux/authentication"
+import moment from "moment"
 
 const MySwal = withReactContent(Swal)
 
@@ -20,6 +29,7 @@ const PreviewActions = ({
   setSendSidebarOpen,
   setAddStudentOpen,
   setEditOfferOpen,
+  toggleEditForm,
   data
 }) => {
   const { t } = useTranslation()
@@ -27,12 +37,21 @@ const PreviewActions = ({
   const navigate = useNavigate()
   const status = data?.status
   const user = useSelector(selectUser)
-  console.log(data)
+  const store = useSelector((state) => state.appOffers.selectedOffer)
   const handelRejectOffer = (id) => {
     toast.promise(dispatch(rejectOffer(id)), {
       loading: t("Rejecting"),
       success: () => {
         navigate(-1)
+        return t("Rejected")
+      },
+      error: t("Error")
+    })
+  }
+  const handleRejectRequest = (id) => {
+    toast.promise(dispatch(rejectSubmission(id)), {
+      loading: t("Rejecting"),
+      success: () => {
         return t("Rejected")
       },
       error: t("Error")
@@ -87,41 +106,96 @@ const PreviewActions = ({
       error: t("Error")
     })
   }
+  const handleSubmitRequest = () => {
+    toast.promise(
+      dispatch(
+        submitRequest({
+          offer_id: store.offer.id
+        })
+      ),
+      {
+        loading: t("Submitting"),
+        success: t("Submitted"),
+        error: t("Error")
+      }
+    )
+  }
+
+  const handleAcceptRequest = () => {
+    toast.promise(
+      dispatch(
+        acceptRequest({
+          offer_id: store.offer.id
+        })
+      ),
+      {
+        loading: t("Accepting"),
+        success: t("Accepted"),
+        error: t("Error")
+      }
+    )
+  }
+
+  const handleRemoveStudent = () => {
+    dispatch(flushSelectedOffer())
+    toast.promise(
+      dispatch(
+        removeStudent({
+          offer_id: store.offer.id,
+          student_id: store.student.ID
+        })
+      ),
+      {
+        loading: t("Removing"),
+        success: t("Removed"),
+        error: t("Error")
+      }
+    )
+  }
 
   return (
-    <Card className="invoice-action-wrapper">
+    <Card>
       <CardBody>
         {/* <ShareProjectExample /> */}
         {status === 0 && user.university_id === data.university_id_src && (
-          <Button
-            color="primary"
-            block
-            className="mb-75"
-            onClick={setSendSidebarOpen}
-          >
-            {t("Send")}
-          </Button>
+          <>
+            <Button
+              color="primary"
+              block
+              className="mb-75"
+              onClick={setSendSidebarOpen}
+            >
+              {t("Send")}
+            </Button>
+            <Button
+              color="danger"
+              block
+              className="mb-75"
+              onClick={() => handelDeleteOffer(id)}
+            >
+              {t("Delete")}
+            </Button>
+          </>
         )}
-
-        {status < 5 && user.university_id === data.university_id_src && (
-          <Button
-            color="warning"
-            block
-            className="mb-75"
-            onClick={setEditOfferOpen}
-          >
-            {t("Edit")}
-          </Button>
-        )}
-        {status === 0 && user.university_id === data.university_id_src && (
-          <Button
-            color="danger"
-            block
-            className="mb-75"
-            onClick={() => handelDeleteOffer(id)}
-          >
-            {t("Delete")}
-          </Button>
+        {status === 1 && user.university_id !== data.university_id_src && (
+          <>
+            <Button
+              color="success"
+              block
+              onClick={() => handelAcceptOffer(id)}
+              className="mb-75"
+            >
+              {t("Accept")}
+            </Button>
+            <Button
+              color="danger"
+              block
+              onClick={() => handelRejectOffer(id)}
+              className="mb-75"
+            >
+              {t("Reject")}
+            </Button>
+          </>
         )}
         {status === 2 && user.university_id !== data.university_id_src && (
           <Button
@@ -133,27 +207,129 @@ const PreviewActions = ({
             {t("AddStudent")}
           </Button>
         )}
-        {status === 1 && user.university_id !== data.university_id_src && (
+        {status === 3 && user.university_id !== data.university_id_src && (
+          <>
+            {!store.student.status && (
+              <UncontrolledTooltip placement="top" target="student-state">
+                {t("You must complete your request")}
+              </UncontrolledTooltip>
+            )}
+            <Button
+              color={store.student?.status ? "success" : "secondary"}
+              block
+              onClick={() => {
+                if (store.student?.status) handleSubmitRequest(id)
+              }}
+              className="mb-75"
+              id="student-state"
+            >
+              {t("Submit Request")}
+            </Button>
+            <Button
+              color="warning"
+              block
+              onClick={toggleEditForm}
+              className="mb-75"
+            >
+              {t("Edit Request")}
+            </Button>
+            <Button
+              color="danger"
+              block
+              onClick={handleRemoveStudent}
+              className="mb-75"
+            >
+              {t("Remove Student")}
+            </Button>
+          </>
+        )}
+        {status === 4 && user.university_id === data.university_id_src && (
+          <>
+            <Button
+              color="success"
+              block
+              onClick={() => handleAcceptRequest()}
+              className="mb-75"
+            >
+              {t("Accept Submission")}
+            </Button>
+            <Button
+              color="danger"
+              block
+              onClick={() => handleRejectRequest(id)}
+              className="mb-75"
+            >
+              {t("Reject Submission")}
+            </Button>
+          </>
+        )}
+        {status === 5 && (
+          <Button
+            color="warning"
+            block
+            onClick={() => {}}
+            className="mb-75"
+            disabled={true}
+          >
+            {t("Starts in ")} {moment(data.train_start_date).fromNow()}
+          </Button>
+        )}
+        {status < 6 && user.university_id === data.university_id_src && (
+          <Button
+            color="warning"
+            block
+            className="mb-75"
+            onClick={setEditOfferOpen}
+          >
+            {t("Edit")}
+          </Button>
+        )}
+        {status === 6 && (
+          <Button
+            color="warning"
+            block
+            onClick={() => {}}
+            className="mb-75"
+            disabled={true}
+          >
+            {t("Waiting for training to Finish")}
+          </Button>
+        )}
+        {status === 7 && user.university_id === data.university_id_src && (
           <Button
             color="success"
             block
-            onClick={() => handelAcceptOffer(id)}
+            onClick={() => {
+              if (!store.universityReport) {
+                console.log("University Report is not ready")
+              }
+              // else setUniversityReportOpen(true)
+            }}
             className="mb-75"
           >
-            {t("Accept")}
+            {t("Evaluate Student")}
           </Button>
         )}
-        {status === 1 && user.university_id !== data.university_id_src && (
+        {status === 7 && user.university_id !== data.university_id_src && (
           <Button
-            color="danger"
+            color={store.universityReport ? "success" : "warning"}
             block
-            onClick={() => handelRejectOffer(id)}
+            onClick={() => {
+              if (!store.studentReport && store.universityReport) {
+                console.log("Student Report is not ready")
+              }
+              // else setStudentReportOpen(true)
+            }}
+            disabled={!store.universityReport}
             className="mb-75"
           >
-            {t("Reject")}
+            {store.universityReport
+              ? t("Evaluate Training")
+              : t("Waiting for University Evaluation")}
           </Button>
         )}
-        <Button color="success" block outline className="mb-75">
+
+        <Button color="success" block outline>
           {t("Print")}
         </Button>
       </CardBody>

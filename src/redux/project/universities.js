@@ -74,19 +74,19 @@ const universitiesSlice = createSlice({
 
 export default universitiesSlice.reducer
 
-export const selectAllUniversities = (state) => {
-  const user_university_id = state.auth.userData.university_id
-  const universities = state.universities.universities?.filter(
-    (university) => university.ID !== user_university_id
-  )
-  return universities
-}
+// export const selectAllUniversities = (state) => {
+//   const user_university_id = state.auth.userData.university_id
+//   const universities = state.universities.universities?.filter(
+//     (university) => university.ID !== user_university_id
+//   )
+//   return universities
+// }
 
-export const selectUniversityById = (state, id) => {
-  return state.universities.universities?.find((u) => {
-    return u.ID === +id
-  })
-}
+// export const selectUniversityById = (state, id) => {
+//   return state.universities.universities?.find((u) => {
+//     return u.ID === +id
+//   })
+// }
 
-export const selectIsLoadingUniversities = (state) =>
-  state.universities.isLoading
+// export const selectIsLoadingUniversities = (state) =>
+//   state.universities.isLoading

@@ -1,5 +1,5 @@
 // ** Reactstrap Imports
-import { Card, CardHeader, Progress } from "reactstrap"
+import { Card, CardHeader, Col, Progress, Row } from "reactstrap"
 
 // ** Third Party Components
 import { ChevronDown } from "react-feather"
@@ -14,20 +14,68 @@ import { useSelector } from "react-redux"
 
 import Spinner from "../../../components/custom/loader/Spinner"
 import { useTranslation } from "react-i18next"
+import moment from "moment"
 
 const ExpandableTable = ({ data }) => {
+  const { t } = useTranslation()
+  // const university = useSelector
   return (
-    <div className="expandable-content p-2">
-      <p>
-        <span className="fw-bold">Start Date:</span> {data.train_start_date}
-      </p>
-      <p>
-        <span className="fw-bold">End Date:</span> {data.train_end_date}
-      </p>
-      <p className="m-0">
-        <span className="fw-bold">Description:</span> {data.train_description}
-      </p>
-    </div>
+    <Card className="expandable-content d-flex px-2 pt-2">
+      <Row>
+        <Col md={6} className="d-flex flex-column gap-75">
+          <Row>
+            <Col md={3}>
+              <span className="fw-bold">{t("trainingStartDate")}:</span>
+            </Col>
+            <Col md={9}>
+              <span>{moment(data.train_start_date).format("MMM d, YYYY")}</span>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={3}>
+              <span className="fw-bold">{t("trainingEndDate")}:</span>
+            </Col>
+            <Col md={9}>
+              <span>{moment(data.train_end_date).format("MMM d, YYYY")}</span>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={3}>
+              <span className="fw-bold">{t("trainingDescription")}:</span>
+            </Col>
+            <Col md={9}>
+              <span className="text-wrap">{data.train_description}</span>
+            </Col>
+          </Row>
+        </Col>
+        <Col md={6} className="d-flex flex-column gap-75">
+          <Row>
+            <Col md={6}>
+              <span className="fw-bold">{t("instituteDaysOfWork")}:</span>
+            </Col>
+            <Col md={6}>
+              <span>{data.days_of_work}</span>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              <span className="fw-bold">{t("instituteDailyHours")}:</span>
+            </Col>
+            <Col md={6}>
+              <span>{data.daily_hours}</span>
+            </Col>
+          </Row>
+          <Row>
+            <Col md={6}>
+              <span className="fw-bold">{t("instituteWeeklyHours")}:</span>
+            </Col>
+            <Col md={6}>
+              <span>{data.weekly_hours}</span>
+            </Col>
+          </Row>
+        </Col>
+      </Row>
+    </Card>
   )
 }
 
@@ -53,7 +101,6 @@ const UserProjectsList = () => {
             className="react-dataTable"
             sortIcon={<ChevronDown size={10} />}
             expandableRowsComponent={ExpandableTable}
-            paginationRowsPerPageOptions={[10, 25, 50, 100]}
           />
         )}
       </div>

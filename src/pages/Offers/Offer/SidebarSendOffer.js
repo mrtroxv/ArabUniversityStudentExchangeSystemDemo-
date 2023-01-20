@@ -46,7 +46,6 @@ import { selectUser } from "../../../redux/authentication"
 import { useLang } from "../../../utility/hooks/custom/useLang"
 import { getUniversityName } from "../../../utility/Utils"
 import { sendOffer } from "../store"
-// import { sendOffer } from "../../../redux/project/offers"
 
 const OptionComponent = ({ data, ...props }) => {
   return (
@@ -61,8 +60,6 @@ const OptionComponent = ({ data, ...props }) => {
 
 const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
   // ** States
-  // const { t } = useTranslation()
-  // const universities = useSelector(selectAllUniversities)
   const store = useSelector((state) => state.users)
   const user = useSelector(selectUser)
   const [lang] = useLang()
