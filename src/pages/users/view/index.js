@@ -30,11 +30,10 @@ const UserView = () => {
   if (!id) {
     id = user.university_id
   }
-  console.log(user)
   // ** Get user on mount
   useEffect(() => {
     dispatch(getUser(id))
-  }, [dispatch, store?.data?.length])
+  }, [dispatch, store?.allData?.activeUsers])
 
   const refetchData = (id) => dispatch(getUser(id))
 
@@ -54,10 +53,7 @@ const UserView = () => {
       <div className="app-user-view">
         <Row>
           <Col xl="4" lg="5" xs={{ order: 1 }} md={{ order: 0, size: 5 }}>
-            <UserInfoCard
-              selectedUser={store.selectedUser?.activeUser}
-              refetchData={refetchData}
-            />
+            <UserInfoCard refetchData={refetchData} />
           </Col>
           <Col xl="8" lg="7" xs={{ order: 0 }} md={{ order: 1, size: 7 }}>
             <UserTabs active={active} toggleTab={toggleTab} />

@@ -15,25 +15,36 @@ import {
   CardText
 } from "reactstrap"
 import * as Yup from "yup"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { uploadUniversityReport } from "./store"
 import "@styles/react/pages/page-authentication.scss"
 import { useTranslation } from "react-i18next"
+import { useNavigate, useParams } from "react-router-dom"
+import toast from "react-hot-toast"
 
 const EvaluationReport = () => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const navigate = useNavigate()
+  const options = [
+    { value: "excellent", label: "Excellent" },
+    { value: "good", label: "Good" },
+    { value: "fair", label: "Fair" },
+    { value: "poor", label: "Poor" }
+  ]
   const validationSchema = Yup.object().shape({
-    student_performance: Yup.string().required("This field is required"),
-    coworker_relationship: Yup.string().required("This field is required"),
+    student_performance: Yup.string().required(t("This field is required")),
+    coworker_relationship: Yup.string().required(t("This field is required")),
     training_officer_relationship: Yup.string().required(
-      "This field is required"
+      t("This field is required")
     ),
-    duty_performance: Yup.string().required("This field is required"),
-    learning_ability: Yup.string().required("This field is required"),
-    documentation_ability: Yup.string().required("This field is required")
+    duty_performance: Yup.string().required(t("This field is required")),
+    learning_ability: Yup.string().required(t("This field is required")),
+    documentation_ability: Yup.string().required(t("This field is required"))
   })
 
+  const selectedOffer = useSelector((state) => state.appOffers.selectedOffer)
+  const { id } = useParams()
   const initialValues = {
     student_performance: "",
     coworker_relationship: "",
@@ -42,13 +53,6 @@ const EvaluationReport = () => {
     learning_ability: "",
     documentation_ability: ""
   }
-
-  const options = [
-    { value: "excellent", label: "Excellent" },
-    { value: "good", label: "Good" },
-    { value: "fair", label: "Fair" },
-    { value: "poor", label: "Poor" }
-  ]
 
   const labels = {
     student_performance: "Student's general performance",
@@ -72,7 +76,7 @@ const EvaluationReport = () => {
               }}
               className="mb-1"
             >
-              {t("University Evaluation Report")}
+              {t("University Evaluation Report")} {}
             </CardTitle>
           </CardHeader>
           <CardBody>
@@ -81,13 +85,31 @@ const EvaluationReport = () => {
               validationSchema={validationSchema}
               onSubmit={(values) => {
                 //make a request to the server to insert the data
-                dispatch(uploadUniversityReport(values))
+                const data = {
+                  values,
+                  requestId: selectedOffer?.request?.id || id
+                }
+
+                if (!selectedOffer?.request && !id) {
+                  navigate(-1)
+                  toast.error(t("There was a problem, try again later"))
+                } else {
+                  toast
+                    .promise(dispatch(uploadUniversityReport(data)), {
+                      loading: t("Submitting"),
+                      success: t("Submitted successfully"),
+                      error: t("There was a problem, try again later")
+                    })
+                    .then(() => {
+                      navigate(-1)
+                    })
+                }
               }}
             >
               {({ setFieldValue }) => (
                 <Form>
                   {keys.map((key, index) => (
-                    <FormGroup key={index} className="border-bottom pb-3">
+                    <FormGroup key={index} className="border-bottom">
                       <Label for={key} className="mb-2">
                         <CardText
                           className="fw-bold"
@@ -98,34 +120,35 @@ const EvaluationReport = () => {
                           {index + 1} - {t(labels[key])} :
                         </CardText>
                       </Label>
-                      <Row>
+                      <Row className="mb-1">
                         {options.map((option) => (
                           <Col key={option.value}>
                             <Input
                               type="radio"
                               name={key}
-                              id={key}
+                              id={`${key}_${option.value}`}
                               value={option.value}
                               className="mx-1"
                               onChange={(e) => {
                                 setFieldValue(key, e.target.value)
                               }}
                             />
-                            <FormText
+                            <Label
                               color="secondary"
                               style={{
                                 fontSize: "1.2rem"
                               }}
+                              for={`${key}_${option.value}`}
                             >
                               {t(option.label)}
-                            </FormText>
+                            </Label>
                           </Col>
                         ))}
                       </Row>
                       <ErrorMessage
-                        name={key}
                         component="p"
-                        className="invalid-feedback"
+                        className="text-danger fw-bold"
+                        name={key}
                       />
                     </FormGroup>
                   ))}

@@ -50,13 +50,7 @@ const OptionComponent = ({ data, ...props }) => {
   )
 }
 
-const ReactivateAccount = ({
-  open,
-  toggleSidebar,
-  id,
-  university_id,
-  refetchData
-}) => {
+const ReactivateAccount = ({ open, toggleSidebar, id, university_id }) => {
   // ** States
   const { t } = useTranslation()
   const store = useSelector((state) => state.users)
@@ -77,14 +71,13 @@ const ReactivateAccount = ({
         account_id,
         university_id
       }
-      toast.promise(
-        dispatch(reactivateAccount(data)).then(refetchData(account_id)),
-        {
-          loading: "Saving...",
-          success: "Saved",
-          error: "Error"
-        }
-      )
+      toast.promise(dispatch(reactivateAccount(data)), {
+        loading: "Saving...",
+        success: () => {
+          return "Account Reactivated"
+        },
+        error: "Error"
+      })
     } else if (!!username && !!name && !!password && !!avatar) {
       const data = {
         id,

@@ -5,13 +5,13 @@ const useStatusBadge = () => {
   const { t } = useTranslation()
   const statusBadge = {
     0: { title: t("Creating Offer"), color: "light-primary" },
-    1: { title: t("Pending Request"), color: "light-warning" },
-    2: { title: t("Accepted"), color: "light-success" },
-    3: { title: t("Application Submission"), color: "warning" },
-    4: { title: t("Pending Submission"), color: "light-warning" },
+    1: { title: t("Pending Offer Request"), color: "light-warning" },
+    2: { title: t("Accepted Offer"), color: "light-success" },
+    3: { title: t("Student Request Submission"), color: "warning" },
+    4: { title: t("Pending Student Request"), color: "light-warning" },
     5: { title: t("Ready to Start"), color: "success" },
     6: { title: t("In Progress"), color: "info" },
-    7: { title: t("Offer Report"), color: "light-primary" },
+    7: { title: t("Creating Offer Reports"), color: "light-primary" },
     8: { title: t("Finished"), color: "light-danger" }
   }
   return {

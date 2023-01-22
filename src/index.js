@@ -48,6 +48,7 @@ import "./assets/scss/style.scss"
 
 // ** Service Worker
 import * as serviceWorker from "./serviceWorker"
+import { SocketProvider } from "./utility/context/Socket"
 
 // ** Lazy load app
 const LazyApp = lazy(() => import("./App"))
@@ -61,11 +62,13 @@ root.render(
       <Suspense fallback={<Spinner />}>
         <AbilityContext.Provider value={ability}>
           <ThemeContext>
-            <LazyApp />
-            <Toaster
-              position={themeConfig.layout.toastPosition}
-              toastOptions={{ className: "react-hot-toast" }}
-            />
+            <SocketProvider>
+              <LazyApp />
+              <Toaster
+                position={themeConfig.layout.toastPosition}
+                toastOptions={{ className: "react-hot-toast" }}
+              />
+            </SocketProvider>
           </ThemeContext>
         </AbilityContext.Provider>
       </Suspense>

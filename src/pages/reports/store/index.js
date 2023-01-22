@@ -9,20 +9,42 @@ export const uploadUniversityReport = createAsyncThunk(
   "evaluationReport/uploadUniversityReport",
   async (data) => {
     console.log(data)
-    const response = await axios.post(
-      "http://localhost:3500/offer/insert_evaluation",
-      data,
-      {
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
+    try {
+      const response = await axios.post(
+        "http://localhost:3500/offer/insert_evaluation",
+        data,
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
         }
-      }
-    )
-    return response.data
+      )
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
   }
 )
-
-export const uploadStudentReport = createAsyncThunk()
+export const uploadStudentReport = createAsyncThunk(
+  "evaluationReport/uploadStudentReport",
+  async (data) => {
+    console.log(data)
+    try {
+      const response = await axios.post(
+        "http://localhost:3500/offer/insert_feedback",
+        data,
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      return response.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
 
 export const evaluationReportSlice = createSlice({
   name: "evaluationReport",

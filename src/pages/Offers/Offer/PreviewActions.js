@@ -21,6 +21,8 @@ import {
 } from "../store"
 import { selectUser } from "../../../redux/authentication"
 import moment from "moment"
+import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner"
+import { deleteRequest } from "../../candidates/store"
 
 const MySwal = withReactContent(Swal)
 
@@ -37,7 +39,8 @@ const PreviewActions = ({
   const navigate = useNavigate()
   const status = data?.status
   const user = useSelector(selectUser)
-  const store = useSelector((state) => state.appOffers.selectedOffer)
+  const store = useSelector((state) => state.appOffers)
+  const selectedOffer = store?.selectedOffer
   const handelRejectOffer = (id) => {
     toast.promise(dispatch(rejectOffer(id)), {
       loading: t("Rejecting"),
@@ -110,7 +113,7 @@ const PreviewActions = ({
     toast.promise(
       dispatch(
         submitRequest({
-          offer_id: store.offer.id
+          offer_id: selectedOffer.offer.id
         })
       ),
       {
@@ -125,7 +128,7 @@ const PreviewActions = ({
     toast.promise(
       dispatch(
         acceptRequest({
-          offer_id: store.offer.id
+          offer_id: selectedOffer.offer.id
         })
       ),
       {
@@ -141,18 +144,28 @@ const PreviewActions = ({
     toast.promise(
       dispatch(
         removeStudent({
-          offer_id: store.offer.id,
-          student_id: store.student.ID
+          offer_id: selectedOffer.offer.id,
+          student_id: selectedOffer.student.ID
         })
       ),
       {
         loading: t("Removing"),
-        success: t("Removed"),
+        success: () => {
+          dispatch(
+            deleteRequest({
+              offer_id: selectedOffer.offer.id,
+              student_id: selectedOffer.student.ID
+            })
+          )
+        },
         error: t("Error")
       }
     )
   }
 
+  if (store.isLoading) {
+    return <SpinnerComponent />
+  }
   return (
     <Card>
       <CardBody>
@@ -209,16 +222,16 @@ const PreviewActions = ({
         )}
         {status === 3 && user.university_id !== data.university_id_src && (
           <>
-            {!store.student.status && (
+            {!selectedOffer?.student?.status && (
               <UncontrolledTooltip placement="top" target="student-state">
                 {t("You must complete your request")}
               </UncontrolledTooltip>
             )}
             <Button
-              color={store.student?.status ? "success" : "secondary"}
+              color={selectedOffer.student?.status ? "success" : "secondary"}
               block
               onClick={() => {
-                if (store.student?.status) handleSubmitRequest(id)
+                if (selectedOffer.student?.status) handleSubmitRequest(id)
               }}
               className="mb-75"
               id="student-state"
@@ -281,7 +294,7 @@ const PreviewActions = ({
             className="mb-75"
             onClick={setEditOfferOpen}
           >
-            {t("Edit")}
+            {t("Edit Offer")}
           </Button>
         )}
         {status === 6 && (
@@ -300,37 +313,42 @@ const PreviewActions = ({
             color="success"
             block
             onClick={() => {
-              if (!store.universityReport) {
-                console.log("University Report is not ready")
+              if (!selectedOffer.universityReport) {
+                navigate(`/evaluate-student/${selectedOffer?.request?.id}`)
               }
-              // else setUniversityReportOpen(true)
             }}
             className="mb-75"
+            disabled={!!selectedOffer.universityReport}
           >
-            {t("Evaluate Student")}
+            {!selectedOffer.universityReport
+              ? t("Evaluate Student")
+              : t("Student Evaluated")}
           </Button>
         )}
         {status === 7 && user.university_id !== data.university_id_src && (
           <Button
-            color={store.universityReport ? "success" : "warning"}
+            color={selectedOffer.universityReport ? "success" : "warning"}
             block
             onClick={() => {
-              if (!store.studentReport && store.universityReport) {
-                console.log("Student Report is not ready")
+              if (
+                !selectedOffer.studentReport &&
+                selectedOffer.universityReport
+              ) {
+                navigate(`/evaluate-offer/${selectedOffer?.request?.id}`)
               }
               // else setStudentReportOpen(true)
             }}
-            disabled={!store.universityReport}
+            disabled={!selectedOffer.universityReport}
             className="mb-75"
           >
-            {store.universityReport
+            {selectedOffer.universityReport
               ? t("Evaluate Training")
               : t("Waiting for University Evaluation")}
           </Button>
         )}
 
         <Button color="success" block outline>
-          {t("Print")}
+          {t("Print Offer")}
         </Button>
       </CardBody>
     </Card>

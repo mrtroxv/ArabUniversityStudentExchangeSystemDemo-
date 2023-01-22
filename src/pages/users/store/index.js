@@ -49,38 +49,6 @@ export const suspendUser = createAsyncThunk(
     }
   }
 )
-export const reactivateAccount = createAsyncThunk(
-  "appUsers/reactivateAccount",
-  async (data, { rejectWithValue }) => {
-    try {
-      await axios.post(
-        `http://localhost:3500/admin/reactivate-user`,
-        {
-          userId: data.account_id,
-          id: data.id,
-          university_id: data.university_id
-        },
-        {
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
-        }
-      )
-      const response = await axios.get(`http://localhost:3500/admin/get-user`, {
-        params: {
-          universityId: data.university_id
-        },
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
-      })
-      return response.data
-    } catch (error) {
-      // console.log(error)
-      return rejectWithValue(error.message)
-    }
-  }
-)
 
 export const getUser = createAsyncThunk("appUsers/getUser", async (id) => {
   try {
@@ -97,6 +65,32 @@ export const getUser = createAsyncThunk("appUsers/getUser", async (id) => {
     console.log(error)
   }
 })
+
+export const reactivateAccount = createAsyncThunk(
+  "appUsers/reactivateAccount",
+  async (data, { rejectWithValue, dispatch }) => {
+    try {
+      await axios.post(
+        `http://localhost:3500/admin/reactivate-user`,
+        {
+          userId: data.account_id,
+          id: data.id,
+          university_id: data.university_id
+        },
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      await dispatch(getUser(data.university_id))
+      return response.data
+    } catch (error) {
+      // console.log(error)
+      return rejectWithValue(error.message)
+    }
+  }
+)
 
 export const editUser = createAsyncThunk("appUsers/editUser", async (data) => {
   try {
@@ -203,14 +197,6 @@ export const appUsersSlice = createSlice({
       .addCase(getUsersForUniversity.pending, (state) => {
         state.isLoading = true
       })
-      .addCase(
-        reactivateAccount.fulfilled,
-        suspendUser.fulfilled,
-        (state, action) => {
-          state.isLoading = false
-          state.selectedUser = action.payload
-        }
-      )
       .addCase(reactivateAccount.pending, (state) => {
         state.isLoading = true
       })

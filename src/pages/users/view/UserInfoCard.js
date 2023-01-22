@@ -36,7 +36,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { selectUser } from "../../../redux/authentication"
 // import { suspendUser } from "../store"
 import ReactivateAccount from "./ReactivateAccount"
-import store, { editUser } from "../store"
+import { editUser } from "../store"
 import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner"
 import FormHeader from "../create-user/new-user-form/FormHeader"
 
@@ -54,12 +54,15 @@ const statusColors = {
   inactive: "light-secondary"
 }
 
-const UserInfoCard = ({ selectedUser, refetchData }) => {
+const UserInfoCard = ({ refetchData }) => {
   // ** State
   const [show, setShow] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const { t } = useTranslation()
   const user = useSelector(selectUser)
+  const store = useSelector((state) => state.users)
+  const selectedUser = store?.selectedUser?.activeUser
+
   const dispatch = useDispatch()
   // ** Hook
   const defaultValues = {
@@ -235,7 +238,7 @@ const UserInfoCard = ({ selectedUser, refetchData }) => {
               Edit
             </Button>
 
-            {user.role === "admin" && (
+            {user.role === "admin" && selectedUser?.role !== "admin" && (
               <Button
                 className="ms-1"
                 color="danger"

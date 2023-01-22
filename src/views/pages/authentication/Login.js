@@ -43,9 +43,8 @@ import {
 // ** Styles
 import "@styles/react/pages/page-authentication.scss"
 import { useTranslation } from "react-i18next"
-import { fetchAllOffers } from "../../../redux/project/offers"
-import { fetchUniversities } from "../../../redux/project/universities"
-import { fetchStudents } from "../../../redux/project/students"
+import { SocketContext } from "../../../utility/context/Socket"
+import { getNotifications } from "../../../redux/project/notification"
 
 const ToastContent = ({ t, name, role }) => {
   return (
@@ -79,17 +78,18 @@ const Login = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const ability = useContext(AbilityContext)
+  const { socket } = useContext(SocketContext)
 
   const illustration = skin === "dark" ? "login-v2-dark.svg" : "login-v2.svg",
     source = require(`@src/assets/images/pages/${illustration}`).default
 
   const onSubmit = (data) => {
-    if (Object.values(data).every((field) => field.length > 0)) {
+    if (Object.values(data).every((field) => field.length > 0) && socket) {
       const logInData = useJwt.login({
         Username: data.Username,
-        password: data.password
+        password: data.password,
+        socketId: socket.id
       })
-      console.log(data)
       const handleLoginData = logInData.then((res) => {
         const data = { ...res.data, accessToken: res.data.accessToken }
         dispatch(handleLogin(data))
@@ -104,17 +104,12 @@ const Login = () => {
         return data
       })
       const handleRedirect = handleLoginData.then((data) => {
-        const promises = Promise.all([
-          dispatch(fetchAllOffers()),
-          dispatch(fetchUniversities()),
-          dispatch(fetchStudents())
-        ])
-        toast.promise(promises, {
-          loading: "Loading Data...",
-          success: "Data Loaded",
-          error: "Error"
-        })
-        navigate(getHomeRouteForLoggedInUser(data.role))
+        toast
+          .promise(dispatch(getNotifications()), {
+            loading: "Logging in ...",
+            error: "Error Logging in"
+          })
+          .then(() => navigate(getHomeRouteForLoggedInUser(data.role)))
       })
       handleRedirect.catch((error) => {
         toast.error(error.message)

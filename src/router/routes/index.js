@@ -52,6 +52,7 @@ const CandidateView = lazy(() => import("../../pages/candidates/view/index"))
 const UniversityReport = lazy(() =>
   import("../../pages/reports/UniversityReport")
 )
+const StudentReport = lazy(() => import("../../pages/reports/StudentReport"))
 // ** Merge Routes
 const Routes = [
   {
@@ -208,9 +209,18 @@ const Routes = [
   },
   {
     element: <UniversityReport />,
-    path: "/view-reports",
+    path: "/evaluate-student/:id",
     meta: {
-      // layout: "blank",
+      layout: "blank",
+      action: "read",
+      resource: "user"
+    }
+  },
+  {
+    element: <StudentReport />,
+    path: "/evaluate-offer/:id",
+    meta: {
+      layout: "blank",
       action: "read",
       resource: "user"
     }

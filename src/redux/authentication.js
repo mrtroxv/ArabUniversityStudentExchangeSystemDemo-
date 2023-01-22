@@ -13,6 +13,22 @@ const initialUser = () => {
   return item ? JSON.parse(item) : {}
 }
 
+export const login = createAsyncThunk(
+  "auth/login",
+  async (data, { rejectWithValue }) => {
+    try {
+      const response = await axios.post("http://localhost:3500/login", data)
+      return response.data
+    } catch (err) {
+      if (err.response) {
+        return rejectWithValue(err.response.data)
+      } else {
+        throw err
+      }
+    }
+  }
+)
+
 export const fetchUserData = createAsyncThunk(
   "userData/fetchUserData",
   async () => {
@@ -44,7 +60,6 @@ export const authSlice = createSlice({
   },
   reducers: {
     handleLogin: (state, action) => {
-      console.log(action.payload)
       state.userData = action.payload
       state[config.storageTokenKeyName] =
         action.payload[config.storageTokenKeyName]
