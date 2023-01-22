@@ -15,6 +15,7 @@ import UserInfoCard from "./UserInfoCard"
 
 // ** Styles
 import "@styles/react/apps/app-users.scss"
+import { getOffer } from "../../Offers/store"
 // import { selectAllUniversities } from "../../../redux/project/universities"
 
 const UserView = () => {
@@ -28,7 +29,10 @@ const UserView = () => {
   // ** Get suer on mount
   useEffect(() => {
     dispatch(getCandidate(id))
-  }, [dispatch])
+    if (store.selectedUser?.offer?.id !== undefined) {
+      dispatch(getOffer(store.selectedUser?.offer?.id))
+    }
+  }, [dispatch, store.selectedUser])
 
   const [active, setActive] = useState("1")
 

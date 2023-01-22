@@ -1,5 +1,5 @@
 // eslint-disable-next-line
-import React, { Fragment, useState, useEffect } from "react"
+import React, { Fragment, useState, useEffect, useContext } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import { useParams } from "react-router-dom"
 import Breadcrumbs from "@components/breadcrumbs"
@@ -40,6 +40,7 @@ import {
   selectObtainedOffers,
   selectSentOffers
 } from "../store"
+import { SocketContext } from "../../../utility/context/Socket"
 
 function ViewOffers() {
   const { register, watch, getValues, setValue } = useForm()
@@ -52,6 +53,8 @@ function ViewOffers() {
   const [formModal, setFormModal] = useState(false)
   const [filter, setFilter] = useState("all")
   const dispatch = useDispatch()
+  // const { socket } = useContext(SocketContext)
+
   const breadcrumbs = {
     "created-offers": {
       title: "Created Offers",
@@ -98,16 +101,9 @@ function ViewOffers() {
 
   useEffect(() => {
     if (data === "finished-offers") {
-      toast.promise(dispatch(getFinishedOffers()), {
-        loading: "Loading...",
-        success: "Finished offers"
-      })
+      dispatch(getFinishedOffers())
     } else {
-      toast.promise(dispatch(getOffersData()), {
-        loading: "Loading...",
-        success: "Fetched offers",
-        error: "Error"
-      })
+      dispatch(getOffersData())
     }
   }, [data, offersList?.length])
 
@@ -167,9 +163,9 @@ function ViewOffers() {
         case "all":
           return true
         case "pending":
-          return offer.status > 0 && offer.status < 4
+          return offer.status > 0 && offer.status <= 4
         case "active":
-          return offer.status >= 4 && offer.status < 6
+          return offer.status > 4 && offer.status < 8
         default:
           return true
       }
@@ -263,7 +259,7 @@ function ViewOffers() {
           <Row>
             <Col md="12">
               <Row className="d-flex">
-                <Col lg="2" md="6">
+                <Col lg={data !== "created-offers" ? "1" : "3"} md="2">
                   <Label key="id">{t("ID")} :</Label>
                   <input
                     {...register("id")}
@@ -272,7 +268,7 @@ function ViewOffers() {
                     className="form-control"
                   />
                 </Col>
-                <Col lg="2" md="6">
+                <Col lg={data !== "created-offers" ? "3" : "3"} md="6">
                   <Label key="college">{t("college")} :</Label>
                   <input
                     {...register("college")}
@@ -281,7 +277,7 @@ function ViewOffers() {
                     className="form-control"
                   />
                 </Col>
-                <Col lg="2" md="6">
+                <Col lg={data !== "created-offers" ? "2" : "3"} md="6">
                   <Label key="major">{t("major")} :</Label>
                   <input
                     {...register("major")}
@@ -291,7 +287,7 @@ function ViewOffers() {
                   />
                 </Col>
                 {data !== "created-offers" && (
-                  <Col lg="2" md="6">
+                  <Col lg="3" md="6">
                     <Label key="university">
                       {data === "sent-offers"
                         ? t("Destination University")

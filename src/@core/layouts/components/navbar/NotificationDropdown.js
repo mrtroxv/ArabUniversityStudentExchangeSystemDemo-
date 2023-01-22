@@ -19,83 +19,12 @@ import {
   DropdownToggle,
   UncontrolledDropdown
 } from "reactstrap"
+import { useSelector } from "react-redux"
 
 const NotificationDropdown = () => {
   // ** Notification Array
-  const notificationsArray = [
-    {
-      img: require("@src/assets/images/portrait/small/avatar-s-15.jpg").default,
-      subtitle: "Won the monthly best seller badge.",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">Congratulation Sam 🎉</span>winner!
-        </p>
-      )
-    },
-    {
-      img: require("@src/assets/images/portrait/small/avatar-s-3.jpg").default,
-      subtitle: "You have 10 unread messages.",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">New message</span>&nbsp;received
-        </p>
-      )
-    },
-    {
-      avatarContent: "MD",
-      color: "light-danger",
-      subtitle: "MD Inc. order updated",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">Revised Order 👋</span>&nbsp;checkout
-        </p>
-      )
-    },
-    {
-      title: <h6 className="fw-bolder me-auto mb-0">System Notifications</h6>,
-      switch: (
-        <div className="form-check form-switch">
-          <Input
-            type="switch"
-            name="customSwitch"
-            id="exampleCustomSwitch"
-            defaultChecked
-          />
-        </div>
-      )
-    },
-    {
-      avatarIcon: <X size={14} />,
-      color: "light-danger",
-      subtitle: "USA Server is down due to hight CPU usage",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">Server down</span>&nbsp;registered
-        </p>
-      )
-    },
-    {
-      avatarIcon: <Check size={14} />,
-      color: "light-success",
-      subtitle: "Last month sales report generated",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">Sales report</span>&nbsp;generated
-        </p>
-      )
-    },
-    {
-      avatarIcon: <AlertTriangle size={14} />,
-      color: "light-warning",
-      subtitle: "BLR Server using high memory",
-      title: (
-        <p className="media-heading">
-          <span className="fw-bolder">High memory</span>&nbsp;usage
-        </p>
-      )
-    }
-  ]
-
+  const store = useSelector((state) => state.notifications)
+  const notificationsArray = store.notifications
   // ** Function to render Notifications
   /*eslint-disable */
   const renderNotificationItems = () => {
@@ -107,16 +36,19 @@ const NotificationDropdown = () => {
           wheelPropagation: false
         }}
       >
-        {notificationsArray.map((item, index) => {
+        {notificationsArray?.map((item, index) => {
           return (
             <a
               key={index}
               className="d-flex"
               href={item.switch ? "#" : "/"}
               onClick={(e) => {
-                if (!item.switch) {
-                  e.preventDefault()
-                }
+                // if (!item.switch) {
+                //   e.preventDefault()
+                // }
+                e.preventDefault()
+                item.onClick && item.onClick()
+                console.log(item)
               }}
             >
               <div
@@ -178,16 +110,18 @@ const NotificationDropdown = () => {
         onClick={(e) => e.preventDefault()}
       >
         <Bell size={21} />
-        <Badge pill color="danger" className="badge-up">
-          {notificationsArray.length}
-        </Badge>
+        {notificationsArray?.length !== 0 && (
+          <Badge pill color="danger" className="badge-up">
+            {store.notificationsCount}
+          </Badge>
+        )}
       </DropdownToggle>
       <DropdownMenu end tag="ul" className="dropdown-menu-media mt-0">
         <li className="dropdown-menu-header">
           <DropdownItem className="d-flex" tag="div" header>
             <h4 className="notification-title mb-0 me-auto">Notifications</h4>
             <Badge tag="div" color="light-primary" pill>
-              6 New
+              {store.notificationsUnread} New
             </Badge>
           </DropdownItem>
         </li>

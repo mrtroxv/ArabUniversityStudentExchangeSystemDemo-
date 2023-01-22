@@ -28,12 +28,14 @@ import {
   UncontrolledDropdown,
   Form,
   Input,
-  Badge
+  Badge,
+  Row,
+  Col
 } from "reactstrap"
 
 // ** Third Party Components
 import Select, { components } from "react-select"
-import { FileText, Users, X, Check } from "react-feather"
+import { FileText, Users, X, Check, Link2, UserPlus } from "react-feather"
 
 // ** Utils
 import { selectThemeColors } from "@utils"
@@ -49,6 +51,8 @@ import { getUniversityName } from "../../../utility/Utils"
 import { useLang } from "../../../utility/hooks/custom/useLang"
 import { addStudent } from "../store"
 import { Link } from "react-router-dom"
+import CandidateForm from "../../candidates/candidate-form/CandidateForm"
+import { addCandidate, fetchCandidatesData } from "../../candidates/store"
 
 const OptionComponent = ({ data, ...props }) => {
   return (
@@ -68,6 +72,7 @@ const SidebarAddStudent = ({ creator, open, toggleSidebar, id }) => {
   const requests = useSelector((state) => state.candidates.requestsData)
   const [student_id, setStudent_id] = useState(-1)
   const dispatch = useDispatch()
+  const [screen, setScreen] = useState(false)
   const [lang] = useLang()
   const user = useSelector(selectUser)
   const handelAddStudent = () => {
@@ -108,6 +113,18 @@ const SidebarAddStudent = ({ creator, open, toggleSidebar, id }) => {
       .filter((item) => !requestsIds.includes(item.value))
   ]
 
+  const handleSubmit = (data) => {
+    toast.promise(dispatch(addCandidate(data)), {
+      loading: t("Adding Candidate"),
+      success: () => {
+        setScreen(!screen)
+        dispatch(fetchCandidatesData(user.university_id))
+        return t("Candidate Added Successfully")
+      },
+      error: "Error"
+    })
+  }
+
   return (
     <Modal
       isOpen={open}
@@ -118,103 +135,137 @@ const SidebarAddStudent = ({ creator, open, toggleSidebar, id }) => {
         className="bg-transparent"
         toggle={toggleSidebar}
       ></ModalHeader>
-      <ModalBody className="px-sm-5 mx-50 pb-4">
-        <h1 className="text-center mb-1">
-          {t("Share Offer")} #{id}
-        </h1>
-        <p className="text-center">{t("Share offer with another Student")}</p>
-        <Label
-          for="addStudentSelect"
-          className="form-label fw-bolder font-size font-small-4 mb-50"
-        >
-          Add Student
-        </Label>
-        <Select
-          options={options}
-          isClearable={false}
-          id="addStudentSelect"
-          theme={selectThemeColors}
-          className="react-select"
-          classNamePrefix="select"
-          components={{
-            Option: OptionComponent
-          }}
-          onChange={handelSelectStudent}
-        />
-        <p className="fw-bolder pt-50 mt-2">
-          {students.allData?.length} {t("Students")}
-        </p>
-        <ListGroup flush className="mb-2">
-          {students.allData.map((item) => {
-            return (
-              <ListGroupItem
-                key={item.ID}
-                className="d-flex align-items-start border-0 px-0"
+      <ModalBody>
+        <Row>
+          {!screen && (
+            <div className="px-sm-5 mx-50 pb-2">
+              <h1 className="text-center mb-1">
+                {t("Share Offer")} #{id}
+              </h1>
+              <p className="text-center">
+                {t("Share offer with another Student")}
+              </p>
+              <Label
+                for="addStudentSelect"
+                className="form-label fw-bolder font-size font-small-4 mb-50"
               >
-                <Avatar
-                  className="me-75"
-                  img={user.logo}
-                  imgHeight={38}
-                  imgWidth={38}
-                />
-                <div className="d-flex align-items-center justify-content-between w-100">
-                  <div className="me-1">
-                    <h5 className="mb-25">{item.name}</h5>
-                    <span>{item.email}</span>
-                  </div>
-                  <div className="d-flex align-items-center">
-                    {requestsIds.includes(item.ID) && (
-                      <Link
-                        to={`/view-offers/${
-                          requests.find((r) => r.student_id === item.ID)
-                            .offer_id
-                        }`}
-                        target="_blank"
-                      >
-                        <Button.Ripple
-                          className="btn-icon"
-                          color="danger"
-                          outline
-                        >
-                          <X size={14} className="mx-2" />
-                          {t("Requested")}
-                        </Button.Ripple>
-                      </Link>
-                    )}
-                    {!requestsIds.includes(item.ID) && (
-                      <Button.Ripple
-                        className="btn-icon"
-                        color="success"
-                        outline
-                      >
-                        <Check size={14} className="mx-2" />
-                        {t("Available")}
-                      </Button.Ripple>
-                    )}
-                  </div>
+                Add Student
+              </Label>
+              <Select
+                options={options}
+                isClearable={false}
+                id="addStudentSelect"
+                theme={selectThemeColors}
+                className="react-select"
+                classNamePrefix="select"
+                components={{
+                  Option: OptionComponent
+                }}
+                onChange={handelSelectStudent}
+                value={options.find((option) => option.value === student_id)}
+              />
+              <p className="fw-bolder pt-50 mt-2">
+                {students.allData?.length} {t("Students")}
+              </p>
+              <ListGroup flush className="mb-2">
+                {students.allData.map((item) => {
+                  return (
+                    <ListGroupItem
+                      key={item.ID}
+                      className="d-flex align-items-start border-0 px-0"
+                    >
+                      <Avatar
+                        className="me-75"
+                        img={user.logo}
+                        imgHeight={38}
+                        imgWidth={38}
+                      />
+                      <div className="d-flex align-items-center justify-content-between w-100">
+                        <div className="me-1">
+                          <h5 className="mb-25">{item.name}</h5>
+                          <span>{item.email}</span>
+                        </div>
+                        <div className="d-flex align-items-center">
+                          {requestsIds.includes(item.ID) && (
+                            <Link
+                              to={`/view-offers/${
+                                requests.find((r) => r.student_id === item.ID)
+                                  .offer_id
+                              }`}
+                              target="_blank"
+                            >
+                              <Button.Ripple
+                                className="btn-icon"
+                                color="danger"
+                                outline
+                              >
+                                <X size={14} className="me-1" />
+                                {t("Requested")}
+                              </Button.Ripple>
+                            </Link>
+                          )}
+                          {!requestsIds.includes(item.ID) && (
+                            <Button.Ripple
+                              className="btn-icon"
+                              color="success"
+                              outline
+                              onClick={() => {
+                                console.log("item", item.ID)
+                                setStudent_id(item.ID)
+                              }}
+                            >
+                              <Check size={14} className="me-1" />
+                              {t("Available")}
+                            </Button.Ripple>
+                          )}
+                        </div>
+                      </div>
+                    </ListGroupItem>
+                  )
+                })}
+              </ListGroup>
+              <div className="d-flex align-content-center justify-content-between flex-wrap">
+                <div className="d-flex align-items-center me-2">
+                  <Users className="font-medium-2 me-50" />
+                  <p className="fw-bolder mb-0">
+                    {t("Public to")} {user.name} -{" "}
+                    {getUniversityName(user, lang)}
+                  </p>
                 </div>
-              </ListGroupItem>
-            )
-          })}
-        </ListGroup>
-        <div className="d-flex align-content-center justify-content-between flex-wrap">
-          <div className="d-flex align-items-center me-2">
-            <Users className="font-medium-2 me-50" />
-            <p className="fw-bolder mb-0">
-              {t("Public to")} {user.name} - {getUniversityName(user, lang)}
-            </p>
-          </div>
-          <Button
-            className="fw-bolder"
-            onClick={handelAddStudent}
-            outline
-            color="primary"
-            type="button"
-          >
-            <Link className="font-medium-2 me-50" />
-            <span>{t("Add")} </span>
-          </Button>
-        </div>
+              </div>
+              <Row className="d-flex align-items-center justify-content-end mt-2 mx-50">
+                <Col
+                  md={4}
+                  className="d-flex align-items-center justify-content-end"
+                >
+                  <Button
+                    className="fw-bolder d-flex align-items-center justify-content-center "
+                    onClick={handelAddStudent}
+                    color="success"
+                    type="button"
+                  >
+                    <Link2 className="font-medium-2 me-50" />
+                    <span>{t("Add Student")} </span>
+                  </Button>
+                </Col>
+              </Row>
+            </div>
+          )}
+          {screen && <CandidateForm outerSubmit={handleSubmit} />}
+        </Row>
+        <Row className="d-flex justify-content-end align-items-center pb-2 mx-3">
+          <Col md={4} className="d-flex align-items-center justify-content-end">
+            <Button.Ripple
+              onClick={() => setScreen(!screen)}
+              className="fw-bolder"
+              outline
+              color="primary"
+            >
+              <UserPlus className="font-medium-2 me-75" />
+              <span>{t("Create student")}</span>
+            </Button.Ripple>
+          </Col>
+        </Row>
       </ModalBody>
     </Modal>
   )

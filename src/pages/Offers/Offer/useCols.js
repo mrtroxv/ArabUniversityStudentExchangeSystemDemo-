@@ -5,11 +5,13 @@ import { Button } from "reactstrap"
 import { FileText, Trash, Edit } from "react-feather"
 import ReactCountryFlag from "react-country-flag"
 import { useSelector } from "react-redux"
+import { selectUser } from "../../../redux/authentication"
 
 const useCols = (toggleEditForm) => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const store = useSelector((state) => state.appOffers?.selectedOffer?.offer)
+  const user = useSelector(selectUser)
   const cols = [
     {
       name: t("name"),
@@ -56,11 +58,12 @@ const useCols = (toggleEditForm) => {
             >
               <FileText size={15} />
             </Button>
-            {store.status === 3 && (
-              <Button type="button" color="warning" onClick={toggleEditForm}>
-                <Edit size={15} />
-              </Button>
-            )}
+            {store.status === 3 &&
+              user.university_id === store.University_id_des && (
+                <Button type="button" color="warning" onClick={toggleEditForm}>
+                  <Edit size={15} />
+                </Button>
+              )}
           </div>
         )
       }

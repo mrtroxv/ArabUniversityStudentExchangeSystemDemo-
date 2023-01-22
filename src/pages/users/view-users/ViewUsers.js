@@ -44,7 +44,6 @@ import useCols from "./useCols"
 import Spinner from "../../../components/custom/loader/Spinner"
 import { getAllData } from "../store"
 import { useDispatch, useSelector } from "react-redux"
-import toast from "react-hot-toast"
 import { useParams } from "react-router-dom"
 
 // ** Styles
@@ -66,11 +65,7 @@ const ViewUsers = () => {
   const toggleModal = () => setFormModal(!formModal)
 
   useEffect(() => {
-    toast.promise(dispatch(getAllData()), {
-      loading: "modal",
-      success: "success",
-      error: "error"
-    })
+    dispatch(getAllData())
   }, [dispatch, store.allData?.length])
 
   const name = watch("name")

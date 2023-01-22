@@ -5,6 +5,8 @@ import { useLang } from "../../../utility/hooks/custom/useLang"
 import { Button } from "reactstrap"
 import { FileText, Trash } from "react-feather"
 import ReactCountryFlag from "react-country-flag"
+import { getUniversityName } from "../../../utility/Utils"
+import Avatar from "../../../@core/components/avatar"
 const useCols = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -13,16 +15,16 @@ const useCols = () => {
     {
       name: "Name",
       sortable: true,
-      minWidth: "100px",
+      minWidth: "300px",
+      maxWidth: "300px",
       cell: (row) => {
         return (
-          <div className="d-flex gap-1">
-            <ReactCountryFlag
-              svg
-              className="country-flag flag-icon"
-              countryCode={row.city_id.toLowerCase()}
-            />
-            {lang === "en" ? row.EN_Name : row.AR_Name}
+          <div className="d-flex align-items-center" md={10}>
+            <Avatar img={row?.logo} />
+            <div className="d-flex flex-column mx-1">
+              <span className="fw-bolder">{getUniversityName(row, lang)}</span>
+              <span className="text-muted fw-bold">{row?.email}</span>
+            </div>
           </div>
         )
       }

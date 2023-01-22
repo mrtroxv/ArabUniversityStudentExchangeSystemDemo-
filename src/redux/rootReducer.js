@@ -2,6 +2,7 @@
 import navbar from "./navbar"
 import layout from "./layout"
 import auth from "./authentication"
+import notifications from "./project/notification"
 import users from "../pages/users/store"
 import candidates from "../pages/candidates/store"
 import appOffers from "../pages/Offers/store"
@@ -30,7 +31,8 @@ const rootReducer = {
   email,
   users,
   candidates,
-  appOffers
+  appOffers,
+  notifications
 }
 
 export default rootReducer

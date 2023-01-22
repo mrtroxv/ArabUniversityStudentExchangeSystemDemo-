@@ -109,15 +109,6 @@ const menuItems = (t) => {
       resource: "ACL"
     },
     {
-      id: "ViewReports",
-      title: t("reports"),
-      icon: <Edit size={20} />,
-      navLink: "/view-reports",
-      action: "read",
-      resource: "user"
-      // newTab: true
-    },
-    {
       header: "Apps & Pages",
       action: "read",
       resource: "user"

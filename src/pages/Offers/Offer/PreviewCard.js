@@ -141,13 +141,12 @@ const PreviewCard = ({ toggleSidebar, toggleAddStudent, toggleEditForm }) => {
             </span>
           </div>
         </Col>
-        {data.status < 3 && (
-          <Col md={2}>
-            <Button.Ripple color="success">
-              <BiMailSend size={16} />
-            </Button.Ripple>
-          </Col>
-        )}
+
+        <Col md={2}>
+          <Button.Ripple color="success">
+            <BiMailSend size={16} />
+          </Button.Ripple>
+        </Col>
       </Row>
     )
   }
@@ -269,8 +268,10 @@ const PreviewCard = ({ toggleSidebar, toggleAddStudent, toggleEditForm }) => {
                   alt="logo"
                   width="100%"
                   style={{
-                    minWidth: "75px"
+                    minWidth: "75px",
+                    maxWidth: "100px"
                   }}
+                  className="mb-1 mb-md-0"
                 />
               </Col>
               <Col lg={8} md={8}>
@@ -337,7 +338,7 @@ const PreviewCard = ({ toggleSidebar, toggleAddStudent, toggleEditForm }) => {
       <hr className="invoice-spacing" />
 
       {/* Address and Contact */}
-      <CardBody className="invoice-padding pt-0">
+      <CardBody className="invoice-padding pt-0" id="requirments">
         <Row className="invoice-spacing">
           <Col className="p-0" xl="8">
             <h5 className="mb-2">{t("offerRequirment")} :</h5>
@@ -401,7 +402,12 @@ const PreviewCard = ({ toggleSidebar, toggleAddStudent, toggleEditForm }) => {
       {/* Total & Sales Person */}
       <CardBody className="invoice-padding pb-0">
         <Row className="d-flex justify-content-between">
-          <Col className="mt-md-0 mt-3" md={6} order={{ md: 1, lg: 2 }}>
+          <Col
+            className="mt-md-0 mt-3"
+            md={6}
+            order={{ md: 1, lg: 2 }}
+            id="offer-timeline"
+          >
             <Timeline data={basicData} className="mb-2" />
           </Col>
 
@@ -409,6 +415,7 @@ const PreviewCard = ({ toggleSidebar, toggleAddStudent, toggleEditForm }) => {
             className="d-flex justify-content-end"
             md={store?.student ? "3" : "4"}
             order={{ md: 2, lg: 1 }}
+            id="support"
           >
             <div
               className="d-flex flex-column gap-1"

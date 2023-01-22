@@ -138,16 +138,16 @@ export const getOffer = createAsyncThunk(
           }
         }
       )
-      if (response.data.University_id_des) {
+      if (response.data.University_id_des && response.data.status > 0) {
+        await dispatch(getUniversityById(response.data.University_id_des))
+      }
+      if (response.data.status > 2) {
         await dispatch(
           getRequestData({
             id,
             status: response.data.status
           })
         )
-        await dispatch(getUniversityById(response.data.University_id_des))
-      }
-      if (response.data.status > 2) {
         await dispatch(getStudentByOfferId(id))
       }
       return response.data
@@ -176,36 +176,14 @@ export const editOffer = createAsyncThunk(
 
 export const sendOffer = createAsyncThunk(
   "offers/sendOffer",
-  async (offerData) => {
+  async (offerData, { dispatch }) => {
     try {
       await axios.post(`http://localhost:3500/offer/send-offer`, offerData, {
         headers: {
           authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
       })
-      const offer = await axios.get(`http://localhost:3500/offer/get-offer`, {
-        params: {
-          id: offerData.offer_id
-        },
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
-      })
-      const university = await axios.get(
-        "http://localhost:3500/offer/get-university-data",
-        {
-          params: {
-            universityId: offerData.university_id_des
-          },
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
-        }
-      )
-      return {
-        offer: offer.data,
-        university: university.data
-      }
+      await dispatch(getOffer(offerData.offer_id))
     } catch (error) {}
   }
 )
@@ -407,12 +385,13 @@ export const appOffersSlice = createSlice({
       universityReport: null,
       studentReport: null
     },
-
     isLoading: false
   },
   reducers: {
-    flushSelectedOffer: (state, action) => {
-      state.selectedOffer.offer = action.payload
+    flushSelectedOffer: (state) => {
+      state.selectedOffer.university = null
+      state.selectedOffer.student = null
+      state.selectedOffer.offer = null
     }
   },
   extraReducers: (builder) => {
@@ -465,11 +444,6 @@ export const appOffersSlice = createSlice({
       .addCase(sendOffer.pending, (state) => {
         state.isLoading = true
       })
-      .addCase(sendOffer.fulfilled, (state, action) => {
-        state.isLoading = false
-        state.selectedOffer.offer = action.payload.offer
-        state.selectedOffer.university = action.payload.university
-      })
       .addCase(rejectOffer.pending, (state) => {
         state.isLoading = true
       })
@@ -497,6 +471,14 @@ export const appOffersSlice = createSlice({
       .addCase(getStudentReport.fulfilled, (state, action) => {
         state.isLoading = false
         state.selectedOffer.studentReport = action.payload || null
+      })
+      .addCase(removeStudent.pending, (state) => {
+        state.isLoading = true
+      })
+      .addCase(removeStudent.fulfilled, (state) => {
+        state.isLoading = false
+        state.selectedOffer.student = null
+        state.selectedOffer.request = null
       })
   }
 })

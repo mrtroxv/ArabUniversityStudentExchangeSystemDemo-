@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 import { useTranslation } from "react-i18next"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { FileText, Trash, Copy } from "react-feather"
 import { Badge, Button } from "reactstrap"
 import { deleteOffer } from "../../../redux/project/offers"
@@ -36,10 +36,17 @@ const useCols = () => {
     setDuplicateDialogData((prev) => ({ ...prev, isOpen: !prev.isOpen }))
   const cols = [
     {
-      name: "ID",
+      name: t("id"),
       sortable: true,
-      maxWidth: "25px",
-      selector: (row) => row.id
+      maxWidth: "50px",
+      minWidth: "100px",
+      selector: (row) => row.id,
+      cell: (row) => (
+        <Link to={`/view-offers/${row.id}`}>
+          <span className="fw-bolder">#</span>
+          <span className="fw-bolder">{row.id}</span>
+        </Link>
+      )
     },
     {
       name: t("college"),

@@ -30,7 +30,7 @@ import { useLang } from "../../../utility/hooks/custom/useLang"
 export const useColumns = () => {
   const { t } = useTranslation()
   const { statusBadge: status } = useStatusBadge()
-  const universities = useSelector((state) => state.users.allData.activeUsers)
+  const universities = useSelector((state) => state.users?.allData?.activeUsers)
   const [lang] = useLang()
   const cols = [
     {
@@ -50,13 +50,13 @@ export const useColumns = () => {
       sortable: true,
       minWidth: "275px",
       selector: (row) => {
-        const university = universities.find(
+        const university = universities?.find(
           (university) => university.ID === row.University_id_des
         )
         return getUniversityName(university, lang)
       },
       cell: (row) => {
-        const university = universities.find(
+        const university = universities?.find(
           (university) => university.ID === row.University_id_des
         )
         return (

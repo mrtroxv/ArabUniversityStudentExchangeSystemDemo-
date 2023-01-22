@@ -20,7 +20,7 @@ export const useColumns = () => {
   const { statusBadge: status } = useStatusBadge()
   const store = useSelector((state) => state.candidates.selectedUser?.offer)
   const offerUniversity = useSelector((state) =>
-    selectUniversity(state, store.university_id_src)
+    selectUniversity(state, store?.university_id_src)
   )
   const [lang] = useLang()
   const cols = [

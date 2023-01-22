@@ -4,36 +4,6 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 // ** Axios Imports
 import axios from "axios"
 
-// export const getRequestsData = createAsyncThunk(
-//   "students/getRequestsData",
-//   async (id) => {
-//     const response = await axios.get(
-//       "http://localhost:3500/student/get-requests",
-//       {
-//         universityId: id
-//       },
-//       {
-//         headers: {
-//           authorization: JSON.parse(localStorage.getItem("accessToken"))
-//         }
-//       }
-//     )
-//     return response.data
-//   }
-// )
-
-// export const fetchCandidatesData = createAsyncThunk(
-//   "appOffers/getAllData",
-//   async () => {
-//     const response = await axios.get("http://localhost:3500/offer/show_offer", {
-//       headers: {
-//         authorization: JSON.parse(localStorage.getItem("accessToken"))
-//       }
-//     })
-//     return response.data
-//   }
-// )
-
 export const getRequestsData = createAsyncThunk(
   "candidates/request",
   async (id) => {
@@ -205,7 +175,15 @@ export const appUsersSlice = createSlice({
     requestsData: [],
     isLoading: false
   },
-  reducers: {},
+  reducers: {
+    deleteRequest(state, action) {
+      state.requestsData = state.requestsData.filter(
+        (item) =>
+          item.student_id !== action.payload?.student_id ||
+          item.offer_id !== action.payload?.offer_id
+      )
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchCandidatesData.fulfilled, (state, action) => {
@@ -244,5 +222,7 @@ export const appUsersSlice = createSlice({
       })
   }
 })
+
+export const { deleteRequest } = appUsersSlice.actions
 
 export default appUsersSlice.reducer
