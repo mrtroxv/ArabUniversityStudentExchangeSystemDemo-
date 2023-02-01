@@ -20,7 +20,8 @@ const App = () => {
   useEffect(() => {
     // load data when app is mounted
     if (userId) {
-      socket?.emit("addSocket", user.id)
+      console.log("Loading user data")
+      socket?.emit("addSocket", user.university_id)
       dispatch(getAllData())
       dispatch(fetchCandidatesData(user.university_id))
       dispatch(getOffersData())

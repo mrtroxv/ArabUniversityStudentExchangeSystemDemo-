@@ -295,7 +295,7 @@ export const addStudent = createAsyncThunk(
   "offers/addStudent",
   async (offerIdAndStudentId, { dispatch }) => {
     try {
-      await axios.post(
+      const response = await axios.post(
         "http://localhost:3500/offer/add-student",
         offerIdAndStudentId,
         {
@@ -305,6 +305,7 @@ export const addStudent = createAsyncThunk(
         }
       )
       await dispatch(getOffer(offerIdAndStudentId.offer_id))
+      return response.data
     } catch (error) {}
   }
 )
@@ -479,6 +480,9 @@ export const appOffersSlice = createSlice({
         state.isLoading = false
         state.selectedOffer.student = null
         state.selectedOffer.request = null
+      })
+      .addCase(addStudent.pending, (state) => {
+        state.isLoading = true
       })
   }
 })

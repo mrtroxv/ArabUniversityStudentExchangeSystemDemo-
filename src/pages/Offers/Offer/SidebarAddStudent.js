@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from "react"
+import { useContext, useState } from "react"
 // ** Third Party Components
 import Flatpickr from "react-flatpickr"
 //useSelector
@@ -53,6 +53,8 @@ import { addStudent } from "../store"
 import { Link } from "react-router-dom"
 import CandidateForm from "../../candidates/candidate-form/CandidateForm"
 import { addCandidate, fetchCandidatesData } from "../../candidates/store"
+import { SocketContext } from "../../../utility/context/Socket"
+import moment from "moment"
 
 const OptionComponent = ({ data, ...props }) => {
   return (
@@ -75,13 +77,32 @@ const SidebarAddStudent = ({ creator, open, toggleSidebar, id }) => {
   const [screen, setScreen] = useState(false)
   const [lang] = useLang()
   const user = useSelector(selectUser)
+  const { socket } = useContext(SocketContext)
+  const offer = useSelector((state) => state?.appOffers?.selectedOffer?.offer)
   const handelAddStudent = () => {
     if (student_id === -1) {
       toast.error(t("msg.noStudentSelected"))
     } else {
       toast.promise(dispatch(addStudent({ offer_id: id, student_id })), {
         loading: "Adding Student",
-        success: "Student Added Successfully",
+        success: () => {
+          socket?.emit("new-notification-update", {
+            user: offer?.university_id_src,
+            link: offer?.id,
+            message: `${user?.name} added student ${
+              students?.allData?.find((student) => student.ID === student_id)
+                ?.name
+            } to offer ${offer?.id}`,
+            name: "New Student Added",
+            type: "info",
+            date: moment(),
+            update: {
+              type: "offer",
+              id: offer?.id
+            }
+          })
+          return t("Student Added Successfully")
+        },
         error: "Error Adding Student"
       })
       toggleSidebar()

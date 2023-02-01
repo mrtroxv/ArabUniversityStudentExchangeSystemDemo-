@@ -23,6 +23,8 @@ import { selectUser } from "../../../redux/authentication"
 import moment from "moment"
 import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner"
 import { deleteRequest } from "../../candidates/store"
+import { useContext } from "react"
+import { SocketContext } from "../../../utility/context/Socket"
 
 const MySwal = withReactContent(Swal)
 
@@ -41,11 +43,22 @@ const PreviewActions = ({
   const user = useSelector(selectUser)
   const store = useSelector((state) => state.appOffers)
   const selectedOffer = store?.selectedOffer
+  const { socket } = useContext(SocketContext)
+
   const handelRejectOffer = (id) => {
     toast.promise(dispatch(rejectOffer(id)), {
       loading: t("Rejecting"),
       success: () => {
+        socket.emit("new-notification", {
+          user: selectedOffer?.offer?.university_id_src,
+          link: id,
+          message: `Your offer to has been rejected`,
+          name: "Offer Rejected",
+          type: "danger",
+          date: moment()
+        })
         navigate(-1)
+
         return t("Rejected")
       },
       error: t("Error")
@@ -55,6 +68,14 @@ const PreviewActions = ({
     toast.promise(dispatch(rejectSubmission(id)), {
       loading: t("Rejecting"),
       success: () => {
+        socket.emit("new-notification", {
+          user: selectedOffer?.offer?.University_id_des,
+          link: id,
+          message: `Your request to has been rejected`,
+          name: "Request Rejected",
+          type: "danger",
+          date: moment()
+        })
         return t("Rejected")
       },
       error: t("Error")
@@ -105,7 +126,17 @@ const PreviewActions = ({
   const handelAcceptOffer = (offer_id) => {
     toast.promise(dispatch(acceptOffer(offer_id)), {
       loading: t("Accepting"),
-      success: t("Accepted"),
+      success: () => {
+        socket.emit("new-notification", {
+          user: selectedOffer?.offer?.university_id_src,
+          link: offer_id,
+          message: `Your offer to has been accepted`,
+          name: "Offer Accepted",
+          type: "success",
+          date: moment()
+        })
+        return t("Accepted")
+      },
       error: t("Error")
     })
   }
@@ -118,7 +149,17 @@ const PreviewActions = ({
       ),
       {
         loading: t("Submitting"),
-        success: t("Submitted"),
+        success: () => {
+          socket.emit("new-notification", {
+            user: selectedOffer?.offer?.university_id_src,
+            link: selectedOffer?.offer?.id,
+            message: `Your request to has been submitted`,
+            name: "Request Submitted",
+            type: "success",
+            date: moment()
+          })
+          return t("Submitted")
+        },
         error: t("Error")
       }
     )
@@ -133,14 +174,24 @@ const PreviewActions = ({
       ),
       {
         loading: t("Accepting"),
-        success: t("Accepted"),
+        success: () => {
+          socket.emit("new-notification", {
+            user: selectedOffer?.offer?.university_id_src,
+            link: selectedOffer?.offer?.id,
+            message: `Your request to has been accepted`,
+            name: "Request Accepted",
+            type: "success",
+            date: moment()
+          })
+          return t("Accepted")
+        },
         error: t("Error")
       }
     )
   }
 
   const handleRemoveStudent = () => {
-    dispatch(flushSelectedOffer())
+    console.log("Removing student")
     toast.promise(
       dispatch(
         removeStudent({
@@ -157,6 +208,16 @@ const PreviewActions = ({
               student_id: selectedOffer.student.ID
             })
           )
+          dispatch(flushSelectedOffer())
+          socket.emit("new-notification", {
+            user: selectedOffer?.offer?.university_id_src,
+            link: selectedOffer?.offer?.id,
+            message: `A student has been removed from your offer`,
+            name: "Student Removed",
+            type: "warning",
+            date: moment()
+          })
+          return t("Removed")
         },
         error: t("Error")
       }
@@ -195,7 +256,10 @@ const PreviewActions = ({
             <Button
               color="success"
               block
-              onClick={() => handelAcceptOffer(id)}
+              onClick={(e) => {
+                e.stopPropagation()
+                handelAcceptOffer(id)
+              }}
               className="mb-75"
             >
               {t("Accept")}

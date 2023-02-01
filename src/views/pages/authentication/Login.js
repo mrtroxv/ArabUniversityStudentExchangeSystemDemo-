@@ -43,7 +43,6 @@ import {
 // ** Styles
 import "@styles/react/pages/page-authentication.scss"
 import { useTranslation } from "react-i18next"
-import { SocketContext } from "../../../utility/context/Socket"
 import { getNotifications } from "../../../redux/project/notification"
 
 const ToastContent = ({ t, name, role }) => {
@@ -78,17 +77,15 @@ const Login = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
   const ability = useContext(AbilityContext)
-  const { socket } = useContext(SocketContext)
 
   const illustration = skin === "dark" ? "login-v2-dark.svg" : "login-v2.svg",
     source = require(`@src/assets/images/pages/${illustration}`).default
 
   const onSubmit = (data) => {
-    if (Object.values(data).every((field) => field.length > 0) && socket) {
+    if (Object.values(data).every((field) => field.length > 0)) {
       const logInData = useJwt.login({
         Username: data.Username,
-        password: data.password,
-        socketId: socket.id
+        password: data.password
       })
       const handleLoginData = logInData.then((res) => {
         const data = { ...res.data, accessToken: res.data.accessToken }

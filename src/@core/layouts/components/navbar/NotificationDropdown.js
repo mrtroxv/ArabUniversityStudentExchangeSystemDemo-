@@ -82,6 +82,7 @@ const NotificationDropdown = () => {
                         {item.subtitle}
                       </small>
                     </div>
+                    <small>{item.meta}</small>
                   </Fragment>
                 ) : (
                   <Fragment>

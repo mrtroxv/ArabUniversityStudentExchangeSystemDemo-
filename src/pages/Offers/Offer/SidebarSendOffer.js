@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from "react"
+import { useState, useContext } from "react"
 // ** Third Party Components
 import Flatpickr from "react-flatpickr"
 //useSelector
@@ -46,6 +46,8 @@ import { selectUser } from "../../../redux/authentication"
 import { useLang } from "../../../utility/hooks/custom/useLang"
 import { getUniversityName } from "../../../utility/Utils"
 import { sendOffer } from "../store"
+import { SocketContext } from "../../../utility/context/Socket"
+import moment from "moment"
 
 const OptionComponent = ({ data, ...props }) => {
   return (
@@ -63,9 +65,10 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
   const store = useSelector((state) => state.users)
   const user = useSelector(selectUser)
   const [lang] = useLang()
+  const uniName = getUniversityName(user, lang)
   const [selectedUniversity, setSelectedUniversity] = useState(-1)
   const dispatch = useDispatch()
-
+  const { socket } = useContext(SocketContext)
   const handleChange = (e) => {
     setSelectedUniversity(e?.value)
   }
@@ -80,7 +83,17 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
       toast
         .promise(dispatch(sendOffer(uploadData)), {
           loading: "Sending Offer",
-          success: "Offer Sent Successfully",
+          success: () => {
+            socket?.emit("new-notification", {
+              user: uploadData.university_id_des,
+              link: uploadData.offer_id,
+              message: `${uniName}  has sent you offer #${uploadData.offer_id}`,
+              name: "Offer Received",
+              type: "info",
+              date: moment()
+            })
+            return "Offer Sent"
+          },
           error: "Error Sending Offer"
         })
         .then(() => toggleSidebar())
@@ -108,50 +121,7 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
       logo: item.logo
     }))
   ]
-  // return (
-  //   <Sidebar
-  //     size="lg"
-  //     open={open}
-  //     title={t("SendUniversity")}
-  //     headerClassName="mb-1"
-  //     contentClassName="p-0"
-  //     toggleSidebar={toggleSidebar}
-  //   >
-  //     <Form>
-  //       <div className="mb-1">
-  //         <Input id="id" defaultValue={`${t("offerID")} : #${id}`} disabled />
-  //       </div>
-  //       <div className="mb-1">
-  //         <Label for="payment-method" className="form-label">
-  //           {t("selectUniversity")}
-  //         </Label>
-  //         <Input
-  //           type="select"
-  //           id="payment-method"
-  //           defaultValue={selectedUniversity}
-  //           onChange={(e) => {
-  //             setSelectedUniversity(e.target.value)
-  //           }}
-  //         >
-  //           {universities.map((university) => (
-  //             <option value={university.ID} key={university.ID}>
-  //               {university.EN_Name}
-  //             </option>
-  //           ))}
-  //         </Input>
-  //       </div>
 
-  //       <div className="d-flex flex-wrap mb-0">
-  //         <Button className="me-1" color="primary" onClick={handleSubmit}>
-  //           {t("Send")}
-  //         </Button>
-  //         <Button color="secondary" outline onClick={toggleSidebar}>
-  //           {t("cancel")}
-  //         </Button>
-  //       </div>
-  //     </Form>
-  //   </Sidebar>
-  // )
   return (
     <Modal
       isOpen={open}

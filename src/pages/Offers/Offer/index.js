@@ -26,10 +26,8 @@ import { editOffer, getOffer } from "../store"
 import OfferWizard from "../create-offer/OfferWizard"
 import { useTranslation } from "react-i18next"
 import toast from "react-hot-toast"
-import { selectUser } from "../../../redux/authentication"
 import EditRequest from "./EditRequest"
 import Spinner from "../../../components/custom/loader/Spinner"
-import { selectUniversity } from "../../users/store"
 
 import { ShepherdTour, ShepherdTourContext } from "react-shepherd"
 
@@ -37,6 +35,7 @@ import { ShepherdTour, ShepherdTourContext } from "react-shepherd"
 import "shepherd.js/dist/css/shepherd.css"
 import "@styles/react/libs/shepherd-tour/shepherd-tour.scss"
 import SpinnerComponent from "../../../@core/components/spinner/Fallback-spinner"
+import { SocketContext } from "../../../utility/context/Socket"
 
 const backBtnClass = "btn btn-sm btn-outline-primary",
   nextBtnClass = "btn btn-sm btn-primary btn-next"
@@ -65,12 +64,11 @@ const OfferPreview = () => {
   const [editForm, setEditForm] = useState(false)
   const [editRequest, setEditRequest] = useState(false)
   const dispatch = useDispatch()
-  const user = useSelector(selectUser)
   const defaultData = store.selectedOffer.offer || {}
+  const users = useSelector((state) => state.users.allData.activeUsers)
+  const sender = users.find((user) => user.ID === defaultData.university_id_src)
+  const { socket } = useContext(SocketContext)
 
-  const recepient = useSelector((state) =>
-    selectUniversity(state, user.university_id)
-  )
   // ** Functions to toggle add & send sidebar
   const toggleSendSidebar = () => setSendSidebarOpen(!sendSidebarOpen)
   const toggleAddSidebar = () => setAddStudent(!addStudent)
@@ -250,7 +248,20 @@ const OfferPreview = () => {
   }
 
   useEffect(() => {
-    dispatch(getOffer(id))
+    if (
+      store.selectedOffer?.offer === null ||
+      store.selectedOffer?.offer?.id !== +id
+    ) {
+      dispatch(getOffer(+id))
+    }
+    socket.on("update-data", (data) => {
+      if (data?.update?.type === "offer" && data?.update?.id === +id) {
+        dispatch(getOffer(+id))
+      }
+    })
+    return () => {
+      socket.off("update-data")
+    }
   }, [
     dispatch,
     id,
@@ -328,7 +339,7 @@ const OfferPreview = () => {
       />
       <SidebarAddStudent
         toggleSidebar={toggleAddSidebar}
-        creator={recepient}
+        creator={sender}
         open={addStudent}
         id={id}
       />
