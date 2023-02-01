@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import { Formik, Form, Field } from "formik"
 import * as Yup from "yup"
 import {
@@ -18,12 +18,17 @@ import Select from "react-select"
 import { selectThemeColors } from "../../../utility/Utils"
 import { useTranslation } from "react-i18next"
 import moment from "moment"
+import { SocketContext } from "../../../utility/context/Socket"
 
 const EditRequest = (props) => {
   const dispatch = useDispatch()
   const { t } = useTranslation()
   const [request, setRequest] = useState(props.request)
   const store = useSelector((state) => state?.appOffers?.selectedOffer?.offer)
+  const users = useSelector((state) => state?.users?.allData?.activeUsers)
+  const owner = users?.find((user) => user.ID === store?.university_id_src)
+  const recepient = users?.find((user) => user.ID === store?.University_id_des)
+  const { socket } = useContext(SocketContext)
   const requestSchema = Yup.object().shape({
     arrive_date: Yup.date().required("Arrival date is required"),
     arrive_time: Yup.string().required("Arrival time is required"),
@@ -50,7 +55,18 @@ const EditRequest = (props) => {
     setRequest(values)
     toast.promise(dispatch(updateRequest({ offer_id: store.id, values })), {
       loading: "Updating request...",
-      success: "Request updated successfully",
+      success: () => {
+        socket.emit("send-notification", {
+          title: "Update request",
+          user: recepient,
+          message: `The request of the offer ${store?.name} has been updated by ${owner?.name}`,
+          data: {
+            type: "warning",
+            id: store.id
+          }
+        })
+        return "Request updated successfully"
+      },
       error: "Error updating request"
     })
     setSubmitting(false)

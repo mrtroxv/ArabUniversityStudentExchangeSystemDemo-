@@ -59,19 +59,19 @@ const root = createRoot(container)
 root.render(
   <BrowserRouter>
     <Provider store={store}>
-      <Suspense fallback={<Spinner />}>
-        <AbilityContext.Provider value={ability}>
-          <ThemeContext>
-            <SocketProvider>
+      <SocketProvider>
+        <Suspense fallback={<Spinner />}>
+          <AbilityContext.Provider value={ability}>
+            <ThemeContext>
               <LazyApp />
               <Toaster
                 position={themeConfig.layout.toastPosition}
                 toastOptions={{ className: "react-hot-toast" }}
               />
-            </SocketProvider>
-          </ThemeContext>
-        </AbilityContext.Provider>
-      </Suspense>
+            </ThemeContext>
+          </AbilityContext.Provider>
+        </Suspense>
+      </SocketProvider>
     </Provider>
   </BrowserRouter>
 )

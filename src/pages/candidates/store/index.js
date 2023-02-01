@@ -141,25 +141,6 @@ export const editCandidate = createAsyncThunk(
     return response.data
   }
 )
-export const addUser = createAsyncThunk(
-  "appUsers/addUser",
-  async (user, { dispatch, getState }) => {
-    await axios.post("/apps/users/add-user", user)
-    await dispatch(getData(getState().users.params))
-    await dispatch(getAllData())
-    return user
-  }
-)
-
-export const deleteUser = createAsyncThunk(
-  "appUsers/deleteUser",
-  async (id, { dispatch, getState }) => {
-    await axios.delete("/apps/users/delete", { id })
-    await dispatch(getData(getState().users.params))
-    await dispatch(getAllData())
-    return id
-  }
-)
 
 export const appUsersSlice = createSlice({
   name: "candidates",
