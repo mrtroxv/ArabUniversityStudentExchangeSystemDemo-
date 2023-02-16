@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useContext } from "react"
 import { ErrorMessage, Form, Formik } from "formik"
 import {
   FormGroup,
@@ -21,6 +21,8 @@ import "@styles/react/pages/page-authentication.scss"
 import { useTranslation } from "react-i18next"
 import { useNavigate, useParams } from "react-router-dom"
 import toast from "react-hot-toast"
+import { SocketContext } from "../../utility/context/Socket"
+import moment from "moment"
 
 const EvaluationReport = () => {
   const dispatch = useDispatch()
@@ -90,7 +92,7 @@ const EvaluationReport = () => {
   }
 
   const keys = Object.keys(initialValues)
-
+  const { socket } = useContext(SocketContext)
   return (
     <div className="auth-wrapper auth-basic px-2">
       <div className="auth-inner my-2">
@@ -128,6 +130,18 @@ const EvaluationReport = () => {
                       error: t("There was a problem, try again later")
                     })
                     .then(() => {
+                      socket?.emit("new-notification-update", {
+                        user: selectedOffer?.offer?.university_id_src,
+                        link: `/view-offers/${selectedOffer?.offer?.id}`,
+                        message: `Student has evaluated the offer`,
+                        name: "Student Evaluation",
+                        type: "info",
+                        date: moment(),
+                        update: {
+                          type: "offer",
+                          id: selectedOffer?.offer?.id
+                        }
+                      })
                       navigate(-1)
                     })
                 }

@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from "axios"
 import moment from "moment"
-import { AlertTriangle, Check, X } from "react-feather"
-import { Link } from "react-router-dom"
+import { AlertTriangle, Check, File, X } from "react-feather"
 
 const defaultOptions = {
   avatarIcon: <X size={14} />,
@@ -23,10 +22,11 @@ export function createNotification(name, data, type) {
   switch (type) {
     case "success":
       options = {
+        id: data?.id,
         avatarIcon: data?.avatar || <Check size={14} />,
         color: data?.color || "light-success",
         subtitle: `${data?.subtitle}`,
-        onClick: data?.onClick,
+        link: data?.link,
         meta: moment(data?.date).format("DD MMM, YYYY"),
         title: (
           <p className="media-heading">
@@ -37,10 +37,11 @@ export function createNotification(name, data, type) {
       break
     case "warning":
       options = {
+        id: data?.id,
         avatarIcon: data?.avatar || <AlertTriangle size={14} />,
         color: data?.color || "light-warning",
         subtitle: `${data?.subtitle}`,
-        onClick: data?.onClick,
+        link: data?.link,
         meta: moment(data?.date).format("DD MMM, YYYY"),
         title: (
           <p className="media-heading">
@@ -51,10 +52,11 @@ export function createNotification(name, data, type) {
       break
     case "danger":
       options = {
+        id: data?.id,
         avatarIcon: data?.avatar || <X size={14} />,
         color: data?.color || "light-danger",
         subtitle: `${data?.subtitle}`,
-        onClick: data?.onClick,
+        link: data?.link,
         meta: moment(data?.date).format("DD MMM, YYYY"),
         title: (
           <p className="media-heading">
@@ -64,12 +66,12 @@ export function createNotification(name, data, type) {
       }
       break
     case "info":
-    default:
       options = {
-        avatarIcon: data?.avatar || <X size={14} />,
+        id: data?.id,
+        avatarIcon: data?.avatar || <File size={14} />,
         color: data?.color || "light-info",
         subtitle: `${data?.subtitle}`,
-        onClick: data?.onClick,
+        link: data?.link,
         meta: moment(data?.date).format("DD MMM, YYYY"),
         title: (
           <p className="media-heading">
@@ -77,6 +79,7 @@ export function createNotification(name, data, type) {
           </p>
         )
       }
+      break
   }
 
   return options
@@ -98,6 +101,42 @@ export const getNotifications = createAsyncThunk(
     } catch (error) {}
   }
 )
+
+export const removeNotification = createAsyncThunk(
+  "notifications/removeNotification",
+  async (id, { dispatch }) => {
+    try {
+      await axios.delete(
+        `http://localhost:3500/notifications/delete-notification/${id}`,
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      dispatch(getNotifications())
+      return response.data
+    } catch (error) {}
+  }
+)
+
+export const clearNotifications = createAsyncThunk(
+  "notifications/clearNotifications",
+  async (id) => {
+    try {
+      const response = await axios.delete(
+        `http://localhost:3500/notifications/clear-notifications/${id}`,
+        {
+          headers: {
+            authorization: JSON.parse(localStorage.getItem("accessToken"))
+          }
+        }
+      )
+      return response.data
+    } catch (error) {}
+  }
+)
+
 const notificationsSlice = createSlice({
   name: "notifications",
   initialState: {
@@ -112,14 +151,9 @@ const notificationsSlice = createSlice({
       state.notifications = action.payload
     },
     addNotification: (state, action) => {
-      state.notifications = state.notifications.concat(action.payload)
-      state.notificationsCount = state.notifications.length
-      state.notificationsUnread = state.notificationsUnread + 1
-    },
-    removeNotification: (state, action) => {
-      state.notifications = state.filter(
-        (notification) => notification.id !== action.payload
-      )
+      state.notifications = state?.notifications?.concat(action.payload)
+      state.notificationsCount = state?.notifications?.length
+      state.notificationsUnread = state?.notificationsUnread + 1
     }
   },
   extraReducers: (builder) => {
@@ -127,10 +161,12 @@ const notificationsSlice = createSlice({
       .addCase(getNotifications.fulfilled, (state, action) => {
         state.notifications = action.payload?.map((notification) => {
           return createNotification(
-            notification.title,
+            notification.name,
             {
-              subtitle: notification.body,
-              color: notification.type
+              subtitle: notification.message,
+              date: notification.date,
+              link: notification.link,
+              id: notification.id
             },
             notification.type
           )
@@ -150,10 +186,19 @@ const notificationsSlice = createSlice({
       .addCase(getNotifications.pending, (state) => {
         state.isLoading = true
       })
+      .addCase(clearNotifications.fulfilled, (state) => {
+        state.notifications = []
+        state.notificationsCount = 0
+        state.notificationsUnread = 0
+        state.notificationsRead = 0
+        state.isLoading = false
+      })
+      .addCase(clearNotifications.pending, (state) => {
+        state.isLoading = true
+      })
   }
 })
 
-export const { setNotifications, addNotification, removeNotification } =
-  notificationsSlice.actions
+export const { setNotifications, addNotification } = notificationsSlice.actions
 
 export default notificationsSlice.reducer

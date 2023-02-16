@@ -257,70 +257,71 @@ function ViewOffers() {
       <Card>
         <CardBody>
           <Row>
-            <Col md="12">
-              <Row className="d-flex">
-                <Col lg={data !== "created-offers" ? "1" : "3"} md="2">
-                  <Label key="id">{t("ID")} :</Label>
-                  <input
-                    {...register("id")}
-                    placeholder="ID"
-                    type="text"
-                    className="form-control"
-                  />
-                </Col>
-                <Col lg={data !== "created-offers" ? "3" : "3"} md="6">
-                  <Label key="college">{t("college")} :</Label>
-                  <input
-                    {...register("college")}
-                    placeholder="College"
-                    type="text"
-                    className="form-control"
-                  />
-                </Col>
-                <Col lg={data !== "created-offers" ? "2" : "3"} md="6">
-                  <Label key="major">{t("major")} :</Label>
-                  <input
-                    {...register("major")}
-                    placeholder="Major"
-                    type="text"
-                    className="form-control"
-                  />
-                </Col>
-                {data !== "created-offers" && (
-                  <Col lg="3" md="6">
-                    <Label key="university">
-                      {data === "sent-offers"
-                        ? t("Destination University")
-                        : t("Source University")}{" "}
-                      :
-                    </Label>
-                    <input
-                      {...register("university")}
-                      placeholder="University"
-                      type="text"
-                      className="form-control"
-                    />
-                  </Col>
-                )}
-                <Col
-                  lg="3"
-                  md="3"
-                  className="p-2 d-flex justify-content-end align-items-end gap-2"
-                >
-                  <Button outline onClick={clearData}>
-                    {isBlank() ? "Filter" : "Reset"}
-                  </Button>
-                  <Button color="primary" onClick={handleOfferPopUp}>
-                    {t("createOffer")}
-                  </Button>
-                </Col>
-              </Row>
+            <Col lg={data !== "created-offers" ? "1" : "3"} md="6">
+              <Label key="id">{t("ID")} :</Label>
+              <input
+                {...register("id")}
+                placeholder="ID"
+                type="text"
+                className="form-control"
+              />
+            </Col>
+            <Col lg={data !== "created-offers" ? "3" : "3"} md="6">
+              <Label key="college">{t("college")} :</Label>
+              <input
+                {...register("college")}
+                placeholder="College"
+                type="text"
+                className="form-control"
+              />
+            </Col>
+            <Col lg={data !== "created-offers" ? "2" : "3"} md="6">
+              <Label key="major">{t("major")} :</Label>
+              <input
+                {...register("major")}
+                placeholder="Major"
+                type="text"
+                className="form-control"
+              />
+            </Col>
+            {data !== "created-offers" && (
+              <Col lg="3" md="6">
+                <Label key="university">
+                  {data === "sent-offers"
+                    ? t("Destination University")
+                    : t("Source University")}{" "}
+                  :
+                </Label>
+                <input
+                  {...register("university")}
+                  placeholder="University"
+                  type="text"
+                  className="form-control"
+                />
+              </Col>
+            )}
+            <Col
+              lg="3"
+              md="6"
+              className="p-2 d-flex justify-content-end align-items-end gap-2"
+            >
+              <Button outline onClick={clearData}>
+                {isBlank() ? "Filter" : "Reset"}
+              </Button>
+              <Button color="primary" onClick={handleOfferPopUp}>
+                {t("createOffer")}
+              </Button>
             </Col>
           </Row>
         </CardBody>
         {store.isLoading && <Spinner />}
         {!store.isLoading && (
-          <DataTableWithButtons data={dataToRender()} columns={cols[data]} />
+          <DataTableWithButtons
+            data={dataToRender()}
+            columns={cols[data]}
+            clickAttr="id"
+            link="/view-offers"
+          />
         )}
       </Card>
       {formModal && (

@@ -8,7 +8,6 @@ export const getReportsData = createAsyncThunk()
 export const uploadUniversityReport = createAsyncThunk(
   "evaluationReport/uploadUniversityReport",
   async (data) => {
-    console.log(data)
     try {
       const response = await axios.post(
         "http://localhost:3500/offer/insert_evaluation",
@@ -27,19 +26,14 @@ export const uploadUniversityReport = createAsyncThunk(
 )
 export const uploadStudentReport = createAsyncThunk(
   "evaluationReport/uploadStudentReport",
-  async (data) => {
-    console.log(data)
+  async (data, { dispatch }) => {
     try {
-      const response = await axios.post(
-        "http://localhost:3500/offer/insert_feedback",
-        data,
-        {
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
+      await axios.post("http://localhost:3500/offer/insert_feedback", data, {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
-      )
-      return response.data
+      })
+      dispatch(getOffer(data.offerId))
     } catch (error) {
       console.log(error)
     }

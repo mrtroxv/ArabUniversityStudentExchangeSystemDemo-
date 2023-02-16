@@ -88,7 +88,7 @@ const SidebarAddStudent = ({ creator, open, toggleSidebar, id }) => {
         success: () => {
           socket?.emit("new-notification-update", {
             user: offer?.university_id_src,
-            link: offer?.id,
+            link: `/view-offers/${offer?.id}`,
             message: `${user?.name} added student ${
               students?.allData?.find((student) => student.ID === student_id)
                 ?.name

@@ -110,7 +110,7 @@ const CompanyDetails = ({ stepper, onStoreData, data }) => {
                   type="text"
                   name={`inst_name`}
                   id={`inst_name`}
-                  placeholder="ex. Foothill Technology Solutions"
+                  placeholder="ex. Company/Institute Name"
                   className={`form-control ${
                     errors.inst_name && touched.inst_name ? "is-invalid" : ""
                   }`}
@@ -202,7 +202,7 @@ const CompanyDetails = ({ stepper, onStoreData, data }) => {
                   type="text"
                   name={`trainer_name`}
                   id={`trainer_name`}
-                  placeholder="ex. Eng.Tamer Naana"
+                  placeholder="ex. Trainer Name"
                   className={`form-control ${
                     errors.trainer_name && touched.trainer_name
                       ? "is-invalid"
@@ -257,7 +257,7 @@ const CompanyDetails = ({ stepper, onStoreData, data }) => {
                   type="text"
                   name={`inst_phone`}
                   id={`inst_phone`}
-                  placeholder="ex. +970 512345678"
+                  placeholder="ex. +###-#########"
                   className={`form-control ${
                     errors.inst_phone && touched.inst_phone ? "is-invalid" : ""
                   }`}
@@ -282,7 +282,7 @@ const CompanyDetails = ({ stepper, onStoreData, data }) => {
                   type="text"
                   name={`inst_fax`}
                   id={`inst_fax`}
-                  placeholder="09-2945415"
+                  placeholder="##-#######"
                   className={`form-control ${
                     errors.inst_fax && touched.inst_fax ? "is-invalid" : ""
                   }`}

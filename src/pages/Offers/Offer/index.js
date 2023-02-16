@@ -255,7 +255,7 @@ const OfferPreview = () => {
       dispatch(getOffer(+id))
     }
     socket.on("update-data", (data) => {
-      if (data?.update?.type === "offer" && data?.update?.id === +id) {
+      if (data?.update?.type === "offer" && +data?.update?.id === +id) {
         dispatch(getOffer(+id))
       }
     })

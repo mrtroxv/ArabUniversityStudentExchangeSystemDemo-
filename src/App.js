@@ -10,6 +10,7 @@ import { getAllData } from "./pages/users/store"
 import { fetchCandidatesData } from "./pages/candidates/store"
 import { getOffersData } from "./pages/Offers/store"
 import { SocketContext } from "./utility/context/Socket"
+import { getNotifications } from "./redux/project/notification"
 
 const App = () => {
   const dispatch = useDispatch()
@@ -26,6 +27,7 @@ const App = () => {
       dispatch(fetchCandidatesData(user.university_id))
       dispatch(getOffersData())
       dispatch(fetchUserData())
+      dispatch(getNotifications())
     }
   }, [dispatch, socket, userId, user.university_id])
 

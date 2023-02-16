@@ -33,9 +33,10 @@ import { useNavigate } from "react-router-dom"
 import { acceptOffer, rejectOffer } from "../store"
 import DataTable from "react-data-table-component"
 import useCols from "./useCols"
-import { useEffect, useState } from "react"
+import { useEffect, useState, useContext } from "react"
 import "@styles/react/libs/tables/react-dataTable-component.scss"
 import { selectUniversity } from "../../users/store"
+import { SocketContext } from "../../../utility/context/Socket"
 
 const ExpandableTable = ({ data }) => {
   return (
@@ -72,11 +73,22 @@ const PreviewCard = ({ toggleSidebar, toggleAddStudent, toggleEditForm }) => {
 
   const currentUser = useSelector(selectUser)
   const creatorUser = useSelector((state) => selectUser(state, data?.user_id))
+  const { socket } = useContext(SocketContext)
 
   const handelAcceptOffer = (offer_id) => {
     toast.promise(dispatch(acceptOffer(offer_id)), {
       loading: t("Accepting"),
-      success: t("Accepted"),
+      success: () => {
+        socket.emit("new-notification", {
+          user: selectedOffer?.offer?.university_id_src,
+          link: `/view-offers/${offer_id}`,
+          message: `Your offer to has been accepted`,
+          name: "Offer Accepted",
+          type: "success",
+          date: moment()
+        })
+        return t("Accepted")
+      },
       error: t("Error")
     })
   }
@@ -84,7 +96,19 @@ const PreviewCard = ({ toggleSidebar, toggleAddStudent, toggleEditForm }) => {
     toast.promise(dispatch(rejectOffer(id)), {
       loading: t("Rejecting"),
       success: () => {
-        navigate(-1)
+        socket?.emit("new-notification-update", {
+          user: selectedOffer?.offer?.university_id_src,
+          link: `/view-offers/${id}`,
+          message: `Your offer to has been rejected`,
+          name: "Offer Rejected",
+          type: "danger",
+          date: moment(),
+          update: {
+            type: "offer",
+            id: offer?.id
+          }
+        })
+        navigate("/home")
         return t("Rejected")
       },
       error: t("Error")
