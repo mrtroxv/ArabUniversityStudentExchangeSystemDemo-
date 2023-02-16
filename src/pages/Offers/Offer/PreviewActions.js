@@ -49,16 +49,20 @@ const PreviewActions = ({
     toast.promise(dispatch(rejectOffer(id)), {
       loading: t("Rejecting"),
       success: () => {
-        socket.emit("new-notification", {
+        socket?.emit("new-notification-update", {
           user: selectedOffer?.offer?.university_id_src,
-          link: id,
+          link: `/view-offers/${id}`,
           message: `Your offer to has been rejected`,
           name: "Offer Rejected",
           type: "danger",
-          date: moment()
+          date: moment(),
+          update: {
+            type: "offer",
+            id
+          }
         })
-        navigate(-1)
-
+        console.log("Rejected")
+        navigate("/home")
         return t("Rejected")
       },
       error: t("Error")
@@ -70,7 +74,7 @@ const PreviewActions = ({
       success: () => {
         socket.emit("new-notification", {
           user: selectedOffer?.offer?.University_id_des,
-          link: id,
+          link: `/view-offers/${id}`,
           message: `Your request to has been rejected`,
           name: "Request Rejected",
           type: "danger",
@@ -129,7 +133,7 @@ const PreviewActions = ({
       success: () => {
         socket.emit("new-notification", {
           user: selectedOffer?.offer?.university_id_src,
-          link: offer_id,
+          link: `/view-offers/${offer_id}`,
           message: `Your offer to has been accepted`,
           name: "Offer Accepted",
           type: "success",
@@ -152,7 +156,7 @@ const PreviewActions = ({
         success: () => {
           socket.emit("new-notification", {
             user: selectedOffer?.offer?.university_id_src,
-            link: selectedOffer?.offer?.id,
+            link: `/view-offers/${selectedOffer?.offer?.id}`,
             message: `Your request to has been submitted`,
             name: "Request Submitted",
             type: "success",
@@ -177,7 +181,7 @@ const PreviewActions = ({
         success: () => {
           socket.emit("new-notification", {
             user: selectedOffer?.offer?.university_id_src,
-            link: selectedOffer?.offer?.id,
+            link: `/view-offers/${selectedOffer?.offer?.id}`,
             message: `Your request to has been accepted`,
             name: "Request Accepted",
             type: "success",
@@ -211,7 +215,7 @@ const PreviewActions = ({
           dispatch(flushSelectedOffer())
           socket.emit("new-notification", {
             user: selectedOffer?.offer?.university_id_src,
-            link: selectedOffer?.offer?.id,
+            link: `/view-offers/${selectedOffer?.offer?.id}`,
             message: `A student has been removed from your offer`,
             name: "Student Removed",
             type: "warning",

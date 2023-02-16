@@ -25,9 +25,6 @@ const EditRequest = (props) => {
   const { t } = useTranslation()
   const [request, setRequest] = useState(props.request)
   const store = useSelector((state) => state?.appOffers?.selectedOffer?.offer)
-  const users = useSelector((state) => state?.users?.allData?.activeUsers)
-  const owner = users?.find((user) => user.ID === store?.university_id_src)
-  const recepient = users?.find((user) => user.ID === store?.University_id_des)
   const { socket } = useContext(SocketContext)
   const requestSchema = Yup.object().shape({
     arrive_date: Yup.date().required("Arrival date is required"),
@@ -56,14 +53,13 @@ const EditRequest = (props) => {
     toast.promise(dispatch(updateRequest({ offer_id: store.id, values })), {
       loading: "Updating request...",
       success: () => {
-        socket.emit("send-notification", {
-          title: "Update request",
-          user: recepient,
-          message: `The request of the offer ${store?.name} has been updated by ${owner?.name}`,
-          data: {
-            type: "warning",
-            id: store.id
-          }
+        socket.emit("new-notification", {
+          user: store?.university_id_src,
+          link: `/view-offers/${store.id}`,
+          message: `A request has been updated!`,
+          name: "Request Updated",
+          type: "info",
+          date: moment()
         })
         return "Request updated successfully"
       },

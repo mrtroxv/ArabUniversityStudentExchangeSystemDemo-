@@ -19,12 +19,25 @@ import {
   DropdownToggle,
   UncontrolledDropdown
 } from "reactstrap"
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import {
+  clearNotifications,
+  removeNotification
+} from "../../../../redux/project/notification"
+import { selectUser } from "../../../../redux/authentication"
 
 const NotificationDropdown = () => {
   // ** Notification Array
   const store = useSelector((state) => state.notifications)
   const notificationsArray = store.notifications
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { university_id } = useSelector(selectUser)
+  const clear = () => {
+    dispatch(clearNotifications(university_id))
+  }
+
   // ** Function to render Notifications
   /*eslint-disable */
   const renderNotificationItems = () => {
@@ -43,12 +56,9 @@ const NotificationDropdown = () => {
               className="d-flex"
               href={item.switch ? "#" : "/"}
               onClick={(e) => {
-                // if (!item.switch) {
-                //   e.preventDefault()
-                // }
                 e.preventDefault()
-                item.onClick && item.onClick()
-                console.log(item)
+                navigate(item.link)
+                dispatch(removeNotification(item.id))
               }}
             >
               <div
@@ -128,7 +138,7 @@ const NotificationDropdown = () => {
         </li>
         {renderNotificationItems()}
         <li className="dropdown-menu-footer">
-          <Button color="primary" block>
+          <Button color="primary" block onClick={clear}>
             Read all notifications
           </Button>
         </li>

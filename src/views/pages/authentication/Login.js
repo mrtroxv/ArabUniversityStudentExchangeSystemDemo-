@@ -43,7 +43,6 @@ import {
 // ** Styles
 import "@styles/react/pages/page-authentication.scss"
 import { useTranslation } from "react-i18next"
-import { getNotifications } from "../../../redux/project/notification"
 
 const ToastContent = ({ t, name, role }) => {
   return (
@@ -65,11 +64,6 @@ const ToastContent = ({ t, name, role }) => {
     </div>
   )
 }
-
-// const defaultValues = {
-//   password: 'admin',
-//   loginEmail: 'admin@demo.com'
-// }
 
 const Login = () => {
   // ** Hooks
@@ -101,12 +95,7 @@ const Login = () => {
         return data
       })
       const handleRedirect = handleLoginData.then((data) => {
-        toast
-          .promise(dispatch(getNotifications()), {
-            loading: "Logging in ...",
-            error: "Error Logging in"
-          })
-          .then(() => navigate(getHomeRouteForLoggedInUser(data.role)))
+        navigate(getHomeRouteForLoggedInUser(data.role))
       })
       handleRedirect.catch((error) => {
         toast.error(error.message)
@@ -152,26 +141,10 @@ const Login = () => {
               {t("signIn")} 👋
             </CardTitle>
             <CardText className="mb-2">{t("signInSubTitle")}</CardText>
-            <Alert color="primary">
-              <div className="alert-body font-small-2">
-                <p>
-                  <small className="me-50">Ahmad Osama | Ahmad2000$</small>
-                </p>
-              </div>
-              <HelpCircle
-                id="login-tip"
-                className="position-absolute"
-                size={18}
-                style={{ top: "10px", right: "10px" }}
-              />
-              <UncontrolledTooltip target="login-tip" placement="left">
-                This is just for ACL demo purpose.
-              </UncontrolledTooltip>
-            </Alert>
             <Formik
               initialValues={{
-                password: "Ahmad2000$",
-                Username: "Ahmad Osama"
+                password: "",
+                Username: ""
               }}
               validationSchema={SignInSchema}
               onSubmit={onSubmit}
@@ -185,7 +158,7 @@ const Login = () => {
                     <Field
                       name="Username"
                       id="Username"
-                      placeholder="Ahmad Osama"
+                      placeholder="Username"
                       type="text"
                       className={`form-control ${
                         errors.Username && touched.Username ? "is-invalid" : ""

@@ -86,7 +86,7 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
           success: () => {
             socket?.emit("new-notification", {
               user: uploadData.university_id_des,
-              link: uploadData.offer_id,
+              link: `/view-offers/${uploadData.offer_id}`,
               message: `${uniName}  has sent you offer #${uploadData.offer_id}`,
               name: "Offer Received",
               type: "info",
@@ -101,7 +101,7 @@ const SidebarSendOffer = ({ open, toggleSidebar, id }) => {
   }
 
   const listUniversities = store.allData?.activeUsers?.filter(
-    (uni) => uni.id !== user.id
+    (uni) => uni.id !== user.id && uni.ID !== user.university_id
   )
 
   const data = [

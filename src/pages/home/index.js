@@ -21,7 +21,7 @@ import { useTranslation } from "react-i18next"
 // import axios from "axios"
 import DataTableWithButtons from "../../components/custom/table/ReactTable"
 import OfferWizard from "../Offers/create-offer/OfferWizard"
-import { dupliateOffer } from "../../redux/project/offers"
+import { createOffer, dupliateOffer } from "../../redux/project/offers"
 import { useForm } from "react-hook-form"
 import Spinner from "../../components/custom/loader/Spinner"
 import useCols from "./useCols"
@@ -43,9 +43,19 @@ function Home() {
     dispatch(getOffersData())
   }, [dispatch, store.allData?.offers?.length])
 
-  const handleOfferPopUp = () => {
+  const handleOfferSubmit = (data) => {
     setFormModal(!formModal)
+    toast.promise(dispatch(createOffer(data)), {
+      loading: "Creating...",
+      success: () => {
+        setFormModal(!formModal)
+        return "Created Offer Successfully"
+      },
+      error: "Error"
+    })
   }
+
+  const handleOfferPopUp = () => setFormModal(!formModal)
 
   const handleCloseDuplicate = () => {
     setValue("duplicate", undefined)
@@ -140,20 +150,17 @@ function Home() {
       {formModal && (
         <Modal
           isOpen={formModal}
-          toggle={() => setFormModal(!formModal)}
+          toggle={handleOfferPopUp}
           className="modal-dialog-centered modal-lg"
         >
-          <ModalHeader
-            toggle={() => setFormModal(!formModal)}
-            className="modal-lg"
-          >
+          <ModalHeader toggle={handleOfferPopUp} className="modal-lg">
             {t("createOffer")}
           </ModalHeader>
           <ModalBody>
             <OfferWizard
-              outerSubmit={handleOfferPopUp}
+              outerSubmit={handleOfferSubmit}
               type="modern-horizontal"
-              onClose={() => setFormModal(!formModal)}
+              onClose={handleOfferPopUp}
             />
           </ModalBody>
         </Modal>

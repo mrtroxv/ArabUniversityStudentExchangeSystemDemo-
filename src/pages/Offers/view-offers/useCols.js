@@ -52,13 +52,16 @@ const useCols = () => {
       name: t("college"),
       sortable: true,
       minWidth: "150px",
-      selector: (row) => row.college_name
-    },
-    {
-      name: t("major"),
-      sortable: true,
-      minWidth: "100px",
-      selector: (row) => row.major_name
+      selector: (row) => row.college_name,
+      cell: (row) => {
+        // college name in bold and major name in muted
+        return (
+          <div className="d-flex flex-column">
+            <span className="fw-bolder">{row.college_name}</span>
+            <span className="text-muted fw-bold">{row.major_name}</span>
+          </div>
+        )
+      }
     }
   ]
 
@@ -129,7 +132,7 @@ const useCols = () => {
     name: t("date"),
     sortable: true,
     minWidth: "50px",
-    selector: (row) => moment(row.receive_date).format("MM/DD/YYYY")
+    selector: (row) => moment(row.offer_date).format("MM/DD/YYYY")
   }
   const actionsCol = {
     name: t("actions"),
