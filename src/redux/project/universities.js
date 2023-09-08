@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit"
 import axios from "axios"
 
-const UNIVERSITIES_URL = "http://localhost:3500/admin/universities"
-const ADD_USER_URL = "http://localhost:3500/admin/add-user"
+const UNIVERSITIES_URL = "/api/universities"
+const ADD_USER_URL = "/api/add-user"
 const initialState = {
   universities: [],
   status: "idle",

@@ -17,7 +17,10 @@ export const login = createAsyncThunk(
   "auth/login",
   async (data, { rejectWithValue }) => {
     try {
-      const response = await axios.post("http://localhost:3500/login", data)
+      const response = await axios.post("/jwt/login", data)
+      console.log({
+        response
+      })
       return response.data
     } catch (err) {
       if (err.response) {
@@ -33,17 +36,14 @@ export const fetchUserData = createAsyncThunk(
   "userData/fetchUserData",
   async () => {
     const user = JSON.parse(localStorage.getItem("userData"))
-    const response = await axios.get(
-      "http://localhost:3500/login/get-user-data",
-      {
-        params: {
-          id: user.id
-        },
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+    const response = await axios.get("/jwt/get-user-data", {
+      params: {
+        id: user.id
+      },
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("accessToken"))
       }
-    )
+    })
     if (response.data) {
       return {
         ...response.data,
