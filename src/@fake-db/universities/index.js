@@ -101,7 +101,7 @@ export const universities = [
     url: "https://ptuk.edu.ps/ar",
     email: "ptuk.ps",
     city_id: "PS",
-    logo: "http://localhost:3500/1673436208916_ptuk.jpg",
+    logo: require("@src/assets/images/avatars/1673436208916_ptuk.jpg").default,
     role: "user"
   },
   {
@@ -118,7 +118,8 @@ export const universities = [
     url: "non",
     email: "alqudes.open@mail.ps",
     city_id: "PS",
-    logo: "http://localhost:3500/1673586198286_png-transparent-al-quds-open-university-al-quds-university-student-college-student-emblem-people-logo-thumbnail.png",
+    logo: require("@src/assets/images/avatars/1673586198286_png-transparent-al-quds-open-university-al-quds-university-student-college-student-emblem-people-logo-thumbnail.png")
+      .default,
     role: "user"
   },
   {
@@ -135,7 +136,8 @@ export const universities = [
     url: "http://ju.edu.jo/ar/arabic/home.aspx",
     email: "Ju.edu.jo",
     city_id: "JO",
-    logo: "http://localhost:3500/1673632816694_png-clipart-hashemite-university-princess-sumaya-university-for-technology-university-of-jordan-tafila-technical-university-the-university-thumbnail.png",
+    logo: require("@src/assets/images/avatars/1673632816694_png-clipart-hashemite-university-princess-sumaya-university-for-technology-university-of-jordan-tafila-technical-university-the-university-thumbnail.png")
+      .default,
     role: "user"
   },
   {
@@ -152,7 +154,7 @@ export const universities = [
     url: "https://cu.edu.eg/ar/Home",
     email: "Cu.edu.eg",
     city_id: "EG",
-    logo: "http://localhost:3500/1673632407898_img1.png",
+    logo: require("@src/assets/images/avatars/1673632407898_img1.png").default,
     role: "user"
   },
   {
@@ -169,7 +171,8 @@ export const universities = [
     url: "https://www.harvard.edu/",
     email: "harvard@harvard.edu",
     city_id: "US",
-    logo: "http://localhost:3500/1673631786669_Harvard_University_shield.png",
+    logo: require("@src/assets/images/avatars/1673631786669_Harvard_University_shield.png")
+      .default,
     role: "user"
   },
   {
@@ -186,7 +189,8 @@ export const universities = [
     url: "https://getbootstrap.com/",
     email: "h.j.salman@students.ptuk.edu.ps",
     city_id: "PS",
-    logo: "http://localhost:3500/1673632869067_m-transparent.webp",
+    logo: require("@src/assets/images/avatars/1673632869067_m-transparent.webp")
+      .default,
     role: "user"
   },
   {
@@ -203,7 +207,8 @@ export const universities = [
     url: "github.com",
     email: "User@DESKTOP-R1135EN.com",
     city_id: "DZ",
-    logo: "http://localhost:3500/1673632833656_H1dqJMueRtGJ3STMwRtA_tK4ZWxDQWV4UZ18e.jpeg",
+    logo: require("@src/assets/images/avatars/1673632833656_H1dqJMueRtGJ3STMwRtA_tK4ZWxDQWV4UZ18e.jpeg")
+      .default,
     role: "user"
   },
   {
@@ -322,4 +327,11 @@ mock.onPost("/api/add-user").reply((config) => {
   representatives.push(representative)
 
   return [200, "Added User successfully"]
+})
+mock.onGet("/api/get-university-data").reply((config) => {
+  const university_id = config.params.universityId
+  const university = universities.find(
+    (university) => university.ID === university_id
+  )
+  return [200, university]
 })

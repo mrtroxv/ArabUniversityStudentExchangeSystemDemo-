@@ -40,7 +40,11 @@ function Home() {
   const dispatch = useDispatch()
   const user = useSelector(selectUser)
   useEffect(() => {
-    dispatch(getOffersData())
+    dispatch(
+      getOffersData({
+        id: user.university_id
+      })
+    )
   }, [dispatch, store.allData?.offers?.length])
 
   const handleOfferSubmit = (data) => {

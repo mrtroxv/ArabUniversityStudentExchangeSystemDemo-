@@ -1,7 +1,7 @@
-const BE_LINK = "http://localhost:3500"
+const BE_LINK = "/api"
 const OFFERS = "/offer"
 export const OFFERS_URL = `${BE_LINK}${OFFERS}/show_offer`
-export const CREATE_OFFER_URL = `${BE_LINK}${OFFERS}/insert_offer`
+export const CREATE_OFFER_URL = `${BE_LINK}/insert_offer`
 export const OWN_OFFERS_URL = `${BE_LINK}${OFFERS}/own-offers`
 export const OBTAINED_OFFER_URL = `${BE_LINK}${OFFERS}/obtained-offers`
 export const ACTIVE_OFFERS_URL = `${BE_LINK}${OFFERS}/active-offers`

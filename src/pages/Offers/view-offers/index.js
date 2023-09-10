@@ -31,7 +31,7 @@ import Spinner from "../../../components/custom/loader/Spinner"
 import useCols from "./useCols"
 import SimpleFormDialog from "../../../components/custom/SimpleFormDialog"
 import toast from "react-hot-toast"
-import Error from "../../../views/pages/misc/Error"
+
 import {
   duplicateOffer,
   getFinishedOffers,
@@ -54,7 +54,6 @@ function ViewOffers() {
   const [filter, setFilter] = useState("all")
   const dispatch = useDispatch()
   // const { socket } = useContext(SocketContext)
-
   const breadcrumbs = {
     "created-offers": {
       title: "Created Offers",
@@ -103,7 +102,11 @@ function ViewOffers() {
     if (data === "finished-offers") {
       dispatch(getFinishedOffers())
     } else {
-      dispatch(getOffersData())
+      dispatch(
+        getOffersData({
+          id: userId
+        })
+      )
     }
   }, [data, offersList?.length])
 

@@ -1,16 +1,18 @@
 import mock from "../mock"
 import jwt from "jsonwebtoken"
 import { representativeData, universities } from "../universities"
+import { data as offers } from "../offers"
 const data = [
   {
     id: 1,
     username: "Ahmad Osama",
     password: "password1234",
     type: "user",
-    name: "بهجت صابر",
-    status: "suspend",
+    name: "Ahmad Osama",
+    status: "active",
     avatar:
-      "http://localhost:3500/1673591531551_H1dqJMueRtGJ3STMwRtA_tK4ZWxDQWV4UZ18e.jpeg"
+      require("@src/assets/images/avatars/1673591531551_H1dqJMueRtGJ3STMwRtA_tK4ZWxDQWV4UZ18e.jpeg")
+        .default
   },
   {
     id: 1261,
@@ -46,7 +48,9 @@ const data = [
     type: "user",
     name: "Huthaifa Salman",
     status: "active",
-    avatar: "http://localhost:3500/1673633055225_photo_2021-11-18_16-51-39.png"
+    avatar:
+      require("@src/assets/images/avatars/1673633055225_photo_2021-11-18_16-51-39.png")
+        .default
   },
   {
     id: 1271,
@@ -64,7 +68,7 @@ const data = [
     type: "user",
     name: "Mr.Sussy Baken",
     status: "suspend",
-    avatar: "http://localhost:3500/1673027073467_Huz2.png"
+    avatar: require("@src/assets/images/avatars/1673027073467_Huz2.png").default
   },
   {
     id: 1288,
@@ -74,7 +78,8 @@ const data = [
     name: "AseelAseel",
     status: "suspend",
     avatar:
-      "http://localhost:3500/1673237922511_Screenshot 2022-11-24 083823.png"
+      require("@src/assets/images/avatars/1673237922511_Screenshot 2022-11-24 083823.png")
+        .default
   },
   {
     id: 1290,
@@ -83,7 +88,9 @@ const data = [
     type: "user",
     name: "Amjad Test",
     status: "suspend",
-    avatar: "http://localhost:3500/1673247985304_Screenshot_20221117_014943.png"
+    avatar:
+      require("@src/assets/images/avatars/1673247985304_Screenshot_20221117_014943.png")
+        .default
   },
   {
     id: 1291,
@@ -92,7 +99,9 @@ const data = [
     type: "user",
     name: "Huthaifa Salman.pdf",
     status: "active",
-    avatar: "http://localhost:3500/1673248102268_Screenshot_20230103_053015.png"
+    avatar:
+      require("@src/assets/images/avatars/1673248102268_Screenshot_20230103_053015.png")
+        .default
   },
   {
     id: 1292,
@@ -101,16 +110,18 @@ const data = [
     type: "admin",
     name: "Huthaifa Salman",
     status: "active",
-    avatar: "http://localhost:3500/1673714696823_Huz2.jpg"
+    avatar: require("@src/assets/images/avatars/1673714696823_Huz2.jpg").default
   },
   {
     id: 1299,
-    username: "BenRestaurant",
+    username: "Testing",
     password: "password1234",
     type: "user",
     name: "Eng. Hamza san",
-    status: "active",
-    avatar: "http://localhost:3500/1673998517822_Screenshot_20221110_024818.png"
+    status: "suspend",
+    avatar:
+      require("@src/assets/images/avatars/1673998517822_Screenshot_20221110_024818.png")
+        .default
   }
 ]
 
@@ -291,6 +302,46 @@ mock.onGet("/jwt/get-user-data").reply((config) => {
     role,
     avatar: user.avatar,
     name: user.name
+  }
+  return [200, response]
+})
+
+mock.onGet("/api/get-all-data").reply(() => {
+  const newUsers = data.map((user) => {
+    const relation = representativeData.find((u) => u.user_id === user.id)
+    const university = universities.find((u) => u.ID === relation.university_id)
+    return {
+      ...user,
+      ...university,
+      startDate: relation.startDate
+    }
+  })
+  return [
+    200,
+    {
+      activeUsers: newUsers.filter((user) => user.status === "active"),
+      suspendedUsers: newUsers.filter((user) => user.status === "suspend")
+    }
+  ]
+})
+mock.onGet("/api/get-user").reply((config) => {
+  const { universityId } = config.params
+  const relations = representativeData
+    .filter((u) => u.university_id === universityId)
+    .map((u) => u.user_id)
+  const users = data.filter((u) => relations.includes(u.id))
+  const university = universities.find((u) => u.ID === universityId)
+  const offersList = offers.filter(
+    (offer) => offer.university_id_src === university.ID
+  )
+  const response = {
+    users,
+    university,
+    offers: offersList,
+    activeUser: {
+      ...university,
+      ...users.find((user) => user.status === "active")
+    }
   }
   return [200, response]
 })

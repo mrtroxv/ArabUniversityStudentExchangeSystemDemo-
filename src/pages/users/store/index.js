@@ -6,7 +6,7 @@ import axios from "axios"
 import { GET_USER } from "./constants"
 
 export const getAllData = createAsyncThunk("appUsers/getAllData", async () => {
-  const response = await axios.get("http://localhost:3500/admin/get-all-data", {
+  const response = await axios.get("/api/get-all-data", {
     headers: {
       authorization: JSON.parse(localStorage.getItem("accessToken"))
     }
@@ -15,7 +15,7 @@ export const getAllData = createAsyncThunk("appUsers/getAllData", async () => {
 })
 
 export const getData = createAsyncThunk("appUsers/getData", async (params) => {
-  const response = await axios.get("/api/users/list/data", params)
+  const response = await axios.get("/api/users/list", params)
   return {
     params,
     data: response.data.users,
@@ -27,14 +27,14 @@ export const suspendUser = createAsyncThunk(
   "appUsers/suspendUser",
   async (data, { rejectWithValue }) => {
     try {
-      await axios.post(`http://localhost:3500/admin/suspend-add-user`, data, {
+      await axios.post(`/api/suspend-add-user`, data, {
         headers: {
           authorization: JSON.parse(localStorage.getItem("accessToken")),
           "Content-Type": "multipart/form-data"
         },
         file: data.avatar
       })
-      const response = await axios.get(`http://localhost:3500/admin/get-user`, {
+      const response = await axios.get(`/api/get-user`, {
         params: {
           universityId: data.university_id
         },
@@ -52,7 +52,7 @@ export const suspendUser = createAsyncThunk(
 
 export const getUser = createAsyncThunk("appUsers/getUser", async (id) => {
   try {
-    const response = await axios.get(`http://localhost:3500/admin/get-user`, {
+    const response = await axios.get(`/api/get-user`, {
       params: {
         universityId: id
       },
@@ -71,7 +71,7 @@ export const reactivateAccount = createAsyncThunk(
   async (data, { rejectWithValue, dispatch }) => {
     try {
       await axios.post(
-        `http://localhost:3500/admin/reactivate-user`,
+        `/api/reactivate-user`,
         {
           userId: data.account_id,
           id: data.id,
@@ -117,17 +117,14 @@ export const getUsersForUniversity = createAsyncThunk(
   "appUsers/getUsersForUniversity",
   async (id) => {
     try {
-      const response = await axios.get(
-        `http://localhost:3500/admin/get-university-users`,
-        {
-          params: {
-            universityId: id
-          },
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
+      const response = await axios.get(`/api/get-university-users`, {
+        params: {
+          universityId: id
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
-      )
+      })
       console.log(response.data)
       return response.data
     } catch (error) {

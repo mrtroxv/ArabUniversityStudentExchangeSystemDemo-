@@ -6,8 +6,11 @@ import axios from "axios"
 
 export const getOffersData = createAsyncThunk(
   "appOffers/getAllData",
-  async () => {
-    const response = await axios.get("http://localhost:3500/offer/show_offer", {
+  async (payload) => {
+    const response = await axios.get("/api/showOffers", {
+      params: {
+        id: payload.id
+      },
       headers: {
         authorization: JSON.parse(localStorage.getItem("accessToken"))
       }
@@ -19,14 +22,11 @@ export const getFinishedOffers = createAsyncThunk(
   "offers/get-finished",
   async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:3500/offer/get-finished",
-        {
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
+      const response = await axios.get("/api/offer/get-finished", {
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
-      )
+      })
       return response.data
     } catch (error) {
       console.log(error)
@@ -36,17 +36,14 @@ export const getFinishedOffers = createAsyncThunk(
 export const getUniversityById = createAsyncThunk(
   "appOffers/getUniversityById",
   async (id) => {
-    const response = await axios.get(
-      "http://localhost:3500/offer/get-university-data",
-      {
-        params: {
-          universityId: id
-        },
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+    const response = await axios.get("/api/get-university-data", {
+      params: {
+        universityId: id
+      },
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("accessToken"))
       }
-    )
+    })
     return response.data
   }
 )
@@ -127,17 +124,14 @@ export const getOffer = createAsyncThunk(
   "appOffers/getOffer",
   async (id, { dispatch }) => {
     try {
-      const response = await axios.get(
-        `http://localhost:3500/offer/get-offer`,
-        {
-          params: {
-            id
-          },
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
+      const response = await axios.get(`/api/get-offer`, {
+        params: {
+          id
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
-      )
+      })
       if (response.data.University_id_des && response.data.status > 0) {
         await dispatch(getUniversityById(response.data.University_id_des))
       }
