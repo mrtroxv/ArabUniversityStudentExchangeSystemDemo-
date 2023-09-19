@@ -5,7 +5,7 @@ export const representativeData = [
     ID: 1,
     university_id: 1,
     user_id: 1,
-    end_date: "2023-01-19",
+    end_date: Date("2023-01-19"),
     start_date: "2022-07-20"
   },
   {

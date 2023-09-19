@@ -24,5 +24,6 @@ import "./pages/account-settings"
 import "./autoComplete/autoComplete"
 import "./universities"
 import "./offers"
+import "./students"
 
 mock.onAny().passThrough()

@@ -48,10 +48,6 @@ const useCols = () => {
       sortable: (row) => row.status,
       selector: (row) => row.status,
       cell: (row) => {
-        console.log({
-          row,
-          status
-        })
         return (
           <Badge color={status[row.status].color} pill>
             {status[row.status].title}

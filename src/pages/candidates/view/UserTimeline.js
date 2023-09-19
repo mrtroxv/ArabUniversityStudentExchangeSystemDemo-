@@ -48,13 +48,13 @@ const UserTimeline = () => {
     title: t("Assigned to an Offer"),
     content: t("This student has been assigned to an offer"),
     icon: <User size={14} />,
-    meta: moment(request.assignDate).format("MM/DD/YYYY")
+    meta: moment(request?.assignDate).format("MM/DD/YYYY")
   }
 
   const acceptState = {
     title: t("Updated offer request"),
     content: t("This student has updated his offer request"),
-    meta: moment(request.submitDate).format("MM/DD/YYYY"),
+    meta: moment(request?.submitDate).format("MM/DD/YYYY"),
     color: "success",
     icon: <HiOutlineDocumentCheck size={14} />
   }

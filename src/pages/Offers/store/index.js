@@ -50,17 +50,14 @@ export const getUniversityById = createAsyncThunk(
 export const getStudentByOfferId = createAsyncThunk(
   "appOffers/getStudentById",
   async (id) => {
-    const response = await axios.get(
-      "http://localhost:3500/offer/get-student-data",
-      {
-        params: {
-          offerId: id
-        },
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+    const response = await axios.get("/offer/get-student-data", {
+      params: {
+        offerId: id
+      },
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("accessToken"))
       }
-    )
+    })
     return response.data
   }
 )
@@ -101,17 +98,14 @@ export const getStudentReport = createAsyncThunk(
 export const getRequestData = createAsyncThunk(
   "appOffers/getRequestData",
   async (data, { dispatch }) => {
-    const response = await axios.get(
-      "http://localhost:3500/offer/get-request-data",
-      {
-        params: {
-          offerId: data.id
-        },
-        headers: {
-          authorization: JSON.parse(localStorage.getItem("accessToken"))
-        }
+    const response = await axios.get("/offer/get-student-data", {
+      params: {
+        offerId: data.id
+      },
+      headers: {
+        authorization: JSON.parse(localStorage.getItem("accessToken"))
       }
-    )
+    })
     if (response.data?.id && data.status >= 7) {
       await dispatch(getUniversityReport(response.data?.id))
       await dispatch(getStudentReport(response.data?.id))

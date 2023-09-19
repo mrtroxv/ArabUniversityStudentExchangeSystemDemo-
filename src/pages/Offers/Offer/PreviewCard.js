@@ -60,7 +60,7 @@ const PreviewCard = ({ toggleSidebar, toggleAddStudent, toggleEditForm }) => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const store = useSelector((state) => state?.appOffers?.selectedOffer)
-  const data = useSelector((state) => state?.appOffers?.selectedOffer?.offer)
+  const data = store?.offer
   const creator = useSelector((state) =>
     selectUniversity(state, data.university_id_src)
   )
@@ -68,7 +68,14 @@ const PreviewCard = ({ toggleSidebar, toggleAddStudent, toggleEditForm }) => {
 
   useEffect(() => {
     const student = store?.student
-    student ? setStudentData([student]) : setStudentData([])
+    student
+      ? setStudentData([
+          {
+            ...student,
+            ...data
+          }
+        ])
+      : setStudentData([])
   }, [store])
 
   const currentUser = useSelector(selectUser)

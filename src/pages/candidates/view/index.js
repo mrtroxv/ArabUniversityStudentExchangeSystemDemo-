@@ -29,6 +29,8 @@ const UserView = () => {
   // ** Get suer on mount
   useEffect(() => {
     dispatch(getCandidate(id))
+  }, [])
+  useEffect(() => {
     if (store.selectedUser?.offer?.id !== undefined) {
       dispatch(getOffer(store.selectedUser?.offer?.id))
     }

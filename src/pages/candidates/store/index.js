@@ -8,17 +8,14 @@ export const getRequestsData = createAsyncThunk(
   "candidates/request",
   async (id) => {
     try {
-      const response = await axios.get(
-        `http://localhost:3500/student/request-data`,
-        {
-          params: {
-            universityId: id
-          },
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
+      const response = await axios.get(`/students/request-data`, {
+        params: {
+          universityId: id
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
-      )
+      })
       return response.data
     } catch (error) {
       console.log(error)
@@ -29,14 +26,12 @@ export const fetchCandidatesData = createAsyncThunk(
   "students/getCandidates",
   async (id, { dispatch }) => {
     try {
-      const response = await axios.get(
-        "http://localhost:3500/student/get-all-data",
-        {
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
+      const response = await axios.get("/students/get-all-data", {
+        params: { id },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
-      )
+      })
       await dispatch(getRequestsData(id))
       return response.data
     } catch (error) {}
@@ -56,17 +51,14 @@ export const getCandidate = createAsyncThunk(
   "candidates/getCandidate",
   async (id) => {
     try {
-      const response = await axios.get(
-        `http://localhost:3500/student/get-student`,
-        {
-          params: {
-            studentId: id
-          },
-          headers: {
-            authorization: JSON.parse(localStorage.getItem("accessToken"))
-          }
+      const response = await axios.get(`/students/get-student`, {
+        params: {
+          studentId: id
+        },
+        headers: {
+          authorization: JSON.parse(localStorage.getItem("accessToken"))
         }
-      )
+      })
       return response.data
     } catch (error) {
       console.log(error)
